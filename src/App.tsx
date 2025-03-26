@@ -1,7 +1,13 @@
 import "./App.css";
+import { AppProvider } from "./providers/app.tsx";
+import AppRoutes from "./routes";
 
 function App() {
-  return <>Hello world</>;
+  return (
+    <AppProvider>
+      <AppRoutes />
+    </AppProvider>
+  );
 }
 
 export default App;
