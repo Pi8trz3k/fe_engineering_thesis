@@ -1,14 +1,13 @@
-import './App.css'
+import "./App.css";
+import { AppProvider } from "./providers/app.tsx";
+import AppRoutes from "./routes";
 
 function App() {
-
   return (
-    <>
-      <p className="flex h-screen items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 text-white text-3xl font-bold">
-          Hello Julcia
-      </p>
-    </>
-  )
+    <AppProvider>
+      <AppRoutes />
+    </AppProvider>
+  );
 }
 
-export default App
+export default App;
