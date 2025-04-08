@@ -1,12 +1,14 @@
-import "./App.css";
-import { AppProvider } from "./providers/app.tsx";
+import { BrowserRouter } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import AppRoutes from "./routes";
 
 function App() {
   return (
-    <AppProvider>
-      <AppRoutes />
-    </AppProvider>
+    <BrowserRouter>
+      <HelmetProvider>
+        <AppRoutes />
+      </HelmetProvider>
+    </BrowserRouter>
   );
 }
 
