@@ -21,16 +21,16 @@ export const Login: Story = {
     onClick: () => alert("Login"),
     fontSize: "font-semibold",
     padding: "px-7 py-3",
-    type: "login",
   },
 };
 
 export const Register: Story = {
   args: {
     text: "Register",
+    color: "text-white",
+    bgColor: "bg-stone-950",
     onClick: () => alert("Register"),
     fontSize: "font-semibold",
     padding: "px-7 py-3",
-    type: "register",
   },
 };

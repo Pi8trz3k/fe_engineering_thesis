@@ -1,29 +1,24 @@
 interface AuthNavigationButtonProps {
   text: string;
+  color?: string;
+  bgColor?: string;
   onClick?: () => void;
   fontSize?: string;
   padding?: string;
-  type?: string;
 }
 
 export function AuthNavigationButton({
   text,
+  color,
+  bgColor,
   onClick,
   fontSize,
   padding,
-  type,
 }: AuthNavigationButtonProps) {
-  let textColor;
-  let bgColor;
-
-  if (type == "register") {
-    textColor = "text-white";
-    bgColor = "bg-stone-950";
-  }
   return (
     <button
       onClick={onClick}
-      className={`${textColor} ${bgColor} ${fontSize} ${padding} shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95 border`}
+      className={`${color} ${bgColor} ${fontSize} ${padding} shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95 border`}
     >
       {text}
     </button>
