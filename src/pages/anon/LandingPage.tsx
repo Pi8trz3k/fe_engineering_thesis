@@ -1,4 +1,4 @@
-import { AuthNavigationButton } from "../../components/Elements/Button/AuthNavigationButton.tsx";
+import { AuthNavigationButton } from "../../components/Elements/Buttons/AuthNavigationButton/AuthNavigationButton.tsx";
 
 export default function LandingPage() {
   return (
