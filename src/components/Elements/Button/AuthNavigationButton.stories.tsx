@@ -18,9 +18,9 @@ type Story = StoryObj<typeof meta>;
 export const Login: Story = {
   args: {
     text: "Login",
+    color: "text-black",
+    bgColor: "bg-white",
     onClick: () => alert("Login"),
-    fontSize: "font-semibold",
-    padding: "px-7 py-3",
   },
 };
 
@@ -28,9 +28,7 @@ export const Register: Story = {
   args: {
     text: "Register",
     color: "text-white",
-    bgColor: "bg-stone-950",
+    bgColor: "bg-black",
     onClick: () => alert("Register"),
-    fontSize: "font-semibold",
-    padding: "px-7 py-3",
   },
 };
