@@ -1,26 +1,24 @@
 import { AuthNavigationButton } from "../../components/Elements/Buttons/AuthNavigationButton/AuthNavigationButton.tsx";
+import ThemeToggle from "../../components/Elements/Theme/ThemeToggle.tsx";
 
 export default function LandingPage() {
   return (
-    <>
-      <div className={"text-black dark:text-white dark:bg-black"}>Test</div>
-      <button
-        id="toggleDark"
-        onClick={() => document.body.classList.toggle("dark")}
-      >
-        Toggle Dark Mode
-      </button>
+    <div>
+      <div className={"text-black dark:text-white dark:bg-gray-800"}>Test</div>
+      <ThemeToggle />
       <AuthNavigationButton
         text="Register"
         color="text-white dark:text-black"
-        bgColor="bg-black dark:bg-white"
+        bgColor="bg-gray-800 dark:bg-white"
+        className={"hover:bg-gray-700 dark:hover:bg-gray-100"}
       />
 
       <AuthNavigationButton
         text="Login"
         color="text-black dark:text-white"
-        bgColor="bg-white dark:bg-black"
+        bgColor="bg-white dark:bg-gray-800"
+        className={"hover:bg-gray-100 dark:hover:bg-gray-700"}
       />
-    </>
+    </div>
   );
 }
