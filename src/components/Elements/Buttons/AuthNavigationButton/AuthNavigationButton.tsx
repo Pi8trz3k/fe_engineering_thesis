@@ -1,8 +1,9 @@
 interface AuthNavigationButtonProps {
   text: string;
-  color?: string;
-  bgColor?: string;
+  color: string;
+  bgColor: string;
   onClick?: () => void;
+  className?: string;
 }
 
 export function AuthNavigationButton({
@@ -10,11 +11,13 @@ export function AuthNavigationButton({
   color,
   bgColor,
   onClick,
+  className,
 }: AuthNavigationButtonProps) {
   return (
     <button
       onClick={onClick}
-      className={`${color} ${bgColor} px-7 py-3 font-semibold shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95 border`}
+      className={`${color} ${bgColor} px-7 py-3 font-semibold shadow-lg transition-all duration-300 transform 
+      hover:scale-105 active:scale-95 ${className}`}
     >
       {text}
     </button>
