@@ -1,18 +1,15 @@
-import { useRoutes } from "react-router-dom";
-import LandingPage from "../pages/anon/LandingPage.tsx";
 import AnonRouter from "./Routers/AnonRouter.tsx";
 import AdminRouter from "./Routers/AdminRouter.tsx";
 import UserRouter from "./Routers/UserRouter.tsx";
+import { useAuth } from "../hooks/useAuth.tsx";
 
 export default function AppRoutes() {
-  // const { isAuthenticated, user } = useAuth();
+  const { role, isAuthenticated } = useAuth();
 
-  // if (!isAuthenticated) {
-  //   return <AnonRouter />;
-  // } else if (user?.role === "admin") {
-  //   return <AdminRouter />;
-  // }
+  if (!isAuthenticated) {
+    return <AnonRouter />;
+  } else if (role === "admin") {
+    return <AdminRouter />;
+  }
   return <UserRouter />;
-
-  // return useRoutes(commonRouter);
 }
