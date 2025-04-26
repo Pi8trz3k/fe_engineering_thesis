@@ -6,6 +6,7 @@ import RefreshProvider from "@/providers/RefreshProvider.tsx";
 import FilterProvider from "@/providers/FilterProvider.tsx";
 import ModalProvider from "@/providers/ModalProvider.tsx";
 import AppRoutes from "@/routes";
+import Header from "@/components/Elements/Header/Header.tsx";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <RefreshProvider>
               <FilterProvider>
                 <ModalProvider>
+                  <Header />
                   <AppRoutes />
                 </ModalProvider>
               </FilterProvider>
