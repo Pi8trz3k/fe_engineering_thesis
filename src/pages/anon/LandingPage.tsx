@@ -1,6 +1,3 @@
-import { AuthNavigationButton } from "@/components/Elements/Buttons/AuthNavigationButton/AuthNavigationButton.tsx";
-import ThemeToggle from "@/components/Elements/Theme/ThemeToggle.tsx";
-
 export default function LandingPage() {
   return (
     <div>
