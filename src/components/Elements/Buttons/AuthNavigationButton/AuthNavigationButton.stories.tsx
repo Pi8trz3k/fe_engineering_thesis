@@ -17,18 +17,24 @@ type Story = StoryObj<typeof meta>;
 
 export const Login: Story = {
   args: {
-    text: "Login",
-    color: "text-black",
-    bgColor: "bg-white",
+    text: "Zaloguj się",
+    type: "login",
     onClick: () => alert("Login"),
   },
 };
 
 export const Register: Story = {
   args: {
-    text: "Register",
-    color: "text-white",
-    bgColor: "bg-black",
+    text: "Zarejestruj się",
+    type: "register",
     onClick: () => alert("Register"),
+  },
+};
+
+export const Logout: Story = {
+  args: {
+    text: "Wyloguj się",
+    type: "logout",
+    onClick: () => alert("Logout"),
   },
 };
