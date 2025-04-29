@@ -16,19 +16,19 @@ export default function Header() {
     if (!isAuthenticated) {
       return (
         <>
-          {pathname !== "/login" && (
-            <AuthNavigationButton
-              text="Zaloguj się"
-              type="login"
-              onClick={() => navigate("/login")}
-            />
-          )}
-          {pathname !== "/register" && (
-            <AuthNavigationButton
-              text="Zarejestruj się"
-              type="register"
-              onClick={() => navigate("/register")}
-            />
+          {pathname !== "/login" && pathname !== "/register" && (
+            <>
+              <AuthNavigationButton
+                text="Zaloguj się"
+                type="login"
+                onClick={() => navigate("/login")}
+              />
+              <AuthNavigationButton
+                text="Zarejestruj się"
+                type="register"
+                onClick={() => navigate("/register")}
+              />
+            </>
           )}
         </>
       );
@@ -54,7 +54,9 @@ export default function Header() {
           </Link>
 
           <div className="flex items-center space-x-4">
-            <ThemeToggle />
+            <div className="hidden md:block">
+              <ThemeToggle />
+            </div>
 
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -78,6 +80,7 @@ export default function Header() {
 
         {isMenuOpen && (
           <div className="md:hidden items-center bg-gray-100 dark:bg-gray-700 shadow-md px-4 py-4 space-x-4 space-y-4">
+            <ThemeToggle />
             {menuItems()}
           </div>
         )}
