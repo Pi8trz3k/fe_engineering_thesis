@@ -1,9 +1,5 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 
 export default function ModalProvider({ children }: { children: ReactNode }) {
-  useEffect(() => {
-    console.log("ModalProvider");
-  }, []);
-
   return <>{children}</>;
 }
