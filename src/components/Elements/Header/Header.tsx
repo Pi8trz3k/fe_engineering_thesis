@@ -2,45 +2,39 @@ import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth.tsx";
 import ThemeToggle from "@/components/Elements/Theme/ThemeToggle.tsx";
 import { AuthNavigationButton } from "@/components/Elements/Buttons/AuthNavigationButton/AuthNavigationButton.tsx";
-import { Link } from "react-router";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { isAuthenticated, role, logOut } = useAuth();
+  const { isAuthenticated, logOut } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { pathname } = location;
 
   const menuItems = () => {
     if (!isAuthenticated) {
       return (
         <>
-          <AuthNavigationButton
-            text="Zaloguj się"
-            type="login"
-            onClick={() => navigate("/login")}
-          />
-          <AuthNavigationButton
-            text="Zarejestruj się"
-            type="register"
-            onClick={() => navigate("/register")}
-          />
-        </>
-      );
-    } else if (role === "admin") {
-      return (
-        <>
-          <button>Admin Panel</button>
-          <AuthNavigationButton
-            text="Wyloguj się"
-            type="logout"
-            onClick={logOut}
-          />
+          {pathname !== "/login" && (
+            <AuthNavigationButton
+              text="Zaloguj się"
+              type="login"
+              onClick={() => navigate("/login")}
+            />
+          )}
+          {pathname !== "/register" && (
+            <AuthNavigationButton
+              text="Zarejestruj się"
+              type="register"
+              onClick={() => navigate("/register")}
+            />
+          )}
         </>
       );
     } else {
       return (
         <>
-          <button>profile</button>
           <AuthNavigationButton
             text="Wyloguj się"
             type="logout"
