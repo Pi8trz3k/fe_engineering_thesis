@@ -21,7 +21,7 @@ export function AuthNavigationButton({
   return (
     <button
       onClick={onClick}
-      className={`px-7 py-3 rounded-sm font-semibold shadow-lg transition-all duration-300 transform hover:scale-105 
+      className={`px-7 py-3 rounded-sm font-semibold shadow-xl transition-all duration-300 transform hover:scale-105 
       active:scale-95 ${variants[type]} `}
     >
       {text}
