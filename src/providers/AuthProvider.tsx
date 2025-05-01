@@ -124,9 +124,6 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       console.log("Nie udało się zarejestrować: ", error);
     }
   };
-  useEffect(() => {
-    console.log("AuthProvider");
-  }, []);
 
   return (
     <AuthContext.Provider
