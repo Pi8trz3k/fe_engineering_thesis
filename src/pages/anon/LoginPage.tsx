@@ -1,7 +1,7 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useAuth } from "@/hooks/useAuth.tsx";
 import { AuthNavigationButton } from "@/components/Elements/Buttons/AuthNavigationButton/AuthNavigationButton.tsx";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -66,17 +66,20 @@ export default function LoginPage() {
             onClick={handleSubmit(onSubmit)}
           />
 
-          <span className="text-md md:text-lg ml-auto mr-auto mt-3">
-            Nie masz konta? Zarejestruj się
-          </span>
+          <Link
+            className="text-sm ml-auto mr-auto hover:underline"
+            to="/login/password-reset"
+          >
+            <span>Nie pamiętasz hasła?</span>
+          </Link>
+
+          <hr className="w-full border-t border-black mt-2 mb-10" />
 
           <AuthNavigationButton
-            text="Zarejestruj się"
+            text="Utwórz nowe konto"
             type="register"
             onClick={() => navigate("/register")}
           />
-
-          <span className="ml-auto mr-auto">Zapomniałeś hasła?</span>
         </div>
       </form>
     </div>
