@@ -29,11 +29,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex items-center bg-gray-200 dark:bg-gray-400 p-5 pt-10 mt-10 mx-auto m-auto w-[90%] max-w-[300px] md:max-w-[500px] border rounded-xl border-gray-300 dark:border-gray-500">
+    <div className="flex items-center bg-gray-100 dark:bg-gray-400 p-5 pt-10 mt-10 mx-auto m-auto w-[90%] max-w-[300px] md:max-w-[500px] border rounded-xl border-gray-300 dark:border-gray-500">
       <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-6">
         <h2 className="text-3xl font-semibold text-center mb-6">Logowanie</h2>
 
-        <div className="flex flex-col">
+        <div className="flex flex-col relative">
           <label htmlFor="email" className="mb-1 font-medium">
             Email
           </label>
@@ -41,7 +41,8 @@ export default function LoginPage() {
             type="email"
             id="email"
             {...register("email", { required: "Email jest wymagany" })}
-            className="p-3 rounded-xl border bg-white border-gray-500 focus:outline-none focus:ring-1 focus:ring-success"
+            className="p-3 rounded-xl bg-white focus:outline-none focus:ring-1 border invalid:border-red-700
+            invalid:focus:ring-red-700 invalid:ring-1 invalid:ring-red-700"
             placeholder="Podaj email"
           />
         </div>
@@ -53,7 +54,7 @@ export default function LoginPage() {
           <input
             type="password"
             id="password"
-            {...register("password", { required: "Hasło jest wymagane" })}
+            {...register("password", { required: true })}
             className="p-3 rounded-xl border bg-white border-gray-500 focus:outline-none focus:ring-1 focus:ring-success"
             placeholder="Podaj hasło"
           />
