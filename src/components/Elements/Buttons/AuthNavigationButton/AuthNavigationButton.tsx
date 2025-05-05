@@ -1,13 +1,15 @@
 interface AuthNavigationButtonProps {
   text: string;
   type: "login" | "register" | "logout";
-  onClick: () => void;
+  onClick?: () => void;
+  typeButton?: "submit" | "button";
 }
 
 export function AuthNavigationButton({
   text,
   type,
   onClick,
+  typeButton = "button",
 }: AuthNavigationButtonProps) {
   const variants = {
     login:
@@ -20,9 +22,10 @@ export function AuthNavigationButton({
 
   return (
     <button
+      type={typeButton}
       onClick={onClick}
       className={`px-7 py-3 rounded-sm font-semibold shadow-xl transition-all duration-300 transform hover:scale-105 
-      active:scale-95 ${variants[type]} `}
+      active:scale-95 ${variants[type]}`}
     >
       {text}
     </button>
