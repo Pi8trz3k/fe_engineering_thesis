@@ -19,29 +19,13 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      try {
-        const refreshToken = localStorage.getItem("refreshToken");
-        const response = await axios.post("/token/refresh", { refreshToken });
-
-        const newAccessToken = response.data.accessToken;
-        localStorage.setItem("accessToken", newAccessToken);
-
-        api.defaults.headers.Authorization = `Bearer ${newAccessToken}`;
-        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-
-        return api(originalRequest);
-      } catch (error) {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        window.location.href = "/login";
-        return Promise.reject(error);
-      }
+    if (
+      error.response?.status === 401 &&
+      !originalRequest.url.includes("/login")
+    ) {
+      localStorage.removeItem("accessToken");
+      window.location.href = "/login"; // przekierowanie na stronę logowania
     }
-
     return Promise.reject(error);
   },
 );
