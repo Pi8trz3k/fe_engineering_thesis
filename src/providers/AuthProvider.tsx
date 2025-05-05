@@ -1,11 +1,10 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import api from "../lib/api.tsx";
+import api from "@/lib/api.tsx";
 
 interface AuthContextType {
   accessToken: string | null;
-  refreshToken: string | null;
   role: string;
   logIn: (email: string, password: string) => Promise<void>;
   logOut: () => void;
@@ -21,7 +20,6 @@ interface AuthContextType {
 
 export const AuthContext = createContext<AuthContextType>({
   accessToken: null,
-  refreshToken: null,
   role: "anon",
   logIn: async () => {},
   logOut: () => {},
@@ -32,9 +30,6 @@ export const AuthContext = createContext<AuthContextType>({
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const [accessToken, setAccessToken] = useState<string | null>(
     localStorage.getItem("accessToken"),
-  );
-  const [refreshToken, setRefreshToken] = useState<string | null>(
-    localStorage.getItem("refreshToken"),
   );
   const [role, setRole] = useState<string>("anon");
   const navigate = useNavigate();
@@ -70,31 +65,25 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       const userAccessToken = response.data.access_token;
-      const refreshToken = response.data.refresh_token;
 
       setAccessToken(userAccessToken);
       localStorage.setItem("accessToken", userAccessToken);
 
-      setRefreshToken(refreshToken);
-      localStorage.setItem("refreshToken", refreshToken);
-
       const decoded = jwtDecode<{ role: string }>(userAccessToken);
       setRole(decoded.role);
-
       navigate("/");
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.error("Błąd logowania:", error?.message);
+      console.log("Error: ", error);
     }
   };
 
   const logOut = () => {
     setAccessToken(null);
     localStorage.removeItem("accessToken");
-    setRefreshToken(null);
-    localStorage.removeItem("refreshToken");
     setRole("anon");
 
-    navigate("/");
+    navigate("/login");
   };
 
   //TODO
@@ -129,7 +118,6 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider
       value={{
         accessToken,
-        refreshToken,
         role,
         logIn,
         logOut,
