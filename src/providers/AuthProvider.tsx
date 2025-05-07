@@ -2,6 +2,7 @@ import { createContext, ReactNode, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import api from "@/lib/api.tsx";
+import { toast } from "react-toastify";
 
 interface AuthContextType {
   accessToken: string | null;
@@ -18,7 +19,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
 }
 
-export const AuthContext = createContext<AuthContextType>({
+export const authContext = createContext<AuthContextType>({
   accessToken: null,
   role: "anon",
   logIn: async () => {},
@@ -48,7 +49,6 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
           setRole(decoded.role);
         }
       } catch (error) {
-        console.log("Invalid token: ", accessToken, ", error: ", error);
         logOut();
       }
     }
@@ -71,10 +71,20 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
       const decoded = jwtDecode<{ role: string }>(userAccessToken);
       setRole(decoded.role);
+
       navigate("/");
+
+      toast.success("Zalogowanie pomyślnie");
     } catch (error: any) {
-      console.error("Błąd logowania:", error?.message);
-      console.log("Error: ", error);
+      const statusCode = error.response.status;
+
+      if (statusCode === 401) {
+        toast.error("Nieprawidłowe dane logowania");
+      } else if (statusCode === 404) {
+        toast.error("Użytkownik nie istnieje");
+      } else {
+        toast.error("Wystąpił nieoczekiwany błąd. Spróbuj ponownie później.");
+      }
     }
   };
 
@@ -84,6 +94,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     setRole("anon");
 
     navigate("/login");
+    toast.info("Wylogowano pomyślnie");
   };
 
   //TODO
@@ -115,7 +126,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider
+    <authContext.Provider
       value={{
         accessToken,
         role,
@@ -126,6 +137,6 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       }}
     >
       {children}
-    </AuthContext.Provider>
+    </authContext.Provider>
   );
 }
