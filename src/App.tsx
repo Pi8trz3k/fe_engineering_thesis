@@ -6,6 +6,7 @@ import FilterProvider from "@/providers/FilterProvider.tsx";
 import ModalProvider from "@/providers/ModalProvider.tsx";
 import AppRoutes from "@/routes";
 import Header from "@/components/Elements/Header/Header.tsx";
+import ToastProvider from "@/providers/ToastProvider.tsx";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
               <ModalProvider>
                 <Header />
                 <AppRoutes />
+                <ToastProvider />
               </ModalProvider>
             </FilterProvider>
           </RefreshProvider>
