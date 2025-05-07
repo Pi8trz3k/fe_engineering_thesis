@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAuth } from "@/hooks/useAuth.tsx";
+import { UseAuth } from "@/hooks/useAuth.tsx";
 import ThemeToggle from "@/components/Elements/Theme/ThemeToggle.tsx";
 import { AuthNavigationButton } from "@/components/Elements/Buttons/AuthNavigationButton/AuthNavigationButton.tsx";
 import { Link } from "react-router-dom";
@@ -7,7 +7,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { isAuthenticated, logOut } = useAuth();
+  const { isAuthenticated, logOut } = UseAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { pathname } = location;

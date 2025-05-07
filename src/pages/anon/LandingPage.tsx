@@ -1,7 +1,7 @@
-import { useAuth } from "@/hooks/useAuth.tsx";
+import { UseAuth } from "@/hooks/useAuth.tsx";
 
 export default function LandingPage() {
-  const { role } = useAuth();
+  const { role } = UseAuth();
 
   const func = () => {
     return (

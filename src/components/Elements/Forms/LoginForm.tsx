@@ -1,6 +1,6 @@
 import { AuthNavigationButton } from "@/components/Elements/Buttons/AuthNavigationButton/AuthNavigationButton.tsx";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth.tsx";
+import { UseAuth } from "@/hooks/useAuth.tsx";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 interface LoginInputs {
@@ -10,7 +10,7 @@ interface LoginInputs {
 
 export default function LoginForm() {
   const navigate = useNavigate();
-  const { logIn } = useAuth();
+  const { logIn } = UseAuth();
 
   const {
     register,
