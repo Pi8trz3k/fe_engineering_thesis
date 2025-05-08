@@ -49,6 +49,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
           setRole(decoded.role);
         }
       } catch (error) {
+        console.log("Wystąpił błąd: ", error);
         logOut();
       }
     }
