@@ -16,13 +16,13 @@ export default function LoginForm() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<LoginInputs>();
 
   const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
     try {
       await logIn(data.email, data.password);
-    } finally {
-      console.log("logged in");
+    } catch (error) {
+      console.error("Nie udało się zalogować: ", error);
     }
   };
 
