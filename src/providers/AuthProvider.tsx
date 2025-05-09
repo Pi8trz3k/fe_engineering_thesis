@@ -76,8 +76,6 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       setRole(decoded.role);
 
       navigate("/");
-
-      toast.success("Zalogowanie pomyślnie");
     } catch (error: any) {
       const statusCode = error.response.status;
 
@@ -88,6 +86,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         toast.error("Wystąpił nieoczekiwany błąd. Spróbuj ponownie później.");
       }
+      throw error;
     }
   };
 
@@ -113,7 +112,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     phone_number: string;
   }) => {
     try {
-      const registerResponse = await api.post("/user/", data, {
+      await api.post("/user/", data, {
         headers: { "Content-Type": "application/json" },
       });
 
@@ -122,7 +121,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       navigate("/");
     } catch (error: any) {
       toast.error("Nie udało się zarejestrować");
-      console.log("Nie udało się zarejestrować: ", error);
+      throw error;
     }
   };
 
