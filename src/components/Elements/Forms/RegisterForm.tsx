@@ -9,6 +9,7 @@ interface RegisterInputs {
   lastName: string;
   email: string;
   password: string;
+  confirmPassword: string;
   phoneNumber: string;
 }
 
@@ -20,6 +21,7 @@ export default function RegisterForm() {
     register: reactFormRegister,
     handleSubmit,
     formState: { errors },
+    getValues,
   } = useForm<RegisterInputs>();
 
   const onSubmit: SubmitHandler<RegisterInputs> = async (data) => {
@@ -58,6 +60,11 @@ export default function RegisterForm() {
             className="p-3 rounded-xl border bg-white border-black focus:outline-none focus:ring-1 focus:ring-success"
             placeholder="Podaj imię"
           />
+          {errors.name && (
+            <p className="text-red-600 dark:text-red-700">
+              {errors.name.message}
+            </p>
+          )}
         </div>
 
         <div className="flex flex-col">
@@ -73,10 +80,15 @@ export default function RegisterForm() {
             className="p-3 rounded-xl border bg-white border-black focus:outline-none focus:ring-1 focus:ring-success"
             placeholder="Podaj nazwisko"
           />
+          {errors.lastName && (
+            <p className="text-red-600 dark:text-red-700">
+              {errors.lastName.message}
+            </p>
+          )}
         </div>
 
         <div className="flex flex-col">
-          <label htmlFor="name" className="mb-1 font-medium">
+          <label htmlFor="phoneNumber" className="mb-1 font-medium">
             Numer telefonu
           </label>
           <input
@@ -84,10 +96,17 @@ export default function RegisterForm() {
             id="phoneNumber"
             {...reactFormRegister("phoneNumber", {
               required: "Numer telefonu jest wymagany",
+              // validate:
             })}
             className="p-3 rounded-xl border bg-white border-black focus:outline-none focus:ring-1 focus:ring-success"
             placeholder="Podaj numer telefonu"
+            defaultValue="+48"
           />
+          {errors.phoneNumber && (
+            <p className="text-red-600 dark:text-red-700">
+              {errors.phoneNumber.message}
+            </p>
+          )}
         </div>
 
         <div className="flex flex-col relative">
@@ -97,13 +116,21 @@ export default function RegisterForm() {
           <input
             type="email"
             id="email"
-            {...reactFormRegister("email", { required: "Email jest wymagany" })}
+            {...reactFormRegister("email", {
+              required: "Adres email jest wymagany",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Podaj poprawny adres email!",
+              },
+            })}
             className="p-3 rounded-xl bg-white focus:outline-none focus:ring-1 border invalid:border-red-700
             invalid:focus:ring-red-700 invalid:ring-1 invalid:ring-red-700"
             placeholder="Podaj email"
           />
           {errors.email && (
-            <p className="focus:visible:">{errors.email.message}</p>
+            <p className="text-red-600 dark:text-red-700">
+              {errors.email.message}
+            </p>
           )}
         </div>
 
@@ -120,6 +147,35 @@ export default function RegisterForm() {
             className="p-3 rounded-xl border bg-white border-black focus:outline-none focus:ring-1 focus:ring-success"
             placeholder="Podaj hasło"
           />
+          {errors.password && (
+            <p className="text-red-600 dark:text-red-700">
+              {errors.password.message}
+            </p>
+          )}
+        </div>
+
+        <div className="flex flex-col">
+          <label htmlFor="confirmPassword" className="mb-1 font-medium">
+            Potwierdź hasło
+          </label>
+          <input
+            type="password"
+            id="confirmPassword"
+            {...reactFormRegister("confirmPassword", {
+              validate: (match) => {
+                const password = getValues("password");
+                return match === password || "Hasła powinny być takie same";
+              },
+              required: "Hasło jest wymagane",
+            })}
+            className="p-3 rounded-xl border bg-white border-black focus:outline-none focus:ring-1 focus:ring-success"
+            placeholder="Podaj hasło ponownie"
+          />
+          {errors.confirmPassword && (
+            <p className="text-red-600 dark:text-red-700">
+              {errors.confirmPassword.message}
+            </p>
+          )}
         </div>
 
         <div className="flex flex-col space-y-5 text-md md:text-lg">
