@@ -4,18 +4,20 @@ import { jwtDecode } from "jwt-decode";
 import api from "@/lib/api.tsx";
 import { toast } from "react-toastify";
 
+interface RegisterData {
+  name: string;
+  last_name: string;
+  phone_number: string;
+  email: string;
+  password: string;
+}
+
 interface AuthContextType {
   accessToken: string | null;
   role: string;
   logIn: (email: string, password: string) => Promise<void>;
   logOut: () => void;
-  register: (
-    name: string,
-    lastName: string,
-    phoneNumber: string,
-    email: string,
-    password: string,
-  ) => Promise<void>;
+  register: (data: RegisterData) => Promise<void>;
   isAuthenticated: boolean;
 }
 
@@ -103,25 +105,23 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   Trzeba dodać obsługe trenera, czyli jakby typ użytkownika który jest rejestrowany
   Nie wiem czy będzie to dodanie zwykłego type: string do parametrów ale wiadomo
    */
-  const register = async (
-    name: string,
-    last_name: string,
-    email: string,
-    phoneNumber: string,
-    password: string,
-  ) => {
+  const register = async (data: {
+    name: string;
+    last_name: string;
+    email: string;
+    password: string;
+    phone_number: string;
+  }) => {
     try {
-      const formData = new FormData();
-      formData.set("name", name);
-      formData.set("last_name", last_name);
-      formData.set("email", email);
-      formData.set("phone_number", phoneNumber);
-      formData.set("password", password);
+      const registerResponse = await api.post("/user/", data, {
+        headers: { "Content-Type": "application/json" },
+      });
 
-      await api.post("/user/", formData);
+      await logIn(data.email, data.password);
 
       navigate("/");
-    } catch (error) {
+    } catch (error: any) {
+      toast.error("Nie udało się zarejestrować");
       console.log("Nie udało się zarejestrować: ", error);
     }
   };
