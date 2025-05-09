@@ -2,6 +2,7 @@ import { AuthNavigationButton } from "@/components/Elements/Buttons/AuthNavigati
 import { Link, useNavigate } from "react-router-dom";
 import { UseAuth } from "@/hooks/useAuth.tsx";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 interface LoginInputs {
   email: string;
@@ -21,6 +22,7 @@ export default function LoginForm() {
   const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
     try {
       await logIn(data.email, data.password);
+      toast.info("Zalogowano pomyślnie");
     } catch (error) {
       console.error("Nie udało się zalogować: ", error);
     }
@@ -56,7 +58,7 @@ export default function LoginForm() {
             type="password"
             id="password"
             {...register("password", { required: "Hasło jest wymagane" })}
-            className="p-3 rounded-xl border bg-white border-gray-500 focus:outline-none focus:ring-1 focus:ring-success"
+            className="p-3 rounded-xl border bg-white border-black focus:outline-none focus:ring-1 focus:ring-success"
             placeholder="Podaj hasło"
           />
         </div>
