@@ -40,13 +40,15 @@ export default function LoginForm() {
           <input
             type="email"
             id="email"
-            {...register("email", { required: "Email jest wymagany" })}
+            {...register("email", { required: "Adres email jest wymagany" })}
             className="p-3 rounded-xl bg-white focus:outline-none focus:ring-1 border invalid:border-red-700
             invalid:focus:ring-red-700 invalid:ring-1 invalid:ring-red-700"
             placeholder="Podaj email"
           />
           {errors.email && (
-            <p className="focus:visible:">{errors.email.message}</p>
+            <p className="text-red-600 dark:text-red-700">
+              {errors.email.message}
+            </p>
           )}
         </div>
 
@@ -61,6 +63,11 @@ export default function LoginForm() {
             className="p-3 rounded-xl border bg-white border-black focus:outline-none focus:ring-1 focus:ring-success"
             placeholder="Podaj hasło"
           />
+          {errors.password && (
+            <p className="text-red-600 dark:text-red-700">
+              {errors.password.message}
+            </p>
+          )}
         </div>
 
         <div className="flex flex-col space-y-5 text-md md:text-lg">
