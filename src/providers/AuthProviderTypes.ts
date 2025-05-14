@@ -1,4 +1,13 @@
-export interface RegisterData {
+export interface RegisterInputs {
+  name: string;
+  lastName: string;
+  phoneNumber: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export interface RegisterDataPayload {
   name: string;
   last_name: string;
   phone_number: string;
@@ -18,6 +27,9 @@ export interface AuthContextType {
   role: string;
   logIn: (data: LoginInputs) => Promise<void>;
   logOut: () => void;
-  register: (data: RegisterData, userType: userTypeData) => Promise<void>;
+  register: (
+    data: RegisterDataPayload,
+    userType: userTypeData,
+  ) => Promise<void>;
   isAuthenticated: boolean;
 }
