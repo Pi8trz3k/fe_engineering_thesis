@@ -1,27 +1,17 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import api from "../lib/api.tsx";
+import api from "@/lib/api.tsx";
+import { toast } from "react-toastify";
+import {
+  userTypeData,
+  AuthContextType,
+  LoginInputs,
+  RegisterDataPayload,
+} from "@/providers/AuthProviderTypes.ts";
 
-interface AuthContextType {
-  accessToken: string | null;
-  refreshToken: string | null;
-  role: string;
-  logIn: (email: string, password: string) => Promise<void>;
-  logOut: () => void;
-  register: (
-    name: string,
-    lastName: string,
-    phoneNumber: string,
-    email: string,
-    password: string,
-  ) => Promise<void>;
-  isAuthenticated: boolean;
-}
-
-export const AuthContext = createContext<AuthContextType>({
+export const authContext = createContext<AuthContextType>({
   accessToken: null,
-  refreshToken: null,
   role: "anon",
   logIn: async () => {},
   logOut: () => {},
@@ -33,9 +23,6 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const [accessToken, setAccessToken] = useState<string | null>(
     localStorage.getItem("accessToken"),
   );
-  const [refreshToken, setRefreshToken] = useState<string | null>(
-    localStorage.getItem("refreshToken"),
-  );
   const [role, setRole] = useState<string>("anon");
   const navigate = useNavigate();
 
@@ -45,94 +32,98 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         const decoded = jwtDecode<{ role: string }>(accessToken);
         const currentTime = Math.floor(Date.now() / 1000);
 
-        console.log("decoded: ", decoded);
-
         if (decoded.exp < currentTime) {
           logOut();
         } else {
           setRole(decoded.role);
         }
       } catch (error) {
-        console.log("Invalid token: ", accessToken, ", error: ", error);
+        console.error("Wystąpił błąd: ", error);
         logOut();
       }
     }
   }, []);
 
-  const logIn = async (email: string, password: string) => {
+  const logIn = async (data: LoginInputs) => {
     try {
       const formData = new URLSearchParams();
-      formData.append("username", email); // important: `username`, not `email`
-      formData.append("password", password);
+      formData.append("username", data.email); // important: `username`, not `email`
+      formData.append("password", data.password);
 
       const response = await api.post("/token/login", formData.toString(), {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
       });
 
       const userAccessToken = response.data.access_token;
-      const refreshToken = response.data.refresh_token;
 
       setAccessToken(userAccessToken);
       localStorage.setItem("accessToken", userAccessToken);
-
-      setRefreshToken(refreshToken);
-      localStorage.setItem("refreshToken", refreshToken);
 
       const decoded = jwtDecode<{ role: string }>(userAccessToken);
       setRole(decoded.role);
 
       navigate("/");
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      const statusCode = error.response.status;
+
+      if (statusCode === 401) {
+        toast.error("Nieprawidłowe dane logowania");
+      } else if (statusCode === 404) {
+        toast.error("Użytkownik nie istnieje");
+      } else {
+        toast.error("Wystąpił nieoczekiwany błąd. Spróbuj ponownie później.");
+      }
+      throw error;
     }
   };
 
   const logOut = () => {
     setAccessToken(null);
     localStorage.removeItem("accessToken");
-    setRefreshToken(null);
-    localStorage.removeItem("refreshToken");
     setRole("anon");
 
-    navigate("/");
+    navigate("/login");
+    toast.info("Wylogowano pomyślnie");
   };
 
-  //TODO
-  /*
-  Trzeba dodać obsługe trenera, czyli jakby typ użytkownika który jest rejestrowany
-  Nie wiem czy będzie to dodanie zwykłego type: string do parametrów ale wiadomo
-   */
   const register = async (
-    name: string,
-    last_name: string,
-    email: string,
-    phoneNumber: string,
-    password: string,
+    data: RegisterDataPayload,
+    userType: userTypeData,
   ) => {
-    try {
-      const formData = new FormData();
-      formData.set("name", name);
-      formData.set("last_name", last_name);
-      formData.set("email", email);
-      formData.set("phone_number", phoneNumber);
-      formData.set("password", password);
+    const endpoint = userType === "user" ? "/user/" : "/trainer/";
 
-      await api.post("/user/", formData);
+    try {
+      await api.post(endpoint, data, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      await logIn({ email: data.email, password: data.password });
 
       navigate("/");
-    } catch (error) {
-      console.log("Nie udało się zarejestrować: ", error);
+    } catch (error: any) {
+      const message = error.response.data.detail;
+      if (error.response.status == 422) {
+        if (message === `User with email: ${data.email} already exists`) {
+          toast.error("Użytkownik z podanym mailem już istnieje");
+        } else if (
+          message ===
+          `User with phone number ${data.phone_number} already exists`
+        ) {
+          toast.error("Użytkownik z podanym numerem telefonu już istnieje");
+        }
+      } else {
+        console.log(message);
+        toast.error("Nie udało się zarejestrować");
+      }
+
+      throw error;
     }
   };
-  useEffect(() => {
-    console.log("AuthProvider");
-  }, []);
 
   return (
-    <AuthContext.Provider
+    <authContext.Provider
       value={{
         accessToken,
-        refreshToken,
         role,
         logIn,
         logOut,
@@ -141,6 +132,6 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       }}
     >
       {children}
-    </AuthContext.Provider>
+    </authContext.Provider>
   );
 }

@@ -1,9 +1,10 @@
+import RegisterForm from "@/components/Elements/Forms/RegisterForm.tsx";
+
 export default function RegisterPage() {
   return (
-    <div>
-      <div className={"text-black dark:text-white dark:bg-gray-800"}>
-        RegisterPage
-      </div>
-    </div>
+    <>
+      <title>BeFit.Always - zarejestruj się</title>
+      <RegisterForm />
+    </>
   );
 }

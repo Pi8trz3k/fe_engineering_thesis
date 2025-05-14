@@ -1,9 +1,10 @@
+import LoginForm from "@/components/Elements/Forms/LoginForm.tsx";
+
 export default function LoginPage() {
   return (
-    <div>
-      <div className={"text-black dark:text-white dark:bg-gray-800"}>
-        Login Page
-      </div>
-    </div>
+    <>
+      <title>BeFit.Always - zaloguj się</title>
+      <LoginForm />
+    </>
   );
 }

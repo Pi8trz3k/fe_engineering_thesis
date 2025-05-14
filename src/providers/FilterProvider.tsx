@@ -1,9 +1,5 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 
 export default function FilterProvider({ children }: { children: ReactNode }) {
-  useEffect(() => {
-    console.log("FilterProvider");
-  }, []);
-
   return <>{children}</>;
 }

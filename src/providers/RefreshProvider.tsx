@@ -1,9 +1,5 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 
 export default function RefreshProvider({ children }: { children: ReactNode }) {
-  useEffect(() => {
-    console.log("RefreshProvider");
-  }, []);
-
   return <>{children}</>;
 }
