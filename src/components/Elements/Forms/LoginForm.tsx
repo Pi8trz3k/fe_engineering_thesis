@@ -3,11 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { UseAuth } from "@/hooks/useAuth.tsx";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-
-interface LoginInputs {
-  email: string;
-  password: string;
-}
+import { LoginInputs } from "@/providers/AuthProviderTypes.ts";
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -19,9 +15,9 @@ export default function LoginForm() {
     formState: { errors },
   } = useForm<LoginInputs>();
 
-  const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
+  const onSubmit: SubmitHandler<LoginInputs> = async (data: LoginInputs) => {
     try {
-      await logIn(data.email, data.password);
+      await logIn({ email: data.email, password: data.password });
       toast.info("Zalogowano pomyślnie");
     } catch (error) {
       console.error("Nie udało się zalogować: ", error);
