@@ -3,23 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import api from "@/lib/api.tsx";
 import { toast } from "react-toastify";
-
-interface RegisterData {
-  name: string;
-  last_name: string;
-  phone_number: string;
-  email: string;
-  password: string;
-}
-
-interface AuthContextType {
-  accessToken: string | null;
-  role: string;
-  logIn: (email: string, password: string) => Promise<void>;
-  logOut: () => void;
-  register: (data: RegisterData) => Promise<void>;
-  isAuthenticated: boolean;
-}
+import {
+  RegisterData,
+  userTypeData,
+  AuthContextType,
+  LoginInputs,
+} from "@/providers/AuthProviderTypes.ts";
 
 export const authContext = createContext<AuthContextType>({
   accessToken: null,
@@ -51,17 +40,17 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
           setRole(decoded.role);
         }
       } catch (error) {
-        console.log("Wystąpił błąd: ", error);
+        console.error("Wystąpił błąd: ", error);
         logOut();
       }
     }
   }, []);
 
-  const logIn = async (email: string, password: string) => {
+  const logIn = async (data: LoginInputs) => {
     try {
       const formData = new URLSearchParams();
-      formData.append("username", email); // important: `username`, not `email`
-      formData.append("password", password);
+      formData.append("username", data.email); // important: `username`, not `email`
+      formData.append("password", data.password);
 
       const response = await api.post("/token/login", formData.toString(), {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -99,28 +88,33 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     toast.info("Wylogowano pomyślnie");
   };
 
-  //TODO
-  /*
-  Trzeba dodać obsługe trenera, czyli jakby typ użytkownika który jest rejestrowany
-  Nie wiem czy będzie to dodanie zwykłego type: string do parametrów ale wiadomo
-   */
-  const register = async (data: {
-    name: string;
-    last_name: string;
-    email: string;
-    password: string;
-    phone_number: string;
-  }) => {
+  const register = async (data: RegisterData, userType: userTypeData) => {
+    const endpoint = userType === "user" ? "/user/" : "/trainer/";
+
     try {
-      await api.post("/user/", data, {
+      await api.post(endpoint, data, {
         headers: { "Content-Type": "application/json" },
       });
 
-      await logIn(data.email, data.password);
+      await logIn({ email: data.email, password: data.password });
 
       navigate("/");
     } catch (error: any) {
-      toast.error("Nie udało się zarejestrować");
+      const message = error.response.data.detail;
+      if (error.response.status == 422) {
+        if (message === `User with email: ${data.email} already exists`) {
+          toast.error("Użytkownik z podanym mailem już istnieje");
+        } else if (
+          message ===
+          `User with phone number ${data.phone_number} already exists`
+        ) {
+          toast.error("Użytkownik z podanym numerem telefonu już istnieje");
+        }
+      } else {
+        console.log(message);
+        toast.error("Nie udało się zarejestrować");
+      }
+
       throw error;
     }
   };
