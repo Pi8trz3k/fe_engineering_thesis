@@ -7,7 +7,8 @@ export default function LandingPage() {
     return (
       <>
         {role === "user" && <div>User się zalogował</div>}
-        {role === "admin" && <div>Admin się zalogował</div>}{" "}
+        {role === "admin" && <div>Admin się zalogował</div>}
+        {role === "trainer" && <div>Trener się zalogował</div>}
       </>
     );
   };
