@@ -21,12 +21,18 @@ export default function Header() {
               <AuthNavigationButton
                 text="Zaloguj się"
                 type="login"
-                onClick={() => navigate("/login")}
+                onClick={() => {
+                  navigate("/login");
+                  setIsMenuOpen(!isMenuOpen);
+                }}
               />
               <AuthNavigationButton
                 text="Zarejestruj się"
                 type="register"
-                onClick={() => navigate("/register")}
+                onClick={() => {
+                  navigate("/register");
+                  setIsMenuOpen(!isMenuOpen);
+                }}
               />
             </>
           )}
