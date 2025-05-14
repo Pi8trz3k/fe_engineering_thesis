@@ -4,10 +4,10 @@ import { jwtDecode } from "jwt-decode";
 import api from "@/lib/api.tsx";
 import { toast } from "react-toastify";
 import {
-  RegisterData,
   userTypeData,
   AuthContextType,
   LoginInputs,
+  RegisterDataPayload,
 } from "@/providers/AuthProviderTypes.ts";
 
 export const authContext = createContext<AuthContextType>({
@@ -31,8 +31,6 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const decoded = jwtDecode<{ role: string }>(accessToken);
         const currentTime = Math.floor(Date.now() / 1000);
-
-        console.log("decoded: ", decoded);
 
         if (decoded.exp < currentTime) {
           logOut();
@@ -88,7 +86,10 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     toast.info("Wylogowano pomyślnie");
   };
 
-  const register = async (data: RegisterData, userType: userTypeData) => {
+  const register = async (
+    data: RegisterDataPayload,
+    userType: userTypeData,
+  ) => {
     const endpoint = userType === "user" ? "/user/" : "/trainer/";
 
     try {

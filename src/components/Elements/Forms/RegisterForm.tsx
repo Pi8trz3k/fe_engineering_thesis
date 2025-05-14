@@ -1,21 +1,14 @@
 import { AuthNavigationButton } from "@/components/Elements/Buttons/AuthNavigationButton/AuthNavigationButton.tsx";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { UseAuth } from "@/hooks/useAuth.tsx";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-
-interface RegisterInputs {
-  name: string;
-  lastName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  phoneNumber: string;
-}
+import { useState } from "react";
+import { RegisterInputs, userTypeData } from "@/providers/AuthProviderTypes.ts";
 
 export default function RegisterForm() {
-  const navigate = useNavigate();
   const { register } = UseAuth();
+  const [userType, setUserType] = useState<userTypeData>("user");
 
   const {
     register: reactFormRegister,
@@ -24,7 +17,9 @@ export default function RegisterForm() {
     getValues,
   } = useForm<RegisterInputs>();
 
-  const onSubmit: SubmitHandler<RegisterInputs> = async (data) => {
+  const onSubmit: SubmitHandler<RegisterInputs> = async (
+    data: RegisterInputs,
+  ) => {
     try {
       const payload = {
         name: data.name,
@@ -34,7 +29,7 @@ export default function RegisterForm() {
         phone_number: data.phoneNumber,
       };
 
-      await register(payload);
+      await register(payload, userType);
 
       toast.success("Pomyślnie zarejestrowano!");
     } catch (error) {
@@ -46,6 +41,29 @@ export default function RegisterForm() {
     <div className="flex items-center bg-gray-100 dark:bg-gray-400 p-5 pt-10 mt-10 mx-auto m-auto w-[90%] max-w-[300px] md:max-w-[500px] border rounded-xl border-gray-300 dark:border-gray-500">
       <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-6">
         <h2 className="text-3xl font-semibold text-center mb-6">Rejestracja</h2>
+
+        <div className="flex flex-row items-center gap-x-10 justify-center text-md md:text-2xl">
+          <label className="flex items-center gap-x-2">
+            <input
+              type="radio"
+              name="userType"
+              value="user"
+              checked={userType === "user"}
+              onChange={() => setUserType("user")}
+            />
+            Użytkownik
+          </label>
+          <label className="flex items-center gap-x-2">
+            <input
+              type="radio"
+              name="userType"
+              value="trainer"
+              checked={userType === "trainer"}
+              onChange={() => setUserType("trainer")}
+            />
+            Trener
+          </label>
+        </div>
 
         <div className="flex flex-col">
           <label htmlFor="name" className="mb-1 font-medium">
@@ -96,7 +114,10 @@ export default function RegisterForm() {
             id="phoneNumber"
             {...reactFormRegister("phoneNumber", {
               required: "Numer telefonu jest wymagany",
-              // validate:
+              pattern: {
+                value: /^\+48\d{9}$/,
+                message: "Numer musi mieć format +48xxxxxxxxx",
+              },
             })}
             className="p-3 rounded-xl border bg-white border-black focus:outline-none focus:ring-1 focus:ring-success"
             placeholder="Podaj numer telefonu"
