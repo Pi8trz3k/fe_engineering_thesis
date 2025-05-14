@@ -164,6 +164,11 @@ export default function RegisterForm() {
             id="password"
             {...reactFormRegister("password", {
               required: "Hasło jest wymagane",
+              pattern: {
+                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/,
+                message:
+                  "Hasło musi mieć co najmniej 8 znaków, zawierać dużą i małą literę, cyfrę oraz znak specjalny",
+              },
             })}
             className="p-3 rounded-xl border bg-white border-black focus:outline-none focus:ring-1 focus:ring-success"
             placeholder="Podaj hasło"
