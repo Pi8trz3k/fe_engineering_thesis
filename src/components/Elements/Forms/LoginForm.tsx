@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { UseAuth } from "@/hooks/useAuth.tsx";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { LoginInputs } from "@/providers/AuthProviderTypes.ts";
+import { LoginInputs } from "@/providers/DataTypes/AuthProviderTypes.ts";
 
 export default function LoginForm() {
   const navigate = useNavigate();

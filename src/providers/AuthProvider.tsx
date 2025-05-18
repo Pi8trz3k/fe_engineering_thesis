@@ -8,7 +8,7 @@ import {
   AuthContextType,
   LoginInputs,
   RegisterDataPayload,
-} from "@/providers/AuthProviderTypes.ts";
+} from "@/providers/DataTypes/AuthProviderTypes.ts";
 
 export const authContext = createContext<AuthContextType>({
   accessToken: null,
