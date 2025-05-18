@@ -22,11 +22,26 @@ export default function DataProvider({ children }: { children: ReactNode }) {
     const fetchData = async () => {
       try {
         if (role === "admin") {
-          const response = await api.get("/user/get-all-users");
+          const responseCountUsers = await api.get("/user/get-all-users");
+          const responseAllUsers = await api.get("/user");
+          console.log("User: ", responseAllUsers);
           const result: AdminData = {
-            usersCount: response.data.users,
-            trainersCount: response.data.trainers,
-            adminsCount: response.data.admins,
+            counts: {
+              usersCount: responseCountUsers.data.users,
+              trainersCount: responseCountUsers.data.trainers,
+              adminsCount: responseCountUsers.data.admins,
+            },
+            users: [
+              {
+                name: "Kacper",
+                lastName: "Pietrzak",
+                email: "test@example.com",
+                phoneNumber: "+48123321123",
+                type: "user",
+                isMailVerified: true,
+                isAdmin: false,
+              },
+            ],
           };
           setData({ admin: result });
         }
@@ -36,7 +51,7 @@ export default function DataProvider({ children }: { children: ReactNode }) {
       }
     };
     fetchData();
-  });
+  }, [role, isAuthenticated]);
 
   return (
     <DataContext.Provider value={{ data }}>{children}</DataContext.Provider>
