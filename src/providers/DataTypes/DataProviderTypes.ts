@@ -1,7 +1,20 @@
 export interface AdminData {
-  usersCount: number;
-  trainersCount: number;
-  adminsCount: number;
+  counts: {
+    usersCount: number;
+    trainersCount: number;
+    adminsCount: number;
+  };
+  users: [
+    {
+      name: string;
+      lastName: string;
+      email: string;
+      phoneNumber: string;
+      type: string;
+      isMailVerified: boolean;
+      isAdmin: boolean;
+    },
+  ];
 }
 
 export type RoleData = {
