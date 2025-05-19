@@ -9,7 +9,7 @@ import { UseAuth } from "@/hooks/useAuth.tsx";
 import { toast } from "react-toastify";
 import api from "@/lib/api.tsx";
 
-export const DataContext = createContext<DataContextType>({
+export const dataContext = createContext<DataContextType>({
   data: {},
 });
 
@@ -25,8 +25,10 @@ export default function DataProvider({ children }: { children: ReactNode }) {
         if (role === "admin") {
           const responseCountUsers = await api.get("/user/get-all-users");
           const responseAllUsers = await api.get("/user");
+          console.log(responseAllUsers.data);
           const mappedUsers = responseAllUsers.data.map(
             (user: BackendUser) => ({
+              userID: user.user_id,
               name: user.name,
               lastName: user.last_name,
               email: user.email,
@@ -56,6 +58,6 @@ export default function DataProvider({ children }: { children: ReactNode }) {
   }, [role, isAuthenticated]);
 
   return (
-    <DataContext.Provider value={{ data }}>{children}</DataContext.Provider>
+    <dataContext.Provider value={{ data }}>{children}</dataContext.Provider>
   );
 }

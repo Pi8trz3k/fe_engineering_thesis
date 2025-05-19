@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import { DataContext } from "@/providers/DataProvider.tsx";
+import { dataContext } from "@/providers/DataProvider.tsx";
 
 export const UseData = () => {
-  const context = useContext(DataContext);
+  const context = useContext(dataContext);
   if (!context) {
     throw new Error("useData must be used within DataProvider");
   }
