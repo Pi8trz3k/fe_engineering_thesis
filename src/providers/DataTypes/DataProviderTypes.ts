@@ -14,6 +14,7 @@ interface BaseUser {
 }
 
 export interface BackendUser extends BaseUser {
+  user_id: number;
   last_name: string;
   phone_number: string;
   is_mail_verified: boolean;
@@ -21,6 +22,7 @@ export interface BackendUser extends BaseUser {
 }
 
 export interface FrontendUser extends BaseUser {
+  userID: number;
   lastName: string;
   phoneNumber: string;
   isMailVerified: boolean;
