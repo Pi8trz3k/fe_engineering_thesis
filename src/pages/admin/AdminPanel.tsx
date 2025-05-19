@@ -1,5 +1,6 @@
 import StatCard from "@/components/Elements/Cards/StatCard.tsx";
 import { UseData } from "@/hooks/useData.tsx";
+import UserProfileCard from "@/components/Elements/Cards/UserProfileCard.tsx";
 
 export default function AdminPanel() {
   const { data } = UseData();
@@ -20,6 +21,11 @@ export default function AdminPanel() {
           cardText="Administratorzy"
           value={data.admin?.counts.adminsCount}
         />
+      </div>
+      <div className="pt-5 bg-green-200">
+        {data.admin?.users.map((user) => (
+          <UserProfileCard key={user.email} user={user} />
+        ))}
       </div>
     </>
   );
