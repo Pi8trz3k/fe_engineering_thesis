@@ -4,17 +4,27 @@ export interface AdminData {
     trainersCount: number;
     adminsCount: number;
   };
-  users: [
-    {
-      name: string;
-      lastName: string;
-      email: string;
-      phoneNumber: string;
-      type: string;
-      isMailVerified: boolean;
-      isAdmin: boolean;
-    },
-  ];
+  users: FrontendUser[];
+}
+
+interface BaseUser {
+  name: string;
+  email: string;
+  type: string;
+}
+
+export interface BackendUser extends BaseUser {
+  last_name: string;
+  phone_number: string;
+  is_mail_verified: boolean;
+  is_admin: boolean;
+}
+
+export interface FrontendUser extends BaseUser {
+  lastName: string;
+  phoneNumber: string;
+  isMailVerified: boolean;
+  isAdmin: boolean;
 }
 
 export type RoleData = {

@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import {
   AdminData,
+  BackendUser,
   DataContextType,
   RoleData,
 } from "@/providers/DataTypes/DataProviderTypes.ts";
@@ -24,24 +25,25 @@ export default function DataProvider({ children }: { children: ReactNode }) {
         if (role === "admin") {
           const responseCountUsers = await api.get("/user/get-all-users");
           const responseAllUsers = await api.get("/user");
-          console.log("User: ", responseAllUsers);
+          const mappedUsers = responseAllUsers.data.map(
+            (user: BackendUser) => ({
+              name: user.name,
+              lastName: user.last_name,
+              email: user.email,
+              phoneNumber: user.phone_number,
+              type: user.type,
+              isMailVerified: user.is_mail_verified,
+              isAdmin: user.is_admin,
+            }),
+          );
+
           const result: AdminData = {
             counts: {
               usersCount: responseCountUsers.data.users,
               trainersCount: responseCountUsers.data.trainers,
               adminsCount: responseCountUsers.data.admins,
             },
-            users: [
-              {
-                name: "Kacper",
-                lastName: "Pietrzak",
-                email: "test@example.com",
-                phoneNumber: "+48123321123",
-                type: "user",
-                isMailVerified: true,
-                isAdmin: false,
-              },
-            ],
+            users: mappedUsers,
           };
           setData({ admin: result });
         }
