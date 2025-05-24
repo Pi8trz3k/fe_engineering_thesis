@@ -22,10 +22,8 @@ export default function AdminPanel() {
           value={data.admin?.counts.adminsCount}
         />
       </div>
-      <div className="pt-5 bg-green-200">
-        {data.admin?.users.map((user) => (
-          <UserProfileCard key={user.email} user={user} />
-        ))}
+      <div className="pt-5">
+        <UserProfileCard user={data.admin?.users ?? []} />
       </div>
     </>
   );
