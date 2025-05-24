@@ -25,7 +25,6 @@ export default function DataProvider({ children }: { children: ReactNode }) {
         if (role === "admin") {
           const responseCountUsers = await api.get("/user/get-all-users");
           const responseAllUsers = await api.get("/user");
-          console.log(responseAllUsers.data);
           const mappedUsers = responseAllUsers.data.map(
             (user: BackendUser) => ({
               userID: user.user_id,
