@@ -1,5 +1,6 @@
 import { FrontendUser } from "@/providers/DataTypes/DataProviderTypes.ts";
 import { Table, TableColumnsType } from "antd";
+import { CheckCircleTwoTone, CloseCircleTwoTone } from "@ant-design/icons";
 
 const columns: TableColumnsType<FrontendUser> = [
   {
@@ -20,7 +21,22 @@ const columns: TableColumnsType<FrontendUser> = [
     },
   },
   {
-    title: "Email",
+    title: "Email (weryfikacja)",
+    render: (_, record) => (
+      <div className="flex items-center gap-2">
+        <span>{record.email}</span>
+        {record.isMailVerified ? (
+          <CheckCircleTwoTone twoToneColor="#52c41a" />
+        ) : (
+          <CloseCircleTwoTone twoToneColor="#ff4d4f" />
+        )}
+      </div>
+    ),
+    filters: [
+      { text: "Potwierdzony", value: true },
+      { text: "Niepotwierdzony", value: false },
+    ],
+    onFilter: (_, record) => record.isMailVerified === _,
     dataIndex: "email",
     key: "email",
   },
@@ -28,11 +44,6 @@ const columns: TableColumnsType<FrontendUser> = [
     title: "Telefon",
     dataIndex: "phoneNumber",
     key: "phoneNumber",
-  },
-  {
-    title: "Weryfikacja email",
-    dataIndex: "isMailVerified",
-    key: "isMailVerified",
   },
   {
     title: "Typ konta",
