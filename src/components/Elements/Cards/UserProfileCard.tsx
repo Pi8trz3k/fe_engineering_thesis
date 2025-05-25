@@ -67,7 +67,7 @@ const columns: TableColumnsType<FrontendUser> = [
 
 export default function UserProfileCard({ user }: { user: FrontendUser[] }) {
   return (
-    <>
+    <div className="overflow-x-auto">
       <Table
         dataSource={user}
         columns={columns}
@@ -76,7 +76,8 @@ export default function UserProfileCard({ user }: { user: FrontendUser[] }) {
           pageSize: 15,
           position: ["bottomCenter"],
         }}
+        scroll={{ x: true }}
       />
-    </>
+    </div>
   );
 }
