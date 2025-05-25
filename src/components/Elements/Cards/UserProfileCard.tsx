@@ -57,6 +57,22 @@ const columns: TableColumnsType<FrontendUser> = [
     title: "Typ konta",
     dataIndex: "type",
     key: "type",
+    render: (_, record) => (
+      <div>
+        {record.isAdmin ? (
+          <span>Administrator</span>
+        ) : record.type === "trainer" ? (
+          <span>Trener</span>
+        ) : (
+          <span>Użytkownik</span>
+        )}
+      </div>
+    ),
+    filters: [
+      { text: "Administrator", value: "administrator" },
+      { text: "Użytkownik", value: "user" },
+      { text: "Trener", value: "trainer" },
+    ],
   },
   {
     title: "Uprawnienia admina",
