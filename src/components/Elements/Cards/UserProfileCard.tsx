@@ -1,5 +1,5 @@
 import { FrontendUser } from "@/providers/DataTypes/DataProviderTypes.ts";
-import { Table, TableColumnsType } from "antd";
+import { Table, TableColumnsType, Tooltip } from "antd";
 import { CheckCircleTwoTone, CloseCircleTwoTone } from "@ant-design/icons";
 
 const columns: TableColumnsType<FrontendUser> = [
@@ -25,11 +25,19 @@ const columns: TableColumnsType<FrontendUser> = [
     render: (_, record) => (
       <div className="flex items-center gap-2">
         <span>{record.email}</span>
-        {record.isMailVerified ? (
-          <CheckCircleTwoTone twoToneColor="#52c41a" />
-        ) : (
-          <CloseCircleTwoTone twoToneColor="#ff4d4f" />
-        )}
+        <Tooltip
+          title={
+            record.isMailVerified
+              ? "Email potwierdzony"
+              : "Email niepotwierdzony"
+          }
+        >
+          {record.isMailVerified ? (
+            <CheckCircleTwoTone twoToneColor="#52c41a" />
+          ) : (
+            <CloseCircleTwoTone twoToneColor="#ff4d4f" />
+          )}
+        </Tooltip>
       </div>
     ),
     filters: [
