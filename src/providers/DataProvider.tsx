@@ -32,6 +32,7 @@ export default function DataProvider({ children }: { children: ReactNode }) {
               lastName: user.last_name,
               email: user.email,
               phoneNumber: user.phone_number,
+              status: user.status,
               type: user.type,
               isMailVerified: user.is_mail_verified,
               isAdmin: user.is_admin,

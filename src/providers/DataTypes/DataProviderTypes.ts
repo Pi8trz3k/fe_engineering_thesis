@@ -11,6 +11,7 @@ interface BaseUser {
   name: string;
   email: string;
   type: string;
+  status: string;
 }
 
 export interface BackendUser extends BaseUser {
