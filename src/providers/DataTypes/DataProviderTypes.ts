@@ -36,4 +36,5 @@ export type RoleData = {
 
 export interface DataContextType {
   data: RoleData;
+  fetchData: () => Promise<void>;
 }
