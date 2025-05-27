@@ -18,3 +18,18 @@ export const deleteUser = async (userID: number, fetchData: () => void) => {
     toast.error("Wystąpił błąd podczas usuwania użytkownika: ", error.message);
   }
 };
+
+export const switchAdmin = async (userID: number, fetchData: () => void) => {
+  try {
+    await api.patch(`/user/${userID}/`);
+
+    toast.success("Uprawnienia użytkownika zostały zmienione!");
+    fetchData();
+  } catch (error: any) {
+    console.error(error);
+    toast.error(
+      "Wystąpił błąd podczas zmiany uprawnień użytkownika: ",
+      error.message,
+    );
+  }
+};

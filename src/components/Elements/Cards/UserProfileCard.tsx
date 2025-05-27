@@ -7,7 +7,7 @@ import {
   StopOutlined,
   UserSwitchOutlined,
 } from "@ant-design/icons";
-import { deleteUser } from "@/utils/adminUtils.tsx";
+import { deleteUser, switchAdmin } from "@/utils/adminUtils.tsx";
 import { UseData } from "@/hooks/useData.tsx";
 
 export default function UserProfileCard({ user }: { user: FrontendUser[] }) {
@@ -127,6 +127,9 @@ export default function UserProfileCard({ user }: { user: FrontendUser[] }) {
           >
             <UserSwitchOutlined
               style={{ color: record.isAdmin ? "green" : "red" }}
+              onClick={() => {
+                switchAdmin(record.userID, fetchData);
+              }}
             />
           </Tooltip>
         </span>
