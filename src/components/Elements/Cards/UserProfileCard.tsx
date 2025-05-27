@@ -7,7 +7,7 @@ import {
   StopOutlined,
   UserSwitchOutlined,
 } from "@ant-design/icons";
-import { deleteUser, switchAdmin } from "@/utils/adminUtils.tsx";
+import { changeStatus, deleteUser, switchAdmin } from "@/utils/adminUtils.tsx";
 import { UseData } from "@/hooks/useData.tsx";
 
 export default function UserProfileCard({ user }: { user: FrontendUser[] }) {
@@ -103,7 +103,7 @@ export default function UserProfileCard({ user }: { user: FrontendUser[] }) {
                 ? "Odblokuj użytkownika"
                 : record.status === "active"
                   ? "Zablokuj użytkownika"
-                  : "Użytkownik nieaktywny"
+                  : "Aktywuj użytkownika"
             }
           >
             <StopOutlined
@@ -114,6 +114,14 @@ export default function UserProfileCard({ user }: { user: FrontendUser[] }) {
                     : record.status === "active"
                       ? "green"
                       : "grey",
+              }}
+              onClick={() => {
+                if (record.status === "active") {
+                  changeStatus(record.userID, "blocked", fetchData);
+                } else {
+                  // user blocked or not active
+                  changeStatus(record.userID, "active", fetchData);
+                }
               }}
             />
           </Tooltip>
