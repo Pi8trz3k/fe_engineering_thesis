@@ -33,3 +33,28 @@ export const switchAdmin = async (userID: number, fetchData: () => void) => {
     );
   }
 };
+
+export const changeStatus = async (
+  userID: number,
+  status: string,
+  fetchData: () => void,
+) => {
+  try {
+    await api.patch(
+      `/user/${userID}`,
+      { status: status },
+      {
+        headers: { "Content-Type": "application/json" },
+      },
+    );
+
+    toast.success("Status użytkownika został zmieniony!");
+    fetchData();
+  } catch (error: any) {
+    console.error(error);
+    toast.error(
+      "Wystąpił błąd podczas zmiany statusu użytkownika",
+      error.message,
+    );
+  }
+};
