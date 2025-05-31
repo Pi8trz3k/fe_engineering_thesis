@@ -80,10 +80,14 @@ export default function UserProfileCard({ user }: { user: FrontendUser[] }) {
         </div>
       ),
       filters: [
-        { text: "Administrator", value: "administrator" },
-        { text: "Użytkownik", value: "user" },
+        { text: "Administrator", value: "admin" },
         { text: "Trener", value: "trainer" },
+        { text: "Użytkownik", value: "user" },
       ],
+      onFilter: (_, record) => {
+        if (_ === "admin") return record.isAdmin;
+        return record.type === _;
+      },
     },
     {
       title: "Zarządzaj",
