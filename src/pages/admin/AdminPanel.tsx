@@ -8,7 +8,7 @@ export default function AdminPanel() {
   return (
     <>
       <title>BeFit.Always - panel administratora</title>
-      <div className="flex flex-wrap justify-center pt-10">
+      <div className="flex flex-wrap justify-center">
         <StatCard
           cardText="Użytkownicy"
           value={data.admin?.counts.usersCount}
