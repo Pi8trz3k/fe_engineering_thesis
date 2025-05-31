@@ -15,7 +15,7 @@ export const deleteUser = async (userID: number, fetchData: () => void) => {
     fetchData();
   } catch (error: any) {
     console.error(error);
-    toast.error("Wystąpił błąd podczas usuwania użytkownika: ", error.message);
+    toast.error("Wystąpił błąd podczas usuwania użytkownika");
   }
 };
 
@@ -26,11 +26,13 @@ export const switchAdmin = async (userID: number, fetchData: () => void) => {
     toast.success("Uprawnienia użytkownika zostały zmienione!");
     fetchData();
   } catch (error: any) {
-    console.error(error);
-    toast.error(
-      "Wystąpił błąd podczas zmiany uprawnień użytkownika: ",
-      error.message,
-    );
+    if (error.status === 403) {
+      console.error(error);
+      toast.error("Nie masz odpowiednich uprawnień!");
+    } else {
+      console.error(error);
+      toast.error("Wystąpił błąd podczas zmiany uprawnień użytkownika");
+    }
   }
 };
 
@@ -52,9 +54,6 @@ export const changeStatus = async (
     fetchData();
   } catch (error: any) {
     console.error(error);
-    toast.error(
-      "Wystąpił błąd podczas zmiany statusu użytkownika",
-      error.message,
-    );
+    toast.error("Wystąpił błąd podczas zmiany statusu użytkownika");
   }
 };
