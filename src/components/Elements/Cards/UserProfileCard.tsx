@@ -18,7 +18,6 @@ export default function UserProfileCard({ user }: { user: FrontendUser[] }) {
       title: "ID",
       dataIndex: "userID",
       key: "userID",
-      defaultSortOrder: "ascend",
       sorter: (a, b) => a.userID - b.userID,
     },
     {
@@ -117,7 +116,7 @@ export default function UserProfileCard({ user }: { user: FrontendUser[] }) {
                     ? "red"
                     : record.status === "active"
                       ? "green"
-                      : "grey",
+                      : "black",
               }}
               onClick={() => {
                 if (record.status === "active") {
@@ -160,6 +159,8 @@ export default function UserProfileCard({ user }: { user: FrontendUser[] }) {
           position: ["bottomCenter"],
         }}
         scroll={{ x: true }}
+        // className="dark:bodySortBg400"
+        rowClassName={"dark:bg-gray-300"}
       />
     </div>
   );
