@@ -4,7 +4,10 @@ import { UseAuth } from "@/hooks/useAuth.tsx";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useState } from "react";
-import { RegisterInputs, userTypeData } from "@/providers/AuthProviderTypes.ts";
+import {
+  RegisterInputs,
+  userTypeData,
+} from "@/providers/DataTypes/AuthProviderTypes.ts";
 
 export default function RegisterForm() {
   const { register } = UseAuth();
