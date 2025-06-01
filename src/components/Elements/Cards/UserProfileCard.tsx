@@ -159,7 +159,6 @@ export default function UserProfileCard({ user }: { user: FrontendUser[] }) {
           position: ["bottomCenter"],
         }}
         scroll={{ x: true }}
-        // className="dark:bodySortBg400"
         rowClassName={"dark:bg-gray-300"}
       />
     </div>
