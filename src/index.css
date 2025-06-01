@@ -11,3 +11,19 @@
 @theme {
     --font-sourgummy: "Sour Gummy", sans-serif;
 }
+
+/* style for table header */
+.ant-table-thead > tr > th {
+    background-color: #d1d5db !important; /* bg-gray-300 */
+}
+
+/* table header color in dark mode */
+.dark .ant-table-thead > tr > th {
+    background-color: #9ca3af !important; /* bg-gray-400 */
+}
+
+/* style for sorted cells (background and text) is inherited */
+.ant-table-column-sort {
+    background-color: transparent !important;
+    color: inherit !important;
+}
