@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { dataContext } from "@/providers/DataProvider.tsx";
+import { dataContext } from "@/./context/dataContext.tsx";
 
 export const UseData = () => {
   const context = useContext(dataContext);

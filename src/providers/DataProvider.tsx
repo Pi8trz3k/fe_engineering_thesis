@@ -1,18 +1,13 @@
-import { createContext, ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import {
   AdminData,
   BackendUser,
-  DataContextType,
   RoleData,
 } from "@/providers/DataTypes/DataProviderTypes.ts";
 import { UseAuth } from "@/hooks/useAuth.tsx";
 import { toast } from "react-toastify";
 import api from "@/lib/api.tsx";
-
-export const dataContext = createContext<DataContextType>({
-  data: {},
-  fetchData: async () => {},
-});
+import { dataContext } from "@/./context/dataContext.tsx";
 
 export default function DataProvider({ children }: { children: ReactNode }) {
   const { role, isAuthenticated } = UseAuth();
@@ -49,7 +44,7 @@ export default function DataProvider({ children }: { children: ReactNode }) {
       }
     } catch (error: any) {
       console.error(error);
-      toast.error("Wystąpił błąd podczas pobierania danych: ", error.message);
+      toast.error("Wystąpił błąd podczas pobierania danych");
     }
   };
 
