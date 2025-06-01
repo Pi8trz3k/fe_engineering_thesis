@@ -1,23 +1,14 @@
-import { createContext, ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import api from "@/lib/api.tsx";
 import { toast } from "react-toastify";
 import {
   userTypeData,
-  AuthContextType,
   LoginInputs,
   RegisterDataPayload,
 } from "@/providers/DataTypes/AuthProviderTypes.ts";
-
-export const authContext = createContext<AuthContextType>({
-  accessToken: null,
-  role: "anon",
-  logIn: async () => {},
-  logOut: () => {},
-  register: async () => {},
-  isAuthenticated: false,
-});
+import { authContext } from "@/./context/authContext.tsx";
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const [accessToken, setAccessToken] = useState<string | null>(
