@@ -52,9 +52,9 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-30 bg-gray-100 dark:bg-gray-700 shadow-lg dark:shadow-sm dark:shadow-gray-500">
+      <header className="sticky top-0 z-30 bg-gray-100 dark:bg-gray-700 shadow-lg dark:shadow-none dark:shadow-gray-500">
         <div className="container mx-auto flex items-center justify-between px-4 py-2">
-          <Link to="/" className="font-sourgummy text-2xl text-text-dark">
+          <Link to="/" className="font-sourgummy text-2xl dark:text-white">
             BeFit.<span className="text-primary text-green-600">Always</span>
           </Link>
 
@@ -65,7 +65,7 @@ export default function Header() {
               <>
                 <button
                   onClick={() => setIsMenuOpen(!isMenuOpen)}
-                  className="text-text-dark h-8 w-8 md:hidden"
+                  className=" h-8 w-8 md:hidden"
                   aria-label="Otwórz menu"
                 >
                   <svg viewBox="0 0 20 20" fill="currentColor">
