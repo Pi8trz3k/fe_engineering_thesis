@@ -41,7 +41,7 @@ export default function RegisterForm() {
   };
 
   return (
-    <div className="flex items-center bg-gray-100 dark:bg-gray-400 p-5 pt-10 mt-10 mx-auto m-auto w-[90%] max-w-[300px] md:max-w-[500px] border rounded-xl border-gray-300 dark:border-gray-500">
+    <div className="flex items-center bg-white dark:bg-gray-400 p-5 pt-10 mt-10 mx-auto m-auto w-[90%] max-w-[300px] md:max-w-[500px] border rounded-xl border-gray-300 dark:border-gray-500">
       <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-6">
         <h2 className="text-3xl font-semibold text-center mb-6">Rejestracja</h2>
 
