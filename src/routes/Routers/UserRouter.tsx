@@ -1,5 +1,5 @@
 import { Navigate, useRoutes } from "react-router-dom";
-import LandingPage from "@/pages/anon/LandingPage.tsx";
+import AnonLandingPage from "@/pages/anon/AnonLandingPage.tsx";
 import UserLayout from "@/components/Elements/Layout/UserLayout.tsx";
 import ErrorPage from "@/pages/ErrorPage.tsx";
 
@@ -15,7 +15,7 @@ export default function UserRouter() {
         />
       ),
       children: [
-        { index: true, element: <LandingPage /> },
+        { index: true, element: <AnonLandingPage /> },
         { path: "*", element: <Navigate to="/" /> },
       ],
     },
