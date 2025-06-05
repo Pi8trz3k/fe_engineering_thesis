@@ -1,4 +1,3 @@
-import { UseAuth } from "@/hooks/useAuth.tsx";
 import main_graphic from "@/assets/main-graphic.svg";
 
 const userAndTrainerStyle =
@@ -8,17 +7,6 @@ const h2Style =
 const ulStyle = "dark:text-white list-disc list-inside space-y-2";
 
 export default function LandingPage() {
-  const { role } = UseAuth();
-
-  const func = () => {
-    return (
-      <>
-        {role === "user" && <div>User się zalogował</div>}
-        {role === "trainer" && <div>Trener się zalogował</div>}
-      </>
-    );
-  };
-
   return (
     <>
       <div className="flex flex-col md:flex-row items-center justify-center w-full md:w-[80%] mx-auto mt-15 md:mt-25 pt-6">
@@ -37,7 +25,6 @@ export default function LandingPage() {
             className="rounded-xl w-full max-w-md"
           />
         </div>
-        {func()}
       </div>
 
       <div className="text-center mt-20 md:mt-35 text-green-600 dark:text-white text-2xl md:text-3xl font-extrabold">
