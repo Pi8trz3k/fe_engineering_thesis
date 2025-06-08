@@ -16,6 +16,10 @@ export default function UserRouter() {
       ),
       children: [
         { index: true, element: <UserLandingPage /> },
+        { path: "trainings", element: <UserLandingPage /> },
+        { path: "trainers", element: <UserLandingPage /> },
+        { path: "profile", element: <UserLandingPage /> },
+        { path: "achievements", element: <UserLandingPage /> },
         { path: "*", element: <Navigate to="/" /> },
       ],
     },
