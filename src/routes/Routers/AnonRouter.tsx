@@ -22,7 +22,7 @@ export default function AnonRouter() {
         { path: "login", element: <LoginPage /> },
         { path: "register", element: <RegisterPage /> },
         { path: "login/password-reset", element: <ResetPasswordPage /> },
-        { path: "*", element: <Navigate to="/" /> },
+        { path: "*", element: <Navigate to="/login" /> },
       ],
     },
   ];
