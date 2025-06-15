@@ -83,19 +83,13 @@ export default function Sidebar() {
           />
           <Drawer
             title={
-              <span className="text-xl font-semibold text-black">Menu</span>
+              <span className="text-xl font-semibold text-black dark:text-gray-50">
+                Menu
+              </span>
             }
             placement="left"
             onClick={() => setIsSiderOpen(false)}
             open={isSiderOpen}
-            styles={{
-              header: {
-                backgroundColor: "#bbf7d0",
-              },
-              body: {
-                backgroundColor: "#dcfce7",
-              },
-            }}
           >
             <nav className="flex flex-col gap-4 text-black dark:text-white font-medium">
               {navigationLinks()}
