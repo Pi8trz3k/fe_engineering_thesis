@@ -27,3 +27,28 @@
     background-color: transparent !important;
     color: inherit !important;
 }
+
+.ant-drawer-header {
+    background-color: #bbf7d0;
+}
+
+.ant-drawer-body {
+    background-color: #dcfce7;
+}
+
+.ant-drawer-body * {
+    color: #111827;
+}
+
+.dark .ant-drawer-header {
+    background-color: #111827 !important; /* Tailwind: gray-900 */
+    color: #f9fafb;
+}
+
+.dark .ant-drawer-body {
+    background-color: #1f2937 !important; /* Tailwind: gray-800 */
+}
+
+.dark .ant-drawer-body * {
+    color: #f9fafb !important; /* Tailwind: gray-50 (prawie biel) */
+}
