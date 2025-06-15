@@ -1,5 +1,5 @@
 import { UseAuth } from "@/hooks/useAuth.tsx";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { MenuOutlined } from "@ant-design/icons";
 import { Drawer, Button } from "antd";
@@ -19,30 +19,30 @@ export default function Sidebar() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const NavLink = ({
+  const Link = ({
     to,
     children,
   }: {
     to: string;
     children: React.ReactNode;
   }) => (
-    <Link
+    <NavLink
       to={to}
-      className="text-black dark:text-white hover:text-green-600 transition-colors"
+      className="text-black dark:text-white hover:text-green-600 transition-colors active:border-b-2 border-black}"
     >
       {children}
-    </Link>
+    </NavLink>
   );
 
   const navigationLinks = () => {
     if (role === "user") {
       return (
         <>
-          <NavLink to="/">Panel główny</NavLink>
-          <NavLink to="/trainers">Trenerzy</NavLink>
-          <NavLink to="/trainings">Twoje treningi</NavLink>
-          <NavLink to="/achievements">Osiągnięcia</NavLink>
-          <NavLink to="/profile">Profil</NavLink>
+          <Link to="/">Panel główny</Link>
+          <Link to="/trainers">Trenerzy</Link>
+          <Link to="/trainings">Twoje treningi</Link>
+          <Link to="/achievements">Osiągnięcia</Link>
+          <Link to="/profile">Profil</Link>
         </>
       );
     }
@@ -50,10 +50,10 @@ export default function Sidebar() {
     if (role === "trainer") {
       return (
         <>
-          <NavLink to="/">Panel główny</NavLink>
-          <NavLink to="/clients">Podopieczni</NavLink>
-          <NavLink to="/trainings">Twoje treningi</NavLink>
-          <NavLink to="/profile">Profil</NavLink>
+          <Link to="/">Panel główny</Link>
+          <Link to="/clients">Podopieczni</Link>
+          <Link to="/trainings">Twoje treningi</Link>
+          <Link to="/profile">Profil</Link>
         </>
       );
     }
