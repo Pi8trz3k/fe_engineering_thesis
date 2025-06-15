@@ -52,3 +52,7 @@
 .dark .ant-drawer-body * {
     color: #f9fafb !important; /* Tailwind: gray-50 (prawie biel) */
 }
+
+.dark .ant-drawer-close {
+    color: #f9fafb !important;
+}
