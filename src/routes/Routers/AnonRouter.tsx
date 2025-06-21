@@ -1,5 +1,5 @@
 import { Navigate, useRoutes } from "react-router-dom";
-import LandingPage from "@/pages/anon/LandingPage.tsx";
+import AnonLandingPage from "@/pages/anon/AnonLandingPage.tsx";
 import LoginPage from "@/pages/anon/LoginPage.tsx";
 import RegisterPage from "@/pages/anon/RegisterPage.tsx";
 import AnonLayout from "@/components/Elements/Layout/AnonLayout.tsx";
@@ -18,11 +18,11 @@ export default function AnonRouter() {
         />
       ),
       children: [
-        { index: true, element: <LandingPage /> },
+        { index: true, element: <AnonLandingPage /> },
         { path: "login", element: <LoginPage /> },
         { path: "register", element: <RegisterPage /> },
         { path: "login/password-reset", element: <ResetPasswordPage /> },
-        { path: "*", element: <Navigate to="/" /> },
+        { path: "*", element: <Navigate to="/login" /> },
       ],
     },
   ];

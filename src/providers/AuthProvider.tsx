@@ -33,7 +33,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         logOut();
       }
     }
-  }, []);
+  }, [accessToken]);
 
   const logIn = async (data: LoginInputs) => {
     try {

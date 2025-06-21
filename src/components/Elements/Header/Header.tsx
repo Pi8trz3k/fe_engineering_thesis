@@ -1,11 +1,10 @@
-import { useState } from "react";
 import { UseAuth } from "@/hooks/useAuth.tsx";
 import ThemeToggle from "@/components/Elements/Theme/ThemeToggle.tsx";
 import { AuthNavigationButton } from "@/components/Elements/Buttons/AuthNavigationButton/AuthNavigationButton.tsx";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { LogoutOutlined } from "@ant-design/icons";
 
 export default function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isAuthenticated, logOut } = UseAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,7 +22,6 @@ export default function Header() {
               type="login"
               onClick={() => {
                 navigate("/login");
-                setIsMenuOpen(false);
               }}
             />
             <AuthNavigationButton
@@ -31,7 +29,6 @@ export default function Header() {
               type="register"
               onClick={() => {
                 navigate("/register");
-                setIsMenuOpen(false);
               }}
             />
           </>
@@ -40,11 +37,24 @@ export default function Header() {
     } else {
       return (
         <>
-          <AuthNavigationButton
-            text="Wyloguj się"
-            type="logout"
+          <button
+            className="block md:hidden text-4xl transition-all duration-300 transform hover:scale-105 active:scale-95
+            text-black dark:text-white "
             onClick={logOut}
-          />
+          >
+            <LogoutOutlined
+              className="bg-gray-100 dark:bg-gray-700"
+              title="Wyloguj się"
+            />
+          </button>
+
+          <button
+            className="hidden md:block px-7 py-3 rounded-sm font-semibold shadow-xl transition-all transform hover:scale-105
+      active:scale-95 text-white dark:text-black bg-gray-800 dark:bg-white hover:bg-gray-700 dark:hover:bg-gray-200"
+            onClick={logOut}
+          >
+            Wyloguj się
+          </button>
         </>
       );
     }
@@ -63,33 +73,13 @@ export default function Header() {
 
             {!isAuthPages && (
               <>
-                <button
-                  onClick={() => setIsMenuOpen(!isMenuOpen)}
-                  className=" h-8 w-8 md:hidden"
-                  aria-label="Otwórz menu"
-                >
-                  <svg viewBox="0 0 20 20" fill="currentColor">
-                    <path
-                      fillRule="evenodd"
-                      d="M3 5h14a1 1 0 110 2H3a1 1 0 110-2zm0 4h14a1 1 0 110 2H3a1 1 0 110-2zm0 4h14a1 1 0 110 2H3a1 1 0 110-2z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-
-                <div className="hidden md:flex items-center space-x-4">
+                <div className="sm:flex items-center space-x-4">
                   {menuItems()}
                 </div>
               </>
             )}
           </div>
         </div>
-
-        {!isAuthPages && isMenuOpen && (
-          <div className="md:hidden items-center bg-gray-100 dark:bg-gray-700 shadow-md px-4 py-4 space-x-4 space-y-4">
-            {menuItems()}
-          </div>
-        )}
       </header>
     </>
   );

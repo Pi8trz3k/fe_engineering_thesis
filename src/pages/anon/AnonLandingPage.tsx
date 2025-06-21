@@ -6,7 +6,7 @@ const h2Style =
   "text-xl text-green-700 dark:text-green-400 font-semibold mb-4 text-center";
 const ulStyle = "dark:text-white list-disc list-inside space-y-2";
 
-export default function LandingPage() {
+export default function AnonLandingPage() {
   return (
     <>
       <div className="flex flex-col md:flex-row items-center justify-center w-full md:w-[80%] mx-auto mt-15 md:mt-25 pt-6">
