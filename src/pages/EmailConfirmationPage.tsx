@@ -19,24 +19,23 @@ export default function EmailConfirmationPage() {
       if (actualUser.data.is_mail_verified) {
         toast.success("Twój email jest już potwierdzony");
         navigate("/");
-      }
-
-      if (!token) {
+      } else if (!token) {
         toast.error("Wystąpił błąd podczas potwierdzenia emaila");
         navigate("/");
         setStatus("error");
-      }
-      try {
-        await api.post(`/email-service/confirm-email?token=${token}`, {
-          headers: { "Content-Type": "application/json" },
-        });
+      } else {
+        try {
+          await api.post(`/email-service/confirm-email?token=${token}`, {
+            headers: { "Content-Type": "application/json" },
+          });
 
-        setStatus("success");
-      } catch (error: any) {
-        const message = error.response.data.detail;
-        console.error(message);
-        setStatus("error");
-        toast.error("Wystąpił błąd");
+          setStatus("success");
+        } catch (error: any) {
+          const message = error.response.data.detail;
+          console.error(message);
+          setStatus("error");
+          toast.error("Wystąpił błąd");
+        }
       }
     };
 
@@ -88,10 +87,16 @@ export default function EmailConfirmationPage() {
             Spróbuj ponownie, kliknij przycisk aby wysłać nową wiadomość na twoją skrzynkę!"
             extra={[
               <Button
-                type="default"
+                type="primary"
                 onClick={() => sendEmailAgain()}
                 key="resend"
                 disabled={disabled}
+                style={{
+                  backgroundColor: "#ebe8e8",
+                  color: "black",
+                  borderColor: disabled ? "#ccc" : "#d9d9d9",
+                  cursor: disabled ? "not-allowed" : "pointer",
+                }}
               >
                 Wyślij email ponownie
               </Button>,
