@@ -85,7 +85,7 @@ export default function EmailConfirmationPage() {
             status="error"
             title="Wystąpił błąd!"
             subTitle="Wystąpił błąd podczas potwierdzenia adresu email.
-            Spróbuj ponownie, wysłaliśmy nową wiadomość na twoją skrzynkę!"
+            Spróbuj ponownie, kliknij przycisk aby wysłać nową wiadomość na twoją skrzynkę!"
             extra={[
               <Button
                 type="default"
