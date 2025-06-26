@@ -1,5 +1,5 @@
 import { Button, Result } from "antd";
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import api from "@/lib/api.tsx";
