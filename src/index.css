@@ -56,3 +56,7 @@
 .dark .ant-drawer-close {
     color: #f9fafb !important;
 }
+
+.dark .ant-result-title, .dark .ant-result-subtitle {
+    color: #f9fafb !important;
+}
