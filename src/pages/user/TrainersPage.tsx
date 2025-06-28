@@ -18,7 +18,7 @@ export default function TrainersPage() {
 
     try {
       const trainersResponse = await api.get(
-        `/trainer?skip=${skip}&limit=${PAGE_SIZE}`,
+        `/trainer?skip=${skip}&limit=${PAGE_SIZE}&withReviewsCount=true`,
       );
       console.log(trainersResponse);
       setTrainers(trainersResponse.data);
@@ -42,7 +42,13 @@ export default function TrainersPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {trainers.map((trainer) => (
-            <TrainerCard key={trainer.user_id} />
+            <TrainerCard
+              key={trainer.user_id}
+              name={trainer.name}
+              lastName={trainer.last_name}
+              meanOfStars={trainer.mean_of_stars}
+              opinionsCount={trainer.opinions_count}
+            />
           ))}
         </div>
       )}
