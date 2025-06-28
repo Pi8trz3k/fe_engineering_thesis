@@ -1,9 +1,10 @@
 import { UseAuth } from "@/hooks/useAuth.tsx";
 import ThemeToggle from "@/components/Elements/Theme/ThemeToggle.tsx";
 import { AuthNavigationButton } from "@/components/Elements/Buttons/AuthNavigationButton/AuthNavigationButton.tsx";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { LogoutOutlined, MenuOutlined, CloseOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useState, lazy } from "react";
+const HeaderLink = lazy(() => import("./HeaderLink.tsx"));
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -41,9 +42,7 @@ export default function Header() {
     <>
       <header className="sticky top-0 z-30 bg-gray-100 dark:bg-gray-700 shadow-lg dark:shadow-none dark:shadow-gray-500">
         <div className="container mx-auto flex items-center justify-between px-4 py-2">
-          <Link to="/" className="font-sourgummy text-2xl dark:text-white">
-            BeFit.<span className="text-primary text-green-600">Always</span>
-          </Link>
+          <HeaderLink />
 
           <div className="flex items-center space-x-4">
             <ThemeToggle />

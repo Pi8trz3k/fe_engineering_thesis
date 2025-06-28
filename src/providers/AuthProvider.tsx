@@ -20,7 +20,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (accessToken) {
       try {
-        const decoded = jwtDecode<{ role: string }>(accessToken);
+        const decoded = jwtDecode<{ role: string; exp: number }>(accessToken);
         const currentTime = Math.floor(Date.now() / 1000);
 
         if (decoded.exp < currentTime) {
