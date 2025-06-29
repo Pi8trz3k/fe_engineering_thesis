@@ -3,6 +3,7 @@ import api from "@/lib/api.tsx";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Pagination, Spin } from "antd";
+import { TrainerBackend } from "@/pages/DataTypes/TrainersPageTypes.ts";
 
 const PAGE_SIZE = 12;
 
@@ -18,7 +19,7 @@ export default function TrainersPage() {
 
     try {
       const trainersResponse = await api.get(
-        `/trainer?skip=${skip}&limit=${PAGE_SIZE}&withReviewsCount=true`,
+        `/trainer?skip=${skip}&limit=${PAGE_SIZE}`,
       );
       console.log(trainersResponse);
       setTrainers(trainersResponse.data);
@@ -41,13 +42,14 @@ export default function TrainersPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {trainers.map((trainer) => (
+          {trainers.map((trainer: TrainerBackend) => (
             <TrainerCard
               key={trainer.user_id}
               name={trainer.name}
               lastName={trainer.last_name}
               meanOfStars={trainer.mean_of_stars}
               opinionsCount={trainer.opinions_count}
+              locations={trainer.locations}
             />
           ))}
         </div>
