@@ -45,6 +45,7 @@ export default function TrainersPage() {
           {trainers.map((trainer: TrainerBackend) => (
             <TrainerCard
               key={trainer.user_id}
+              trainerId={trainer.user_id}
               name={trainer.name}
               lastName={trainer.last_name}
               meanOfStars={trainer.mean_of_stars}
@@ -58,7 +59,7 @@ export default function TrainersPage() {
       <div className="mt-6 text-center">
         <Pagination
           current={currentPage}
-          pageSize={12}
+          pageSize={PAGE_SIZE}
           total={20}
           onChange={(page) => setCurrentPage(page)}
           showSizeChanger={false}

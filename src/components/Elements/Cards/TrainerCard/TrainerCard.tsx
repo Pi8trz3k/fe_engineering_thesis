@@ -1,7 +1,9 @@
 import image from "@/pages/user/image.jpg";
 import { TrainerCardProps } from "@/pages/DataTypes/TrainersPageTypes.ts";
+import { useNavigate } from "react-router-dom";
 
 export default function TrainerCard({
+  trainerId,
   name,
   lastName,
   meanOfStars,
@@ -9,6 +11,8 @@ export default function TrainerCard({
   locations,
   types,
 }: TrainerCardProps) {
+  const navigate = useNavigate();
+
   const getTypes = () => {
     let text = "Specjalizacje: ";
     if (types.length > 0) {
@@ -46,7 +50,12 @@ export default function TrainerCard({
             ? `⭐ ${meanOfStars} (Opinie: ${opinionsCount})`
             : `Brak opinii`}
         </span>
-        <button className="text-sm text-white bg-green-500 px-3 py-1 rounded hover:bg-green-600">
+        <button
+          className="text-sm text-white bg-green-500 px-3 py-1 rounded hover:bg-green-600"
+          onClick={() =>
+            navigate(`http://localhost:5173/trainers/${trainerId}`)
+          }
+        >
           Zobacz profil
         </button>
       </div>
