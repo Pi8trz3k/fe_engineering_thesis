@@ -50,6 +50,7 @@ export default function TrainersPage() {
               meanOfStars={trainer.mean_of_stars}
               opinionsCount={trainer.opinions_count}
               locations={trainer.locations}
+              types={trainer.types}
             />
           ))}
         </div>
