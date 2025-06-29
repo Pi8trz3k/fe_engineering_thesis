@@ -15,6 +15,7 @@ export interface TrainerBackend {
 }
 
 export type TrainerCardProps = {
+  trainerId: number;
   name: string;
   lastName: string;
   meanOfStars: number | null;
