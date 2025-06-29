@@ -11,6 +11,7 @@ export interface TrainerBackend {
   mean_of_stars: number;
   opinions_count: number;
   locations: Location[];
+  types: string[];
 }
 
 export type TrainerCardProps = {
@@ -19,4 +20,5 @@ export type TrainerCardProps = {
   meanOfStars: number | null;
   opinionsCount: number | null;
   locations: Location[];
+  types: string[];
 };
