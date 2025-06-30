@@ -11,6 +11,7 @@ export default function TrainersPage() {
   const [trainers, setTrainers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [totalCount, setTotalCount] = useState(0);
 
   const fetchTrainers = async (page: number) => {
     setLoading(true);
@@ -23,6 +24,7 @@ export default function TrainersPage() {
       );
       console.log(trainersResponse);
       setTrainers(trainersResponse.data);
+      setTotalCount(trainersResponse.data.length);
     } catch (error: any) {
       console.error(error);
       toast.error("Wystąpił błąd podczas pobierania danych");
@@ -34,6 +36,7 @@ export default function TrainersPage() {
   useEffect(() => {
     fetchTrainers(currentPage);
   }, [currentPage]);
+
   return (
     <>
       {loading ? (
@@ -60,7 +63,7 @@ export default function TrainersPage() {
         <Pagination
           current={currentPage}
           pageSize={PAGE_SIZE}
-          total={20}
+          total={totalCount}
           onChange={(page) => setCurrentPage(page)}
           showSizeChanger={false}
         />
