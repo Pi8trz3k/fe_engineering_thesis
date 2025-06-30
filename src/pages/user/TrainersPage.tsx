@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Pagination, Spin } from "antd";
 import { TrainerBackend } from "@/pages/DataTypes/TrainersPageTypes.ts";
+import { useFilterData } from "@/utils/TrainersPageData.tsx";
 
 const PAGE_SIZE = 12;
 
@@ -12,6 +13,7 @@ export default function TrainersPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
+  const { cities, fetchFilterData } = useFilterData();
 
   const fetchTrainers = async (page: number) => {
     setLoading(true);
@@ -35,6 +37,7 @@ export default function TrainersPage() {
 
   useEffect(() => {
     fetchTrainers(currentPage);
+    fetchFilterData();
   }, [currentPage]);
 
   return (
@@ -59,6 +62,11 @@ export default function TrainersPage() {
           ))}
         </div>
       )}
+      <div>
+        {cities.map((city) => (
+          <p key={city}>{city}</p>
+        ))}
+      </div>
       <div className="mt-6 text-center">
         <Pagination
           current={currentPage}
