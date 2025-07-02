@@ -1,44 +1,22 @@
 import TrainerCard from "@/components/Elements/Cards/TrainerCard/TrainerCard.tsx";
-import api from "@/lib/api.tsx";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { Pagination, Spin } from "antd";
 import { TrainerBackend } from "@/pages/DataTypes/TrainersPageTypes.ts";
-import { useFilterData } from "@/utils/TrainersPageData.tsx";
-
-const PAGE_SIZE = 12;
+import { useFilterData, useTrainers } from "@/utils/TrainersPageData.tsx";
 
 export default function TrainersPage() {
-  const [trainers, setTrainers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [totalCount, setTotalCount] = useState(0);
-  const { cities, fetchFilterData } = useFilterData();
-
-  const fetchTrainers = async (page: number) => {
-    setLoading(true);
-
-    const skip = (page - 1) * PAGE_SIZE;
-
-    try {
-      const trainersResponse = await api.get(
-        `/trainer?skip=${skip}&limit=${PAGE_SIZE}`,
-      );
-      console.log(trainersResponse);
-      setTrainers(trainersResponse.data);
-      setTotalCount(trainersResponse.data.length);
-    } catch (error: any) {
-      console.error(error);
-      toast.error("Wystąpił błąd podczas pobierania danych");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { cities, trainerTypes, fetchFilterData } = useFilterData();
+  const { trainers, loading, totalCount, fetchTrainers, PAGE_SIZE } =
+    useTrainers();
 
   useEffect(() => {
     fetchTrainers(currentPage);
-    fetchFilterData();
   }, [currentPage]);
+
+  useEffect(() => {
+    fetchFilterData();
+  }, []);
 
   return (
     <>
@@ -62,11 +40,6 @@ export default function TrainersPage() {
           ))}
         </div>
       )}
-      <div>
-        {cities.map((city) => (
-          <p key={city}>{city}</p>
-        ))}
-      </div>
       <div className="mt-6 text-center">
         <Pagination
           current={currentPage}
