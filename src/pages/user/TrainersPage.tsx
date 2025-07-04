@@ -19,11 +19,17 @@ export default function TrainersPage() {
     undefined,
   );
   const [selectedMinStars, setSelectedMinStars] = useState<number>(0);
-  const starOptions = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
+  const starOptions = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
 
   useEffect(() => {
-    fetchTrainers(currentPage);
-  }, [currentPage]);
+    fetchTrainers(
+      currentPage,
+      searchName,
+      selectedCity,
+      selectedType,
+      selectedMinStars,
+    );
+  }, [currentPage, searchName, selectedCity, selectedType, selectedMinStars]);
 
   useEffect(() => {
     fetchFilterData();
@@ -76,7 +82,6 @@ export default function TrainersPage() {
           <span>Min. ocena:</span>
           <Select
             placeholder="Min. ocena"
-            value={selectedMinStars}
             onChange={(value) => {
               setSelectedMinStars(value);
               setCurrentPage(1);
