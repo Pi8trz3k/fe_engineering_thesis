@@ -59,3 +59,8 @@
 .dark .ant-result-title, .dark .ant-result-subtitle {
     color: #f9fafb !important;
 }
+
+.ant-select-selection-placeholder {
+    background-color: #F9FAFB !important;
+    color: #111827 !important;
+}

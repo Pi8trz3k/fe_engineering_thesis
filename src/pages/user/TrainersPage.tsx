@@ -81,7 +81,7 @@ export default function TrainersPage() {
         </Select>
 
         <div className="flex items-center gap-2 max-w-xs">
-          <span>Min. ocena:</span>
+          <span className="dark:text-white">Min. ocena:</span>
           <Select
             placeholder="Min. ocena"
             value={selectedMinStars}
@@ -121,7 +121,7 @@ export default function TrainersPage() {
         </div>
       )}
       {totalCount === 0 ? (
-        <div className="text-center">Brak wyników</div>
+        <div className="text-center dark:text-white">Brak wyników</div>
       ) : (
         <div className="mt-6 text-center">
           <Pagination
