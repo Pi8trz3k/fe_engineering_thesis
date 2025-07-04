@@ -120,15 +120,19 @@ export default function TrainersPage() {
           ))}
         </div>
       )}
-      <div className="mt-6 text-center">
-        <Pagination
-          current={currentPage}
-          pageSize={PAGE_SIZE}
-          total={totalCount}
-          onChange={(page) => setCurrentPage(page)}
-          showSizeChanger={false}
-        />
-      </div>
+      {totalCount === 0 ? (
+        <div className="text-center">Brak wyników</div>
+      ) : (
+        <div className="mt-6 text-center">
+          <Pagination
+            current={currentPage}
+            pageSize={PAGE_SIZE}
+            total={totalCount}
+            onChange={(page) => setCurrentPage(page)}
+            showSizeChanger={false}
+          />
+        </div>
+      )}
     </>
   );
 }

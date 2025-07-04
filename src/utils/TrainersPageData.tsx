@@ -37,7 +37,7 @@ export const useTrainers = () => {
     searchName: string,
     selectedCity: string | undefined,
     selectedType: string | undefined,
-    selectedMinStars: number,
+    selectedMinStars: number | undefined,
   ) => {
     setLoading(true);
 
