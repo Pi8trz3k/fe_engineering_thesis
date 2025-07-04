@@ -18,7 +18,9 @@ export default function TrainersPage() {
   const [selectedType, setSelectedType] = useState<string | undefined>(
     undefined,
   );
-  const [selectedMinStars, setSelectedMinStars] = useState<number>(0);
+  const [selectedMinStars, setSelectedMinStars] = useState<number | undefined>(
+    undefined,
+  );
   const starOptions = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
 
   useEffect(() => {
@@ -82,6 +84,7 @@ export default function TrainersPage() {
           <span>Min. ocena:</span>
           <Select
             placeholder="Min. ocena"
+            value={selectedMinStars}
             onChange={(value) => {
               setSelectedMinStars(value);
               setCurrentPage(1);
