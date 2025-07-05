@@ -9,6 +9,8 @@
 
 @theme {
     --font-sourgummy: "Sour Gummy", sans-serif;
+    --color-green-project: oklch(0.5229 0.152986 147.5892);
+    --bg-green-project: oklch(0.5229 0.152986 147.5892);
 }
 
 /* style for table header */

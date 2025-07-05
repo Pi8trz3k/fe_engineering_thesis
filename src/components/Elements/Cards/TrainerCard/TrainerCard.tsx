@@ -48,13 +48,13 @@ export default function TrainerCard({
       </p>
       <p className="text-sm text-gray-600 dark:text-gray-300">{getTypes()}</p>
       <div className="flex justify-between items-center mt-4">
-        <span className="text-green-600 dark:text-green-400 text-sm">
+        <span className="text-green-project dark:text-green-400 text-sm">
           {opinionsCount
             ? `⭐ ${meanOfStars} (Opinie: ${opinionsCount})`
             : `Brak opinii`}
         </span>
         <button
-          className="text-sm text-white bg-green-500 px-3 py-1 rounded hover:bg-green-600"
+          className="text-sm text-white bg-green-project px-3 py-1 rounded hover:bg-green-600"
           onClick={() =>
             navigate(`http://localhost:5173/trainers/${trainerId}`)
           }
