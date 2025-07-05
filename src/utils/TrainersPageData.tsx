@@ -53,8 +53,8 @@ export const useTrainers = () => {
 
     try {
       const trainersResponse = await api.get(`/trainer`, { params });
-      setTrainers(trainersResponse.data);
-      setTotalCount(trainersResponse.data.length);
+      setTrainers(trainersResponse.data.trainers);
+      setTotalCount(trainersResponse.data.total_count);
 
       if (trainersResponse.data.length === 0) {
         toast.info("Nie znaleziono trenerów");
