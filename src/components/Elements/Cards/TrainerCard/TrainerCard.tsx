@@ -1,4 +1,4 @@
-import image from "@/pages/user/image.jpg";
+import image from "@/pages/user/image.avif";
 import { TrainerCardProps } from "@/pages/DataTypes/TrainersPageTypes.ts";
 import { useNavigate } from "react-router-dom";
 
@@ -32,11 +32,14 @@ export default function TrainerCard({
 
   return (
     <div className="bg-white dark:bg-gray-700 rounded-2xl shadow-md p-4 transition-transform hover:scale-105">
-      <img
-        src={image}
-        alt="trener image"
-        className="rounded-xl h-40 w-full object-cover"
-      />
+      <div className="relative w-full aspect-[4/3]">
+        <img
+          src={image}
+          alt="trener image"
+          className="absolute inset-0 w-full h-full object-cover rounded-xl"
+          loading="lazy"
+        />
+      </div>
       <h3 className="mt-3 text-lg font-semibold text-gray-900 dark:text-white">
         {name} {lastName}
       </h3>
