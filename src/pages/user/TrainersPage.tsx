@@ -74,9 +74,12 @@ export default function TrainersPage() {
           }}
           allowClear
           className="max-w-xs"
+          styles={{ popup: { root: { width: 300 } } }}
         >
           {trainerTypes.map((type) => (
-            <Option key={type}>{type}</Option>
+            <Option key={type} className="">
+              {type}
+            </Option>
           ))}
         </Select>
 
