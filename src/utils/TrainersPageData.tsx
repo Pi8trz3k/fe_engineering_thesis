@@ -53,7 +53,6 @@ export const useTrainers = () => {
 
     try {
       const trainersResponse = await api.get(`/trainer`, { params });
-      console.log(trainersResponse);
       setTrainers(trainersResponse.data);
       setTotalCount(trainersResponse.data.length);
 
