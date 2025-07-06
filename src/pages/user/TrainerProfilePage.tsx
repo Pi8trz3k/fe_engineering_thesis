@@ -69,13 +69,15 @@ export default function TrainerProfilePage({
         </div>
         <div>
           <div>
-            <a className="font-semibold">Miasta: </a>
-            {[...new Set(trainer?.locations.map((loc) => loc.city))].join(", ")}
+            <a className="font-semibold">Dostępne miasta: </a>
+            {[...new Set(trainer?.locations?.map((loc) => loc.city))].join(
+              ", ",
+            ) || "Brak miast."}
           </div>
           <div>
             {" "}
             <span className="font-semibold">Specjalizacje: </span>
-            {trainer?.types?.join(", ") || "Brak specjalizacji."}
+            {trainer?.types?.join(", ") || "Brak specjalizacji"}
           </div>
         </div>
         <div className="bg-red-300">ASKNDajsndajsndjasnd </div>
