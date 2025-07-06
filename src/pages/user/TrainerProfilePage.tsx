@@ -1,9 +1,25 @@
 import emptyProfileCard from "@/assets/emptyProfileCard.avif";
 import { TrainerProfilePageProps } from "@/pages/user/DataTypes/TrainersPageTypes.ts";
+import { useEffect } from "react";
+import api from "@/lib/api.tsx";
+import { toast } from "react-toastify";
 
 export default function TrainerProfilePage({
   trainerId,
 }: TrainerProfilePageProps) {
+  useEffect(() => {
+    const fetchTrainer = async () => {
+      try {
+        const trainerResponse = await api.get(`/trainer/${trainerId}`);
+      } catch (error: any) {
+        console.log(error);
+        toast.error("");
+      }
+    };
+
+    fetchTrainer();
+  });
+
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
