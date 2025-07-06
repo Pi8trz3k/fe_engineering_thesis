@@ -23,3 +23,7 @@ export type TrainerCardProps = {
   locations: Location[];
   types: string[];
 };
+
+export type TrainerProfilePageProps = {
+  trainerId: number;
+};
