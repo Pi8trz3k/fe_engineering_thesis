@@ -14,6 +14,8 @@ export default function TrainerCard({
   const navigate = useNavigate();
 
   const getTypes = () => {
+    if (!types || types.length === 0) return "Brak specjalizacji.";
+
     let text = "Specjalizacje: ";
     if (types.length > 0) {
       for (let i = 0; i < types.length; i++) {
