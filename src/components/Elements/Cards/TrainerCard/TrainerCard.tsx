@@ -1,5 +1,5 @@
 import emptyProfileCard from "@/assets/emptyProfileCard.avif";
-import { TrainerCardProps } from "@/pages/DataTypes/TrainersPageTypes.ts";
+import { TrainerCardProps } from "@/pages/user/DataTypes/TrainersPageTypes.ts";
 import { useNavigate } from "react-router-dom";
 
 export default function TrainerCard({
@@ -54,10 +54,8 @@ export default function TrainerCard({
             : `Brak opinii`}
         </span>
         <button
-          className="text-sm text-white bg-green-project px-3 py-1 rounded hover:bg-green-600"
-          onClick={() =>
-            navigate(`http://localhost:5173/trainers/${trainerId}`)
-          }
+          className="text-sm text-white bg-green-project px-3 py-1 rounded hover:bg-green-600 hover:cursor-pointer"
+          onClick={() => navigate(`/trainers/${trainerId}`)}
         >
           Zobacz profil
         </button>
