@@ -3,7 +3,7 @@ import UserLandingPage from "@/pages/user/UserLandingPage.tsx";
 import UserLayout from "@/components/Elements/Layout/UserLayout.tsx";
 import ErrorPage from "@/pages/ErrorPage.tsx";
 import Trainings from "@/pages/user/Trainings.tsx";
-import Trainers from "@/pages/user/Trainers.tsx";
+import TrainersPage from "@/pages/user/TrainersPage.tsx";
 import UserProfile from "@/pages/UserProfile.tsx";
 import Achievements from "@/pages/user/Achievements.tsx";
 import EmailConfirmationPage from "@/pages/EmailConfirmationPage.tsx";
@@ -22,7 +22,7 @@ export default function UserRouter() {
       children: [
         { index: true, element: <UserLandingPage /> },
         { path: "trainings", element: <Trainings /> },
-        { path: "trainers", element: <Trainers /> },
+        { path: "trainers", element: <TrainersPage /> },
         { path: "profile", element: <UserProfile /> },
         { path: "achievements", element: <Achievements /> },
         { path: "confirm-email", element: <EmailConfirmationPage /> },

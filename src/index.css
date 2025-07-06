@@ -9,6 +9,8 @@
 
 @theme {
     --font-sourgummy: "Sour Gummy", sans-serif;
+    --color-green-project: oklch(0.5229 0.152986 147.5892);
+    --bg-green-project: oklch(0.5229 0.152986 147.5892);
 }
 
 /* style for table header */
@@ -58,4 +60,13 @@
 
 .dark .ant-result-title, .dark .ant-result-subtitle {
     color: #f9fafb !important;
+}
+
+.ant-select-selection-placeholder {
+    background-color: #F9FAFB !important;
+    color: #111827 !important;
+}
+
+.ant-input::placeholder {
+    color: #000000;
 }

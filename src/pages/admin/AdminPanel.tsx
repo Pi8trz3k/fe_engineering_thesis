@@ -1,6 +1,6 @@
-import StatCard from "@/components/Elements/Cards/StatCard.tsx";
+import StatCard from "@/components/Elements/Cards/StatCard/StatCard.tsx";
 import { UseData } from "@/hooks/useData.tsx";
-import UserProfileCard from "@/components/Elements/Cards/UserProfileCard.tsx";
+import UserProfileCard from "@/components/Elements/Cards/UserProfileCard/UserProfileCard.tsx";
 
 export default function AdminPanel() {
   const { data } = UseData();
