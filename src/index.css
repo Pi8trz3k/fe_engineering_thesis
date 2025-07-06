@@ -70,3 +70,7 @@
 .ant-input::placeholder {
     color: #000000;
 }
+
+.dark .ant-pagination-item-link {
+    color: #f9fafb !important;
+}
