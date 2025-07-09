@@ -18,18 +18,17 @@ export default function TrainerProfilePage({
 
   useEffect(() => {
     fetchTrainer(trainerId);
-    fetchOpinions(trainerId, currentOpinionsPage);
   }, [trainerId]);
 
-  if (trainerLoading) {
-    return (
-      <div className="flex justify-center items-center h-96">
-        <Spin size="large" />
-      </div>
-    );
-  }
+  useEffect(() => {
+    fetchOpinions(trainerId, currentOpinionsPage);
+  }, [trainerId, currentOpinionsPage]);
 
-  return (
+  return trainerLoading ? (
+    <div className="flex justify-center items-center h-96">
+      <Spin size="large" />
+    </div>
+  ) : (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 dark:text-white">
         <div className="relative w-[70%] aspect-[4/3] mx-auto">
@@ -47,14 +46,14 @@ export default function TrainerProfilePage({
           </div>
           <div>
             Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. It has survived not
-            only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s
-            with the release of Letraset sheets containing Lorem Ipsum passages,
-            and more recently with desktop publishing software like Aldus
-            PageMaker including versions of Lorem Ipsum.
+            industry. Lorem Ipsum has been the industry&apos;s standard dummy
+            text ever since the 1500s, when an unknown printer took a galley of
+            type and scrambled it to make a type specimen book. It has survived
+            not only five centuries, but also the leap into electronic
+            typesetting, remaining essentially unchanged. It was popularised in
+            the 1960s with the release of Letraset sheets containing Lorem Ipsum
+            passages, and more recently with desktop publishing software like
+            Aldus PageMaker including versions of Lorem Ipsum.
           </div>
         </div>
         <div>
@@ -72,16 +71,22 @@ export default function TrainerProfilePage({
         </div>
         <div className="bg-red-300">ASKNDajsndajsndjasnd </div>
       </div>
-      <p className="mt-5 font-semibold">Opinie:</p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 dark:text-white">
-        {opinions?.map((opinion: OpinionBackend) => (
-          <OpinionCard
-            key={opinion.opinion_id}
-            description={opinion.description}
-            numberOfStars={opinion.number_of_stars}
-          />
-        ))}
-      </div>
+      <p className="mt-5 mb-5 font-semibold dark:text-white">Opinie:</p>
+      {opinionsLoading ? (
+        <div className="flex justify-center my-10">
+          <Spin size="large" />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2  gap-6 dark:text-white">
+          {opinions?.map((opinion: OpinionBackend) => (
+            <OpinionCard
+              key={opinion.opinion_id}
+              description={opinion.description}
+              numberOfStars={opinion.number_of_stars}
+            />
+          ))}
+        </div>
+      )}
     </>
   );
 }
