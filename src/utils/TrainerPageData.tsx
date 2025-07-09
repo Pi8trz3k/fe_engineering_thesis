@@ -38,7 +38,7 @@ export const useOpinions = () => {
   return {
     opinions,
     totalCount,
-    loading: opinionsLoading,
+    opinionsLoading,
     fetchOpinions,
   };
 };
@@ -52,7 +52,7 @@ export const useTrainer = () => {
 
     try {
       const trainerResponse = await api.get(`/trainer/${trainerId}`);
-      setTrainer(trainerResponse.data.trainer);
+      setTrainer(trainerResponse.data);
 
       if (trainerResponse.data.length === 0) {
         toast.info("Nie znaleziono danych");
