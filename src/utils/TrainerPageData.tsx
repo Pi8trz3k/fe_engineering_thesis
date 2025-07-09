@@ -7,7 +7,7 @@ import {
 } from "@/pages/user/DataTypes/TrainersPageTypes.ts";
 
 export const useOpinions = () => {
-  const [opinions, setOpinions] = useState<OpinionBackend>();
+  const [opinions, setOpinions] = useState<OpinionBackend[]>([]);
   const [opinionsLoading, setOpinionsLoading] = useState<boolean>(true);
   const [totalOpinionsCount, setTotalOpinionsCount] = useState<number>(0);
   const OPINION_PAGE_SIZE = 12;
@@ -26,7 +26,6 @@ export const useOpinions = () => {
       const opinionsResponse = await api.get(`/opinion`, { params });
       setOpinions(opinionsResponse.data.opinions);
       setTotalOpinionsCount(opinionsResponse.data.total_count);
-      console.log("opinions: ", opinions);
     } catch (error: any) {
       console.error(error);
       toast.error("Wystąpił błąd podczas pobierania danych");
