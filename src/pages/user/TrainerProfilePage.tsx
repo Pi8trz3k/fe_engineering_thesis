@@ -20,6 +20,7 @@ export default function TrainerProfilePage({
     OPINION_PAGE_SIZE,
   } = useOpinions();
   const [currentOpinionsPage, setCurrentOpinionsPage] = useState(1);
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   useEffect(() => {
     fetchTrainer(trainerId);
@@ -82,15 +83,50 @@ export default function TrainerProfilePage({
           <Spin size="large" />
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2  gap-6 dark:text-white">
-          {opinions?.map((opinion: OpinionBackend) => (
-            <OpinionCard
-              key={opinion.opinion_id}
-              description={opinion.description}
-              numberOfStars={opinion.number_of_stars}
-            />
-          ))}
-        </div>
+        <>
+          {totalOpinionsCount === 0 ? (
+            ""
+          ) : (
+            <div className="flex justify-begin mb-4 gap-2">
+              <button
+                className={`px-3 py-1 rounded border font-semibold ${
+                  sortOrder === "desc"
+                    ? "bg-green-600 text-white dark:border-none"
+                    : "bg-white dark:bg-white"
+                }`}
+                onClick={() => setSortOrder("desc")}
+              >
+                Od najlepszych
+              </button>
+              <button
+                className={`px-3 py-1 rounded border font-semibold ${
+                  sortOrder === "asc"
+                    ? "bg-green-600 text-white dark:border-none"
+                    : "bg-white dark:bg-white"
+                }`}
+                onClick={() => setSortOrder("asc")}
+              >
+                Od najsłabszych
+              </button>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2  gap-6 dark:text-white">
+            {[...opinions]
+              ?.sort((a, b) =>
+                sortOrder === "asc"
+                  ? a.number_of_stars - b.number_of_stars
+                  : b.number_of_stars - a.number_of_stars,
+              )
+              .map((opinion: OpinionBackend) => (
+                <OpinionCard
+                  key={opinion.opinion_id}
+                  description={opinion.description}
+                  numberOfStars={opinion.number_of_stars}
+                />
+              ))}
+          </div>
+        </>
       )}
       {totalOpinionsCount === 0 ? (
         <div className="dark:text-white">Brak opinii</div>
