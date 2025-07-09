@@ -1,37 +1,27 @@
 import emptyProfileCard from "@/assets/emptyProfileCard.avif";
 import {
-  TrainerBackend,
+  OpinionBackend,
   TrainerProfilePageProps,
 } from "@/pages/user/DataTypes/TrainersPageTypes.ts";
 import { useEffect, useState } from "react";
-import api from "@/lib/api.tsx";
-import { toast } from "react-toastify";
 import { Spin } from "antd";
+import OpinionCard from "@/components/Elements/Cards/OpinionCard/OpinionCard.tsx";
+import { useOpinions, useTrainer } from "@/utils/TrainerPageData.tsx";
 
 export default function TrainerProfilePage({
   trainerId,
 }: TrainerProfilePageProps) {
-  const [trainer, setTrainer] = useState<TrainerBackend>();
-  const [loading, setLoading] = useState(false);
+  const { trainer, trainerLoading, fetchTrainer } = useTrainer();
+  const { opinions, totalCount, opinionsLoading, fetchOpinions } =
+    useOpinions();
+  const [currentOpinionsPage, setCurrentOpinionsPage] = useState(1);
 
   useEffect(() => {
-    const fetchTrainer = async () => {
-      setLoading(true);
-      try {
-        const trainerResponse = await api.get(`/trainer/${trainerId}`);
-        setTrainer(trainerResponse.data);
-      } catch (error: any) {
-        console.log(error);
-        toast.error("Nie udało się pobrać danych");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTrainer();
+    fetchTrainer(trainerId);
+    fetchOpinions(trainerId, currentOpinionsPage);
   }, [trainerId]);
 
-  if (loading) {
+  if (trainerLoading) {
     return (
       <div className="flex justify-center items-center h-96">
         <Spin size="large" />
@@ -81,7 +71,16 @@ export default function TrainerProfilePage({
           </div>
         </div>
         <div className="bg-red-300">ASKNDajsndajsndjasnd </div>
-        <div className="bg-brown-300">{trainerId} </div>
+      </div>
+      <p className="mt-5 font-semibold">Opinie:</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 dark:text-white">
+        {opinions?.map((opinion: OpinionBackend) => (
+          <OpinionCard
+            key={opinion.opinion_id}
+            description={opinion.description}
+            numberOfStars={opinion.number_of_stars}
+          />
+        ))}
       </div>
     </>
   );
