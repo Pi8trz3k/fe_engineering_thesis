@@ -9,7 +9,7 @@ import {
 export const useOpinions = () => {
   const [opinions, setOpinions] = useState<OpinionBackend>();
   const [opinionsLoading, setOpinionsLoading] = useState<boolean>(true);
-  const [totalCount, setTotalCount] = useState<number>(0);
+  const [totalOpinionsCount, setTotalOpinionsCount] = useState<number>(0);
   const OPINION_PAGE_SIZE = 12;
 
   const fetchOpinions = async (trainerId: number, page: number) => {
@@ -25,7 +25,7 @@ export const useOpinions = () => {
     try {
       const opinionsResponse = await api.get(`/opinion`, { params });
       setOpinions(opinionsResponse.data.opinions);
-      setTotalCount(opinionsResponse.data.total_count);
+      setTotalOpinionsCount(opinionsResponse.data.total_count);
       console.log("opinions: ", opinions);
     } catch (error: any) {
       console.error(error);
@@ -37,9 +37,10 @@ export const useOpinions = () => {
 
   return {
     opinions,
-    totalCount,
+    totalOpinionsCount,
     opinionsLoading,
     fetchOpinions,
+    OPINION_PAGE_SIZE,
   };
 };
 
