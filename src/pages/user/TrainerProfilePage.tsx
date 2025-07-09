@@ -4,7 +4,7 @@ import {
   TrainerProfilePageProps,
 } from "@/pages/user/DataTypes/TrainersPageTypes.ts";
 import { useEffect, useState } from "react";
-import { Spin } from "antd";
+import { Pagination, Spin } from "antd";
 import OpinionCard from "@/components/Elements/Cards/OpinionCard/OpinionCard.tsx";
 import { useOpinions, useTrainer } from "@/utils/TrainerPageData.tsx";
 
@@ -12,8 +12,13 @@ export default function TrainerProfilePage({
   trainerId,
 }: TrainerProfilePageProps) {
   const { trainer, trainerLoading, fetchTrainer } = useTrainer();
-  const { opinions, totalCount, opinionsLoading, fetchOpinions } =
-    useOpinions();
+  const {
+    opinions,
+    totalOpinionsCount,
+    opinionsLoading,
+    fetchOpinions,
+    OPINION_PAGE_SIZE,
+  } = useOpinions();
   const [currentOpinionsPage, setCurrentOpinionsPage] = useState(1);
 
   useEffect(() => {
@@ -61,7 +66,7 @@ export default function TrainerProfilePage({
             <a className="font-semibold">Dostępne miasta: </a>
             {[...new Set(trainer?.locations?.map((loc) => loc.city))].join(
               ", ",
-            ) || "Brak miast."}
+            ) || "Brak miast"}
           </div>
           <div>
             {" "}
@@ -85,6 +90,19 @@ export default function TrainerProfilePage({
               numberOfStars={opinion.number_of_stars}
             />
           ))}
+        </div>
+      )}
+      {totalOpinionsCount === 0 ? (
+        <div className="dark:text-white">Brak opinii</div>
+      ) : (
+        <div className="mt-6 text-center">
+          <Pagination
+            current={currentOpinionsPage}
+            pageSize={OPINION_PAGE_SIZE}
+            total={totalOpinionsCount}
+            onChange={(page) => setCurrentOpinionsPage(page)}
+            showSizeChanger={false}
+          />
         </div>
       )}
     </>
