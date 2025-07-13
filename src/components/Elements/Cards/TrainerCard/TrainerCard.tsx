@@ -1,6 +1,8 @@
-import emptyProfileCard from "@/assets/emptyProfileCard.avif";
 import { TrainerCardProps } from "@/pages/user/DataTypes/TrainersPageTypes.ts";
 import { useNavigate } from "react-router-dom";
+import { usePicture } from "@/utils/TrainerPageData.tsx";
+import { Spin } from "antd";
+import { useEffect } from "react";
 
 export default function TrainerCard({
   trainerId,
@@ -12,6 +14,7 @@ export default function TrainerCard({
   types,
 }: TrainerCardProps) {
   const navigate = useNavigate();
+  const { img, imgLoading, fetchImage } = usePicture();
 
   const getTypes = () => {
     if (!types || types.length === 0) return "Brak specjalizacji.";
@@ -32,16 +35,27 @@ export default function TrainerCard({
     }
   };
 
+  useEffect(() => {
+    fetchImage(trainerId);
+  }, [trainerId]);
+
   return (
     <div className="bg-white dark:bg-gray-700 rounded-2xl shadow-md p-4 transition-transform hover:scale-105">
-      <div className="relative w-full aspect-[4/3]">
-        <img
-          src={emptyProfileCard}
-          alt="trener image"
-          className="absolute inset-0 w-full h-full object-cover rounded-xl"
-          loading="lazy"
-        />
-      </div>
+      {imgLoading ? (
+        <div className="flex justify-center items-center h-96">
+          <Spin size="large" />
+        </div>
+      ) : (
+        <div className="relative w-full aspect-[4/3]">
+          <img
+            src={img}
+            alt="trener image"
+            className="absolute inset-0 w-full h-full object-cover rounded-xl"
+            loading="lazy"
+          />
+        </div>
+      )}
+
       <h3 className="mt-3 text-lg font-semibold text-gray-900 dark:text-white">
         {name} {lastName}
       </h3>
