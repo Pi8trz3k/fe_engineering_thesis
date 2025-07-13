@@ -1,4 +1,3 @@
-import emptyProfileCard from "@/assets/emptyProfileCard.avif";
 import {
   OpinionBackend,
   TrainerProfilePageProps,
@@ -6,7 +5,11 @@ import {
 import { useEffect, useState } from "react";
 import { Pagination, Spin } from "antd";
 import OpinionCard from "@/components/Elements/Cards/OpinionCard/OpinionCard.tsx";
-import { useOpinions, useTrainer } from "@/utils/TrainerPageData.tsx";
+import {
+  useOpinions,
+  usePicture,
+  useTrainer,
+} from "@/utils/TrainerPageData.tsx";
 
 export default function TrainerProfilePage({
   trainerId,
@@ -19,6 +22,7 @@ export default function TrainerProfilePage({
     fetchOpinions,
     OPINION_PAGE_SIZE,
   } = useOpinions();
+  const { img, imgLoading, fetchImage } = usePicture();
   const [currentOpinionsPage, setCurrentOpinionsPage] = useState(1);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
@@ -30,6 +34,10 @@ export default function TrainerProfilePage({
     fetchOpinions(trainerId, currentOpinionsPage);
   }, [trainerId, currentOpinionsPage]);
 
+  useEffect(() => {
+    fetchImage(trainerId);
+  }, [trainerId]);
+
   return trainerLoading ? (
     <div className="flex justify-center items-center h-96">
       <Spin size="large" />
@@ -37,14 +45,20 @@ export default function TrainerProfilePage({
   ) : (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 dark:text-white">
-        <div className="relative w-[70%] aspect-[4/3] mx-auto">
-          <img
-            src={emptyProfileCard}
-            alt="trener image"
-            className="absolute inset-0 w-full h-full object-cover rounded-xl"
-            loading="lazy"
-          />
-        </div>
+        {imgLoading ? (
+          <div className="flex justify-center items-center h-96">
+            <Spin size="large" />
+          </div>
+        ) : (
+          <div className="relative w-[65%] aspect-[4/3] mx-auto">
+            <img
+              src={img}
+              alt="Trainer image"
+              className="absolute inset-0 w-full h-full object-cover rounded-xl"
+              loading="lazy"
+            />
+          </div>
+        )}
 
         <div>
           <div className="font-bold">
