@@ -77,19 +77,22 @@ export const usePicture = () => {
     setImgLoading(true);
 
     try {
-      const imageResponse = await api.get(`/file/${trainerId}`, {
-        responseType: "blob",
-      });
-      const imageBlob = await imageResponse.data;
-      const imageObjectURL = URL.createObjectURL(imageBlob);
-      setImg(imageObjectURL);
+      await api
+        .get(`/file/${trainerId}`, {
+          responseType: "blob",
+        })
+        .then((res) => {
+          if (res.status === 204) {
+            setImg(defaultAvatar);
+          } else {
+            const imageBlob = res.data;
+            const imageObjectURL = URL.createObjectURL(imageBlob);
+            setImg(imageObjectURL);
+          }
+        });
     } catch (error: any) {
-      if (error.response?.status === 404) {
-        setImg(defaultAvatar);
-      } else {
-        console.error(error);
-        toast.error("Wystąpił błąd podczas pobierania danych");
-      }
+      console.error(error);
+      toast.error("Wystąpił błąd podczas pobierania danych");
     } finally {
       setImgLoading(false);
     }
