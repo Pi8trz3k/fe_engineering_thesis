@@ -42,7 +42,7 @@ export default function TrainerCard({
   return (
     <div className="bg-white dark:bg-gray-700 rounded-2xl shadow-md p-4 transition-transform hover:scale-105">
       {imgLoading ? (
-        <div className="flex justify-center items-center h-96">
+        <div className="flex justify-center items-center h-96 ">
           <Spin size="large" />
         </div>
       ) : (
@@ -50,7 +50,7 @@ export default function TrainerCard({
           <img
             src={img}
             alt="trener image"
-            className="absolute inset-0 w-full h-full object-cover rounded-xl"
+            className="absolute inset-0 w-full h-full object-cover rounded-xl object-top"
             loading="lazy"
           />
         </div>

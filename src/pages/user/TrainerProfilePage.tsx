@@ -54,7 +54,7 @@ export default function TrainerProfilePage({
             <img
               src={img}
               alt="Trainer image"
-              className="absolute inset-0 w-full h-full object-cover rounded-xl"
+              className="absolute inset-0 w-full h-full object-cover rounded-xl object-top"
               loading="lazy"
             />
           </div>

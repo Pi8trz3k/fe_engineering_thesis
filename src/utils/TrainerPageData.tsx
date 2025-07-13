@@ -5,7 +5,7 @@ import {
   OpinionBackend,
   TrainerBackend,
 } from "@/pages/user/DataTypes/TrainersPageTypes.ts";
-import emptyProfileCard from "@/assets/emptyProfileCard.avif";
+import defaultAvatar from "@/assets/defaultAvatar.avif";
 
 export const useOpinions = () => {
   const [opinions, setOpinions] = useState<OpinionBackend[]>([]);
@@ -85,7 +85,7 @@ export const usePicture = () => {
       setImg(imageObjectURL);
     } catch (error: any) {
       if (error.response?.status === 404) {
-        setImg(emptyProfileCard);
+        setImg(defaultAvatar);
       } else {
         console.error(error);
         toast.error("Wystąpił błąd podczas pobierania danych");
