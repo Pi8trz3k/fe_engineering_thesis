@@ -3,13 +3,15 @@ import {
   TrainerProfilePageProps,
 } from "@/pages/user/DataTypes/TrainersPageTypes.ts";
 import { useEffect, useState } from "react";
-import { Pagination, Spin, Input, Button, message } from "antd";
+import { Pagination, Spin, Input, Button } from "antd";
 import OpinionCard from "@/components/Elements/Cards/OpinionCard/OpinionCard.tsx";
 import {
   useOpinions,
   usePicture,
   useTrainer,
 } from "@/utils/TrainerPageData.tsx";
+import { toast } from "react-toastify";
+import api from "@/lib/api.tsx";
 
 export default function TrainerProfilePage({
   trainerId,
@@ -41,8 +43,30 @@ export default function TrainerProfilePage({
 
   const handleSubmit = async () => {
     if (!messageToTrainer.trim()) {
-      message.warning("Wiadomość nie może być pusta.");
+      toast.error("Wiadomość nie może być pusta!");
       return;
+    }
+
+    try {
+      await api.post(
+        "/user-trainer/",
+        {
+          trainer_id: trainerId,
+          message_to_trainer: messageToTrainer,
+        },
+        { headers: { "Content-Type": "application/json" } },
+      );
+
+      toast.success("Wysłano zapytanie do trenera");
+      setMessageToTrainer("");
+    } catch (error: any) {
+      if (error.status === 400) {
+        console.error(error);
+        toast.error("Zapytanie do trenera zostało już wysłane!");
+      } else {
+        console.error(error);
+        toast.error("Wystąpił błąd podczas wysyłania zapytania");
+      }
     }
   };
 
@@ -58,7 +82,7 @@ export default function TrainerProfilePage({
             <Spin size="large" />
           </div>
         ) : (
-          <div className="relative w-[90%] aspect-[4/3] mx-auto">
+          <div className="relative w-[80%] lg:w-[70%] aspect-[4/3] mx-auto">
             <img
               src={img}
               alt="Trainer image"
@@ -78,33 +102,51 @@ export default function TrainerProfilePage({
 
           <div>
             <p className="font-semibold">Opis:</p>
-            <p className="italic text-gray-500 dark:text-gray-300">
-              {trainer?.description || "Brak opisu"}
-            </p>
+            {trainer?.description || (
+              <a className="italic text-gray-600 dark:text-gray-200">
+                Brak opisu
+              </a>
+            )}
           </div>
 
           <div>
             <p className="font-semibold">Dostępne miasta:</p>
             <p>
-              {[...new Set(trainer?.locations?.map((loc) => loc.city))].join(
-                ", ",
-              ) || "Brak miast"}
+              {trainer?.locations && trainer.locations.length > 0 ? (
+                [
+                  ...new Set(
+                    trainer.locations.map(
+                      (loc) => `${loc.city} (${loc.district})`,
+                    ),
+                  ),
+                ].join(", ")
+              ) : (
+                <span className="italic text-gray-600 dark:text-gray-200">
+                  Brak lokalizacji
+                </span>
+              )}
             </p>
           </div>
 
           <div>
             <p className="font-semibold">Specjalizacje:</p>
-            <p>{trainer?.types?.join(", ") || "Brak specjalizacji"}</p>
+            <p>
+              {trainer?.types?.join(", ") || (
+                <a className="italic text-gray-600 dark:text-gray-200">
+                  Brak specjalizacji
+                </a>
+              )}
+            </p>
           </div>
         </div>
       </div>
       <div className="mt-8 w-[95%] md:w-[50%] m-auto dark:text-white ">
-        <a>Zapytaj o współpracę, wyślij wiadomość do trenera: </a>
+        <a>Zapytaj o współpracę wysyłając wiadomość do trenera: </a>
         <Input.TextArea
           value={messageToTrainer}
           onChange={(e) => setMessageToTrainer(e.target.value)}
           rows={5}
-          placeholder="Witam,szukam trenera personalnego do współpracy, który pomoże mi..."
+          placeholder="Witam, szukam trenera personalnego do współpracy, który pomoże mi..."
         />
         <div className="flex justify-center mt-3">
           <Button
