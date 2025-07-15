@@ -7,6 +7,7 @@ import TrainersPage from "@/pages/user/TrainersPage.tsx";
 import UserProfile from "@/pages/UserProfile.tsx";
 import Achievements from "@/pages/user/Achievements.tsx";
 import EmailConfirmationPage from "@/pages/EmailConfirmationPage.tsx";
+import TrainerProfilePageWrapper from "@/pages/user/TrainerProfilePageWrapper.tsx";
 
 export default function UserRouter() {
   const userRoutes = [
@@ -23,6 +24,10 @@ export default function UserRouter() {
         { index: true, element: <UserLandingPage /> },
         { path: "trainings", element: <Trainings /> },
         { path: "trainers", element: <TrainersPage /> },
+        {
+          path: "trainers/:trainerId",
+          element: <TrainerProfilePageWrapper />,
+        },
         { path: "profile", element: <UserProfile /> },
         { path: "achievements", element: <Achievements /> },
         { path: "confirm-email", element: <EmailConfirmationPage /> },

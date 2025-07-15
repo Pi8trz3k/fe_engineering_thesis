@@ -63,10 +63,13 @@
 }
 
 .ant-select-selection-placeholder {
-    background-color: #F9FAFB !important;
     color: #111827 !important;
 }
 
 .ant-input::placeholder {
     color: #000000;
+}
+
+.dark .ant-pagination-item-link {
+    color: #f9fafb !important;
 }

@@ -1,7 +1,7 @@
 import TrainerCard from "@/components/Elements/Cards/TrainerCard/TrainerCard.tsx";
 import { useEffect, useState } from "react";
 import { Pagination, Spin, Input, Select } from "antd";
-import { TrainerBackend } from "@/pages/DataTypes/TrainersPageTypes.ts";
+import { TrainerBackend } from "@/pages/user/DataTypes/TrainersPageTypes.ts";
 import { useFilterData, useTrainers } from "@/utils/TrainersPageData.tsx";
 
 export default function TrainersPage() {

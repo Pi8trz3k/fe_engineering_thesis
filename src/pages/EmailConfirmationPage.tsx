@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import api from "@/lib/api.tsx";
-import { statusTypes } from "@/pages/DataTypes/EmailConfirmationPage.ts";
+import { statusTypes } from "@/pages/user/DataTypes/EmailConfirmationPage.ts";
 
 export default function EmailConfirmationPage() {
   const [searchParams] = useSearchParams();

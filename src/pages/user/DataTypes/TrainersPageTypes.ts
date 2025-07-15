@@ -12,6 +12,7 @@ export interface TrainerBackend {
   opinions_count: number;
   locations: Location[];
   types: string[];
+  description: string;
 }
 
 export type TrainerCardProps = {
@@ -22,4 +23,21 @@ export type TrainerCardProps = {
   opinionsCount: number | null;
   locations: Location[];
   types: string[];
+};
+
+export type TrainerProfilePageProps = {
+  trainerId: number;
+};
+
+export type OpinionBackend = {
+  opinion_id: number;
+  description: string;
+  number_of_stars: number;
+  user_id: number;
+  trainer_id: number;
+};
+
+export type OpinionCardProps = {
+  description: string;
+  numberOfStars: number;
 };
