@@ -5,11 +5,8 @@ import {
 import { useEffect, useState } from "react";
 import { Pagination, Spin, Input, Button } from "antd";
 import OpinionCard from "@/components/Elements/Cards/OpinionCard/OpinionCard.tsx";
-import {
-  useOpinions,
-  usePicture,
-  useTrainer,
-} from "@/utils/TrainerPageData.tsx";
+import { useOpinions, useTrainer } from "@/utils/TrainerPageData.tsx";
+import { usePicture } from "@/utils/PictureProvider.tsx";
 import { toast } from "react-toastify";
 import api from "@/lib/api.tsx";
 
