@@ -20,7 +20,6 @@ export default function UserProfile() {
     const fetchActualUser = async () => {
       try {
         const response = await api.get("/token/me");
-        console.log("response", response.data);
         setUser(response.data);
       } catch (error: any) {
         toast.error("Wystąpił błąd podczas pobierania danych!");
@@ -60,49 +59,53 @@ export default function UserProfile() {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-10 dark:text-white mt-6">
-      {/* left side */}
-      <div className="flex flex-col items-center gap-6 w-full lg:w-1/2">
-        {imgLoading ? (
-          <div className="flex justify-center items-center h-96 w-full">
-            <Spin size="large" />
-          </div>
-        ) : (
-          <div className="relative w-[80%] aspect-[4/3]">
-            <img
-              src={img}
-              alt="Profile picture"
-              className="absolute inset-0 w-full h-full object-cover rounded-xl object-top"
-              loading="lazy"
-            />
-          </div>
-        )}
+    <div className="flex flex-col gap-6 dark:text-white mt-6">
+      {/* Zdjęcie i dane użytkownika/trenera */}
+      <div className="flex flex-col lg:flex-row gap-6">
+        {/* Zdjęcie + upload */}
+        <div className="flex flex-col items-center gap-4 lg:w-1/2">
+          {imgLoading ? (
+            <div className="flex justify-center items-center h-96 w-full">
+              <Spin size="large" />
+            </div>
+          ) : (
+            <div className="relative w-[80%] aspect-[4/3]">
+              <img
+                src={img}
+                alt="Trainer image"
+                className="absolute inset-0 w-full h-full object-cover rounded-xl object-top"
+                loading="lazy"
+              />
+            </div>
+          )}
 
-        <div className="flex flex-col items-center gap-2">
           <input
             type="file"
             accept="image/*"
             onChange={(e) => {
-              if (e.target.files?.[0]) setFile(e.target.files[0]);
+              if (e.target.files?.[0]) {
+                setFile(e.target.files[0]);
+              }
             }}
-            className="text-md"
           />
           <Button onClick={handleUpload} icon={<UploadOutlined />}>
             Prześlij zdjęcie
           </Button>
         </div>
 
-        <div className="w-full max-w-md">
-          <ChangePasswordSection />
+        {/* Dane użytkownika/trenera */}
+        <div className="lg:w-1/2">
+          <UserProfileContent user={user} />
         </div>
       </div>
 
-      {/* right side */}
-      <div className="w-full lg:w-1/2">
-        {role === "user" ? (
-          <UserProfileContent user={user} />
-        ) : (
-          <TrainerProfileContent />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div>
+          <ChangePasswordSection />
+        </div>
+
+        {role === "trainer" && user?.user_id && (
+          <TrainerProfileContent trainerId={user.user_id} />
         )}
       </div>
     </div>
