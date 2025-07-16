@@ -10,7 +10,7 @@ export default function ChangePasswordSection() {
     confirm_password: "",
   });
 
-  const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+  const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/;
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -20,7 +20,7 @@ export default function ChangePasswordSection() {
   const handleSubmit = async () => {
     if (!PASSWORD_REGEX.test(formData.new_password)) {
       toast.error(
-        "Hasło musi mieć co najmniej 8 znaków, zawierać dużą i małą literę, cyfrę oraz znak specjalny",
+        "Hasło musi mieć co najmniej 8 znaków, zawierać dużą, małą literę, cyfrę oraz znak specjalny",
       );
       return;
     }
@@ -31,7 +31,7 @@ export default function ChangePasswordSection() {
     }
 
     try {
-      await api.post("/users/change-password", {
+      await api.post("/token/change-password", {
         old_password: formData.current_password,
         new_password: formData.new_password,
       });
@@ -43,8 +43,12 @@ export default function ChangePasswordSection() {
         confirm_password: "",
       });
     } catch (error: any) {
+      if (error.response.data.detail == "Stare hasło jest nieprawidłowe") {
+        toast.error("Aktualne hasło jest nieprawdiłowe");
+      } else {
+        toast.error("Nie udało się zmienić hasła.");
+      }
       console.error(error);
-      toast.error("Nie udało się zmienić hasła.");
     }
   };
 
