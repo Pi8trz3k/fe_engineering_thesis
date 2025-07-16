@@ -27,14 +27,19 @@ export default function UserProfileContent({ user }: UserProfileContentProps) {
   const handleSave = async () => {
     setLoading(true);
     try {
-      let testData = {};
-      console.log("formdata: ", formData);
-
       await api.patch(`/user/${user?.user_id}`, formData);
       toast.success("Dane zostały zaktualizowane.");
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response.data.detail == "This email is already in use") {
+        toast.error("Ten adres email jest już zajęty.");
+      } else if (
+        error.response.data.detail == "This phone number is already in use"
+      ) {
+        toast.error("Ten numer telefonu jest już zajęty.");
+      } else {
+        toast.error("Nie udało się zapisać zmian.");
+      }
       console.error(error);
-      toast.error("Nie udało się zapisać zmian.");
     } finally {
       setLoading(false);
     }
@@ -72,7 +77,14 @@ export default function UserProfileContent({ user }: UserProfileContentProps) {
         </div>
         <div>
           <label className="font-semibold">
-            Status: <a className="font-normal">{user.status}</a>
+            Status:{" "}
+            {user.status === "active" ? (
+              <a className="font-normal text-green-project">{"Aktywny"} </a>
+            ) : user.status === "not_active" ? (
+              <a className="font-normal text-yellow-400"> {"Nieaktywny"} </a>
+            ) : (
+              <a className="font-normal text-red-700">{"Zablokowany"} </a>
+            )}
           </label>
         </div>
 
