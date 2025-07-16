@@ -2,17 +2,19 @@ import { UseAuth } from "@/hooks/useAuth.tsx";
 import api from "@/lib/api";
 import { useEffect, useState } from "react";
 import { usePicture } from "@/utils/PictureProvider.tsx";
-import { Spin } from "antd";
+import { Button, Spin } from "antd";
 import UserProfileContent from "@/components/Elements/ProfileContent/UserProfileContent.tsx";
 import TrainerProfileContent from "@/components/Elements/ProfileContent/TrainerProfileContent.tsx";
 import ChangePasswordSection from "@/components/Elements/ProfileContent/ChangePasswordContent.tsx";
 import { UserBackend } from "@/components/Elements/ProfileContent/DataTypes.ts";
 import { toast } from "react-toastify";
+import { UploadOutlined } from "@ant-design/icons";
 
 export default function UserProfile() {
   const { role } = UseAuth();
   const { img, imgLoading, fetchImage } = usePicture();
   const [user, setUser] = useState<UserBackend>();
+  const [file, setFile] = useState<File | null>(null);
 
   useEffect(() => {
     const fetchActualUser = async () => {
@@ -29,39 +31,80 @@ export default function UserProfile() {
     fetchActualUser();
   }, []);
 
-  useEffect(() => {
+  const fetchImageFunc = () => {
     if (user?.user_id !== undefined) {
       fetchImage(user.user_id);
     }
+  };
+
+  useEffect(() => {
+    fetchImageFunc();
   }, [user?.user_id]);
 
+  const handleUpload = async () => {
+    if (!file) return toast.warning("Wybierz plik!");
+
+    const formData = new FormData();
+    formData.append("profile_picture", file);
+
+    try {
+      await api.post("/file/upload-picture-profile", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      toast.success("Zdjęcie przesłane!");
+      fetchImageFunc();
+    } catch (err) {
+      toast.error("Błąd przy przesyłaniu zdjęcia.");
+      console.log(err);
+    }
+  };
+
   return (
-    <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 dark:text-white mt-6">
+    <div className="flex flex-col lg:flex-row gap-10 dark:text-white mt-6">
+      {/* left side */}
+      <div className="flex flex-col items-center gap-6 w-full lg:w-1/2">
         {imgLoading ? (
-          <div className="flex justify-center items-center h-96 col-span-1 sm:col-span-1">
+          <div className="flex justify-center items-center h-96 w-full">
             <Spin size="large" />
           </div>
         ) : (
-          <div className="relative w-[80%] lg:w-[70%] aspect-[4/3] mx-auto">
+          <div className="relative w-[80%] aspect-[4/3]">
             <img
               src={img}
-              alt="Trainer image"
+              alt="Profile picture"
               className="absolute inset-0 w-full h-full object-cover rounded-xl object-top"
               loading="lazy"
             />
           </div>
         )}
 
+        <div className="flex flex-col items-center gap-2">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              if (e.target.files?.[0]) setFile(e.target.files[0]);
+            }}
+            className="text-md"
+          />
+          <Button onClick={handleUpload} icon={<UploadOutlined />}>
+            Prześlij zdjęcie
+          </Button>
+        </div>
+
+        <div className="w-full max-w-md">
+          <ChangePasswordSection />
+        </div>
+      </div>
+
+      {/* right side */}
+      <div className="w-full lg:w-1/2">
         {role === "user" ? (
           <UserProfileContent user={user} />
         ) : (
           <TrainerProfileContent />
         )}
-        <div className="flex items-center justify-center">
-          <ChangePasswordSection />
-        </div>
       </div>
-    </>
+    </div>
   );
 }
