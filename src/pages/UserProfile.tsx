@@ -7,6 +7,7 @@ import UserProfileContent from "@/components/Elements/ProfileContent/UserProfile
 import TrainerProfileContent from "@/components/Elements/ProfileContent/TrainerProfileContent.tsx";
 import ChangePasswordSection from "@/components/Elements/ProfileContent/ChangePasswordContent.tsx";
 import { UserBackend } from "@/components/Elements/ProfileContent/DataTypes.ts";
+import { toast } from "react-toastify";
 
 export default function UserProfile() {
   const { role } = UseAuth();
