@@ -60,9 +60,9 @@ export default function UserProfile() {
 
   return (
     <div className="flex flex-col gap-6 dark:text-white mt-6">
-      {/* Zdjęcie i dane użytkownika/trenera */}
+      {/* photo and data */}
       <div className="flex flex-col lg:flex-row gap-6">
-        {/* Zdjęcie + upload */}
+        {/* photo + data uplard */}
         <div className="flex flex-col items-center gap-4 lg:w-1/2">
           {imgLoading ? (
             <div className="flex justify-center items-center h-96 w-full">
@@ -93,7 +93,7 @@ export default function UserProfile() {
           </Button>
         </div>
 
-        {/* Dane użytkownika/trenera */}
+        {/* user data */}
         <div className="lg:w-1/2">
           <UserProfileContent user={user} />
         </div>
