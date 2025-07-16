@@ -71,6 +71,18 @@ export default function UserProfileContent({ user }: UserProfileContentProps) {
             onChange={handleChange}
           />
         </div>
+
+        <div>
+          <label className="font-semibold">
+            Adres email:{" "}
+            {user.is_mail_verified ? (
+              <a className="font-normal text-green-project">{"Potwierdzony"}</a>
+            ) : (
+              <a className="font-normal text-red-700">{"Niepotwierdzony"} </a>
+            )}
+          </label>
+        </div>
+
         <div>
           <label className="font-semibold">
             Status:{" "}
