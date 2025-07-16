@@ -1,12 +1,8 @@
 import api from "@/lib/api";
-import { UserBackend } from "@/pages/UserProfile.tsx";
 import { Button, Input } from "antd";
 import { ChangeEvent, useState } from "react";
 import { toast } from "react-toastify";
-
-type UserProfileContentProps = {
-  user?: UserBackend;
-};
+import { UserProfileContentProps } from "@/components/Elements/ProfileContent/DataTypes.ts";
 
 export default function UserProfileContent({ user }: UserProfileContentProps) {
   if (!user) return null;

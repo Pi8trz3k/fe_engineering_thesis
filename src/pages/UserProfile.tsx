@@ -6,19 +6,7 @@ import { Spin } from "antd";
 import UserProfileContent from "@/components/Elements/ProfileContent/UserProfileContent.tsx";
 import TrainerProfileContent from "@/components/Elements/ProfileContent/TrainerProfileContent.tsx";
 import ChangePasswordSection from "@/components/Elements/ProfileContent/ChangePasswordContent.tsx";
-
-export type UserBackend = {
-  user_id: number;
-  name: string;
-  last_name: string;
-  phone_number: string;
-  email: string;
-  password: string;
-  is_mail_verified: boolean;
-  status: string;
-  type: string;
-  is_admin: boolean;
-};
+import { UserBackend } from "@/components/Elements/ProfileContent/DataTypes.ts";
 
 export default function UserProfile() {
   const { role } = UseAuth();
@@ -32,6 +20,7 @@ export default function UserProfile() {
         console.log("response", response.data);
         setUser(response.data);
       } catch (error: any) {
+        toast.error("Wystąpił błąd podczas pobierania danych!");
         console.log(error);
       }
     };
