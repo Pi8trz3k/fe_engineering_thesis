@@ -5,6 +5,7 @@ import { usePicture } from "@/utils/PictureProvider.tsx";
 import { Spin } from "antd";
 import UserProfileContent from "@/components/Elements/ProfileContent/UserProfileContent.tsx";
 import TrainerProfileContent from "@/components/Elements/ProfileContent/TrainerProfileContent.tsx";
+import ChangePasswordSection from "@/components/Elements/ProfileContent/ChangePasswordContent.tsx";
 
 export type UserBackend = {
   user_id: number;
@@ -21,7 +22,6 @@ export type UserBackend = {
 
 export default function UserProfile() {
   const { role } = UseAuth();
-  const [userId, setUserId] = useState();
   const { img, imgLoading, fetchImage } = usePicture();
   const [user, setUser] = useState<UserBackend>();
 
@@ -30,7 +30,6 @@ export default function UserProfile() {
       try {
         const response = await api.get("/token/me");
         console.log("response", response.data);
-        setUserId(response.data.user_id);
         setUser(response.data);
       } catch (error: any) {
         console.log(error);
@@ -41,10 +40,10 @@ export default function UserProfile() {
   }, []);
 
   useEffect(() => {
-    if (userId !== undefined) {
-      fetchImage(userId);
+    if (user?.user_id !== undefined) {
+      fetchImage(user.user_id);
     }
-  }, [userId]);
+  }, [user?.user_id]);
 
   return (
     <>
@@ -69,6 +68,9 @@ export default function UserProfile() {
         ) : (
           <TrainerProfileContent />
         )}
+        <div className="flex items-center justify-center">
+          <ChangePasswordSection />
+        </div>
       </div>
     </>
   );
