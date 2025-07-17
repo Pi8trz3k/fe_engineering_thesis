@@ -3,7 +3,7 @@ import api from "@/lib/api";
 import { useEffect, useState } from "react";
 import { usePicture } from "@/utils/PictureProvider.tsx";
 import { Button, Spin } from "antd";
-import UserProfileContent from "@/components/Elements/ProfileContent/UserProfileContent.tsx";
+import CommonProfileContent from "@/components/Elements/ProfileContent/UserProfileContent.tsx";
 import TrainerProfileContent from "@/components/Elements/ProfileContent/TrainerProfileContent.tsx";
 import ChangePasswordSection from "@/components/Elements/ProfileContent/ChangePasswordContent.tsx";
 import { UserBackend } from "@/components/Elements/ProfileContent/DataTypes.ts";
@@ -62,7 +62,6 @@ export default function UserProfile() {
     <div className="flex flex-col gap-6 dark:text-white mt-6">
       {/* photo and data */}
       <div className="flex flex-col lg:flex-row gap-6">
-        {/* photo + data uplard */}
         <div className="flex flex-col items-center gap-4 lg:w-1/2">
           {imgLoading ? (
             <div className="flex justify-center items-center h-96 w-full">
@@ -93,12 +92,12 @@ export default function UserProfile() {
           </Button>
         </div>
 
-        {/* user data */}
         <div className="lg:w-1/2">
-          <UserProfileContent user={user} />
+          <CommonProfileContent user={user} />
         </div>
       </div>
 
+      {/* password and trainer data */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div>
           <ChangePasswordSection />

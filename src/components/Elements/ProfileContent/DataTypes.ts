@@ -11,19 +11,8 @@ export type UserBackend = {
   is_admin: boolean;
 };
 
-export type UserProfileContentProps = {
-  user?: UserBackend;
-};
-
 export type CommonProfileContentProps = {
-  user_id: number;
-  name: string;
-  last_name: string;
-  phone_number: string;
-  email: string;
-  password: string;
-  is_mail_verified: boolean;
-  status: string;
+  user?: UserBackend;
 };
 
 export interface TrainerProfileContentProps {
