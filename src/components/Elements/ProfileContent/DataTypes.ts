@@ -19,8 +19,8 @@ export interface TrainerProfileContentProps {
   trainerId: number;
 }
 
-type TrainerLocation = {
-  city: string;
+export type TrainerLocation = {
+  name: string;
   district: string;
 };
 
