@@ -1,6 +1,6 @@
 interface Location {
   cityId: number;
-  city: string;
+  name: string;
   district: string;
 }
 

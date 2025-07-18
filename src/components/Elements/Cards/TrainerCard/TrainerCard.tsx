@@ -1,6 +1,6 @@
 import { TrainerCardProps } from "@/pages/user/DataTypes/TrainersPageTypes.ts";
 import { useNavigate } from "react-router-dom";
-import { usePicture } from "@/utils/TrainerPageData.tsx";
+import { usePicture } from "@/utils/PictureProvider.tsx";
 import { Spin } from "antd";
 import { useEffect } from "react";
 
@@ -60,7 +60,7 @@ export default function TrainerCard({
         {name} {lastName}
       </h3>
       <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
-        {[...new Set(locations.map((loc) => loc.city))].join(", ")}
+        {[...new Set(locations.map((loc) => loc.name))].join(", ")}
       </p>
       <p className="text-sm text-gray-600 dark:text-gray-300">{getTypes()}</p>
       <div className="flex justify-between items-center mt-4">
