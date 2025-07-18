@@ -65,7 +65,6 @@ export default function TrainerProfileContent({
   const handleSave = async () => {
     setLoading(true);
     try {
-      console.log("data: ", trainerFormData);
       await api.patch(`/trainer/${trainer?.user_id}`, trainerFormData);
       toast.success("Dane zostały zaktualizowane.");
     } catch (error: any) {
@@ -131,7 +130,7 @@ export default function TrainerProfileContent({
         type="primary"
         loading={loading}
         onClick={handleSave}
-        className="mt-4 self-start"
+        className="mt-4 mb-6 self-start"
       >
         Zapisz zmiany
       </Button>
