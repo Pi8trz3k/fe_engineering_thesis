@@ -9,7 +9,6 @@ import api from "@/lib/api.tsx";
 export default function ResetPasswordPage() {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
-  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -91,14 +90,6 @@ export default function ResetPasswordPage() {
               </p>
             )}
           </div>
-          {/*    <Button*/}
-          {/*      type="primary"*/}
-          {/*      htmlType="submit"*/}
-          {/*      className="mt-5 rounded-sm font-semibold shadow-xl transition-all duration-300 transform hover:scale-105*/}
-          {/*active:scale-95"*/}
-          {/*    >*/}
-          {/*      Wyślij link resetujący*/}
-          {/*    </Button>*/}
           <div className="flex flex-col space-y-5 text-md md:text-lg">
             <AuthNavigationButton
               text="Zmień hasło"
