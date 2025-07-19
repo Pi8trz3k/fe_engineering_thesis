@@ -13,7 +13,7 @@ export function AuthNavigationButton({
 }: AuthNavigationButtonProps) {
   const variants = {
     login:
-      "text-black dark:text-white bg-white dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 dark:border dark:border-black",
+      "text-black dark:text-white bg-white dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 dark:border-black border",
     register:
       "text-white dark:text-black bg-gray-800 dark:bg-white hover:bg-gray-700 dark:hover:bg-gray-200",
     logout:
