@@ -13,7 +13,7 @@ export default function ResetPasswordForm() {
 
   const onSubmit = async (data: { email: string }) => {
     try {
-      await api.post("/token/reset-password", { email: data.email });
+      await api.post(`/token/request-reset-password?email=${data.email}`);
       toast.info("Wysłano maila, sprawdź swoją skrzynkę!");
     } catch (error) {
       console.error("Wystąpił błąd podczas wysyłania maila: ", error);
