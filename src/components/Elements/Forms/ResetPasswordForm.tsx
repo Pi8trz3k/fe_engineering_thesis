@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { LoginInputs } from "@/providers/DataTypes/AuthProviderTypes.ts";
-import { Button } from "antd";
 import api from "@/lib/api.tsx";
+import { AuthNavigationButton } from "@/components/Elements/Buttons/AuthNavigationButton/AuthNavigationButton.tsx";
 
 export default function ResetPasswordForm() {
   const {
@@ -44,14 +44,13 @@ export default function ResetPasswordForm() {
               {errors.email.message}
             </p>
           )}
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="mt-5 rounded-sm font-semibold shadow-xl transition-all duration-300 transform hover:scale-105
-      active:scale-95"
-          >
-            Wyślij link resetujący
-          </Button>
+          <div className="flex flex-col space-y-5 text-md md:text-lg mt-5">
+            <AuthNavigationButton
+              text="Wyślij link resetujący hasło"
+              type={"login"}
+              typeButton="submit"
+            />
+          </div>
         </div>
       </form>
     </div>
