@@ -75,7 +75,7 @@ export default function LoginForm() {
 
           <Link
             className="text-sm ml-auto mr-auto hover:underline"
-            to="/login/password-reset"
+            to="/login/request-password-reset"
           >
             <span>Nie pamiętasz hasła?</span>
           </Link>
