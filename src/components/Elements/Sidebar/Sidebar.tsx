@@ -52,6 +52,7 @@ export default function Sidebar() {
         <>
           <Link to="/">Panel główny</Link>
           <Link to="/clients">Podopieczni</Link>
+          <Link to="/requests">Prośby </Link>
           <Link to="/trainings">Twoje treningi</Link>
           <Link to="/profile">Profil</Link>
         </>
