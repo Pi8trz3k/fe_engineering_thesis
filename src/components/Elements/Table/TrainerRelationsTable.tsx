@@ -61,7 +61,6 @@ export default function TrainerRelationsTable({
 
   const mergedData = data.map((relation: ClientTrainer) => {
     const user = users.find((u: BackendUser) => u.user_id === relation.user_id);
-    console.log("merged: ", user);
     return {
       ...relation,
       ...user,
@@ -158,10 +157,6 @@ export default function TrainerRelationsTable({
       : []),
   ];
 
-  useEffect(() => {
-    console.log("Merged data: ", mergedData);
-  }, [mergedData]);
-
   return (
     <div className="overflow-x-auto pt-5">
       <Table
@@ -173,6 +168,7 @@ export default function TrainerRelationsTable({
           pageSize: 15,
           position: ["bottomCenter"],
         }}
+        rowClassName={"dark:bg-gray-300"}
       />
     </div>
   );
