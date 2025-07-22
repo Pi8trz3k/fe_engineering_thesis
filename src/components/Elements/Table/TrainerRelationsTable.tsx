@@ -37,7 +37,18 @@ export default function TrainerRelationsTable({
       onRefresh();
     } catch (error: any) {
       console.error(error);
-      toast.error("Wystąpił błąd podczas potwierdzenia relacji");
+      toast.error("Wystąpił błąd podczas zmiany statusu relacji");
+    }
+  };
+
+  const handleDelete = (id: number) => {
+    try {
+      api.delete(`/user-trainer/delete-relation?relation_id=${id}`);
+    } catch (error: any) {
+      console.error(error);
+      toast.error("Wystąpił błąd podczas usuwania relacji");
+    } finally {
+      onRefresh();
     }
   };
 
@@ -68,8 +79,6 @@ export default function TrainerRelationsTable({
       } catch (error: any) {
         console.error(error);
         toast.error("Wystąpił błąd podczas pobierania danych");
-      } finally {
-        console.log("trainers response: ", trainers);
       }
     };
 
@@ -81,7 +90,6 @@ export default function TrainerRelationsTable({
       const user = users.find(
         (u: BackendUser) => u.user_id === relation.user_id,
       );
-      console.log("merged data: ", user);
       return {
         ...relation,
         ...user,
@@ -90,7 +98,6 @@ export default function TrainerRelationsTable({
       const trainer = trainers.find(
         (t: TrainerBackend) => t.user_id === relation.trainer_id,
       );
-      console.log("merged data: ", trainer);
       return {
         ...relation,
         ...trainer,
@@ -99,6 +106,12 @@ export default function TrainerRelationsTable({
   });
 
   const columns: TableColumnsType<TableColumnsTypeProps> = [
+    {
+      title: "client_trainer_id",
+      dataIndex: "client_trainer_id",
+      key: "client_trainer_id",
+      hidden: true,
+    },
     ...(role === "trainer"
       ? [
           {
@@ -191,7 +204,35 @@ export default function TrainerRelationsTable({
               ),
           },
         ]
-      : []),
+      : [
+          {
+            title: "Akcja",
+            key: "action",
+            render: (_, record) =>
+              record.trainer_agree === "wait" ? (
+                <Button
+                  type="primary"
+                  onClick={() => handleDelete(record.client_trainer_id)}
+                >
+                  Usuń prośbę
+                </Button>
+              ) : record.trainer_agree === "agree" ? (
+                <Button
+                  type="primary"
+                  onClick={() => handleDelete(record.client_trainer_id)}
+                >
+                  Usuń relacje
+                </Button>
+              ) : (
+                <Button
+                  type="primary"
+                  onClick={() => handleDelete(record.client_trainer_id)}
+                >
+                  Usuń wpis
+                </Button>
+              ),
+          },
+        ]),
   ];
 
   return (
@@ -199,7 +240,7 @@ export default function TrainerRelationsTable({
       <Table
         dataSource={mergedData}
         columns={columns}
-        rowKey="message_to_trainer"
+        rowKey="client_trainer_id"
         scroll={{ x: true }}
         pagination={{
           pageSize: 15,
