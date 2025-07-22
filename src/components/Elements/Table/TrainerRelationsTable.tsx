@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import api from "@/lib/api.tsx";
 import { BackendUser } from "@/providers/DataTypes/DataProviderTypes.ts";
 import { toast } from "react-toastify";
+import { TrainerBackend } from "@/pages/user/DataTypes/TrainersPageTypes.ts";
 
 interface ClientTrainer {
   client_trainer_id: number;
@@ -26,6 +27,7 @@ export default function TrainerRelationsTable({
   onRefresh,
 }: Props) {
   const [users, setUsers] = useState<BackendUser[]>([]);
+  const [trainers, setTrainers] = useState<TrainerBackend[]>([]);
 
   const handleStatusChange = (id: number, status: string) => {
     try {
@@ -40,19 +42,34 @@ export default function TrainerRelationsTable({
   };
 
   useEffect(() => {
+    /* First case is getting users to show their data
+     *  Second cas is getting trainer to show their data */
     const fetchUsers = async () => {
       try {
-        const usersResponse = await Promise.all(
-          data.map((relation: ClientTrainer) =>
-            api
-              .get(`/user/${relation.user_id}`)
-              .then((response) => response.data),
-          ),
-        );
-        setUsers(usersResponse);
+        if (role === "trainer") {
+          const usersResponse = await Promise.all(
+            data.map((relation: ClientTrainer) =>
+              api
+                .get(`/user/${relation.user_id}`)
+                .then((response) => response.data),
+            ),
+          );
+          setUsers(usersResponse);
+        } else {
+          const trainersResponse = await Promise.all(
+            data.map((relation: ClientTrainer) =>
+              api
+                .get(`/trainer/${relation.trainer_id}`)
+                .then((response) => response.data),
+            ),
+          );
+          setTrainers(trainersResponse);
+        }
       } catch (error: any) {
         console.error(error);
         toast.error("Wystąpił błąd podczas pobierania danych");
+      } finally {
+        console.log("trainers response: ", trainers);
       }
     };
 
@@ -60,11 +77,25 @@ export default function TrainerRelationsTable({
   }, [data]);
 
   const mergedData = data.map((relation: ClientTrainer) => {
-    const user = users.find((u: BackendUser) => u.user_id === relation.user_id);
-    return {
-      ...relation,
-      ...user,
-    };
+    if (role === "trainer") {
+      const user = users.find(
+        (u: BackendUser) => u.user_id === relation.user_id,
+      );
+      console.log("merged data: ", user);
+      return {
+        ...relation,
+        ...user,
+      };
+    } else if (role === "user") {
+      const trainer = trainers.find(
+        (t: TrainerBackend) => t.user_id === relation.trainer_id,
+      );
+      console.log("merged data: ", trainer);
+      return {
+        ...relation,
+        ...trainer,
+      };
+    }
   });
 
   const columns: TableColumnsType<TableColumnsTypeProps> = [
@@ -94,9 +125,15 @@ export default function TrainerRelationsTable({
         ]
       : [
           {
-            title: "Trener (trainer_id)",
+            title: "Trener",
             dataIndex: "trainer_id",
             key: "trainer_id",
+            render: (_, record) => `${record.name} ${record.last_name}`,
+            sorter: (a, b) => {
+              const fullNameA = `${a.name} ${a.last_name}`.toLowerCase();
+              const fullNameB = `${b.name} ${b.last_name}`.toLowerCase();
+              return fullNameA.localeCompare(fullNameB);
+            },
           },
         ]),
     {
