@@ -41,6 +41,7 @@ export default function Sidebar() {
           <Link to="/">Panel główny</Link>
           <Link to="/trainers">Trenerzy</Link>
           <Link to="/trainings">Twoje treningi</Link>
+          <Link to="/requests">Prośby do trenerów </Link>
           <Link to="/achievements">Osiągnięcia</Link>
           <Link to="/profile">Profil</Link>
         </>
