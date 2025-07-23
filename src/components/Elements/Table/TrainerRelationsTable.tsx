@@ -32,12 +32,14 @@ export default function TrainerRelationsTable({
   const handleStatusChange = (id: number, status: string) => {
     try {
       api.patch(
-        `/user-trainer/change-relation-status?relation_id=${id}&status=${status}`,
+        `/user-trainer/change-relation-status?relation_id=${id}&relation_status=${status}`,
       );
-      onRefresh();
     } catch (error: any) {
       console.error(error);
       toast.error("Wystąpił błąd podczas zmiany statusu relacji");
+    } finally {
+      fetchUsers();
+      onRefresh();
     }
   };
 
@@ -48,40 +50,41 @@ export default function TrainerRelationsTable({
       console.error(error);
       toast.error("Wystąpił błąd podczas usuwania relacji");
     } finally {
+      fetchUsers();
       onRefresh();
     }
   };
 
-  useEffect(() => {
+  const fetchUsers = async () => {
     /* First case is getting users to show their data
      *  Second cas is getting trainer to show their data */
-    const fetchUsers = async () => {
-      try {
-        if (role === "trainer") {
-          const usersResponse = await Promise.all(
-            data.map((relation: ClientTrainer) =>
-              api
-                .get(`/user/${relation.user_id}`)
-                .then((response) => response.data),
-            ),
-          );
-          setUsers(usersResponse);
-        } else {
-          const trainersResponse = await Promise.all(
-            data.map((relation: ClientTrainer) =>
-              api
-                .get(`/trainer/${relation.trainer_id}`)
-                .then((response) => response.data),
-            ),
-          );
-          setTrainers(trainersResponse);
-        }
-      } catch (error: any) {
-        console.error(error);
-        toast.error("Wystąpił błąd podczas pobierania danych");
+    try {
+      if (role === "trainer") {
+        const usersResponse = await Promise.all(
+          data.map((relation: ClientTrainer) =>
+            api
+              .get(`/user/${relation.user_id}`)
+              .then((response) => response.data),
+          ),
+        );
+        setUsers(usersResponse);
+      } else {
+        const trainersResponse = await Promise.all(
+          data.map((relation: ClientTrainer) =>
+            api
+              .get(`/trainer/${relation.trainer_id}`)
+              .then((response) => response.data),
+          ),
+        );
+        setTrainers(trainersResponse);
       }
-    };
+    } catch (error: any) {
+      console.error(error);
+      toast.error("Wystąpił błąd podczas pobierania danych");
+    }
+  };
 
+  useEffect(() => {
     fetchUsers();
   }, [data]);
 
@@ -186,6 +189,7 @@ export default function TrainerRelationsTable({
                     onClick={() =>
                       handleStatusChange(record.client_trainer_id, "agree")
                     }
+                    className="lg:mr-2"
                   >
                     Akceptuj
                   </Button>
@@ -194,13 +198,28 @@ export default function TrainerRelationsTable({
                     onClick={() =>
                       handleStatusChange(record.client_trainer_id, "disagree")
                     }
-                    className="mt-5"
+                    className="mt-2 lg:mt-none lg:pr-1"
                   >
                     Odrzuć
                   </Button>
                 </>
+              ) : record.trainer_agree === "agree" ? (
+                <Button
+                  type="primary"
+                  onClick={() =>
+                    handleStatusChange(record.client_trainer_id, "disagree")
+                  }
+                  className="mt-2 lg:mt-none lg:pr-1"
+                >
+                  Zakończ współpracę
+                </Button>
               ) : (
-                <></>
+                <Button
+                  type="primary"
+                  onClick={() => handleDelete(record.client_trainer_id)}
+                >
+                  Usuń wpis
+                </Button>
               ),
           },
         ]
