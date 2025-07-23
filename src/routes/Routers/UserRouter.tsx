@@ -8,6 +8,7 @@ import UserProfile from "@/pages/UserProfile.tsx";
 import Achievements from "@/pages/user/Achievements.tsx";
 import EmailConfirmationPage from "@/pages/EmailConfirmationPage.tsx";
 import TrainerProfilePageWrapper from "@/pages/user/TrainerProfilePageWrapper.tsx";
+import RequestsToTrainer from "@/pages/trainer/RequestsToTrainer.tsx";
 
 export default function UserRouter() {
   const userRoutes = [
@@ -31,6 +32,7 @@ export default function UserRouter() {
         { path: "profile", element: <UserProfile /> },
         { path: "achievements", element: <Achievements /> },
         { path: "confirm-email", element: <EmailConfirmationPage /> },
+        { path: "requests", element: <RequestsToTrainer /> },
         { path: "*", element: <Navigate to="/" /> },
       ],
     },

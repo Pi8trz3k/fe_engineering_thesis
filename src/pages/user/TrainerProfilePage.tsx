@@ -113,7 +113,7 @@ export default function TrainerProfilePage({
                 [
                   ...new Set(
                     trainer.locations.map(
-                      (loc) => `${loc.city} (${loc.district})`,
+                      (loc) => `${loc.name} (${loc.district})`,
                     ),
                   ),
                 ].join(", ")

@@ -92,13 +92,13 @@ export default function UserProfile() {
           </Button>
         </div>
 
-        <div className="lg:w-1/2">
+        <div className="lg:w-1/2 pr-5">
           <CommonProfileContent user={user} />
         </div>
       </div>
 
       {/* password and trainer data */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pr-5">
         <div>
           <ChangePasswordSection />
         </div>
