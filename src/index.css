@@ -11,6 +11,7 @@
     --font-sourgummy: "Sour Gummy", sans-serif;
     --color-green-project: oklch(0.5229 0.152986 147.5892);
     --bg-green-project: oklch(0.5229 0.152986 147.5892);
+    --color-green-light-project: oklch(0.627 0.194 149.21);
 }
 
 /* style for table header */
@@ -72,4 +73,17 @@
 
 .dark .ant-pagination-item-link {
     color: #f9fafb !important;
+}
+
+.ant-btn-primary, .ant-btn-primary:hover {
+    background-color: var(--color-green-project);
+    &:hover {
+        background-color: var(--color-green-light-project) !important;
+        scale:1.05;
+        transition:all;
+        transition-duration: 300ms;
+    }
+    &:active {
+        scale:0.95;
+    }
 }
