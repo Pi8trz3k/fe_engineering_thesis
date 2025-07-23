@@ -168,9 +168,9 @@ export default function TrainerProfilePage({
           ) : (
             <div className="flex justify-begin mb-4 gap-2">
               <button
-                className={`px-3 py-1 rounded border font-semibold ${
+                className={`px-3 py-1 border border-rounded rounded-md font-semibold ${
                   sortOrder === "desc"
-                    ? "bg-green-600 text-white dark:border-none"
+                    ? "bg-green-project hover:bg-green-light-project text-white  dark:border-none"
                     : "bg-white dark:bg-white"
                 }`}
                 onClick={() => setSortOrder("desc")}
@@ -178,9 +178,9 @@ export default function TrainerProfilePage({
                 Od najlepszych
               </button>
               <button
-                className={`px-3 py-1 rounded border font-semibold ${
+                className={`px-3 py-1 border font-semibold border-rounded rounded-md ${
                   sortOrder === "asc"
-                    ? "bg-green-600 text-white dark:border-none"
+                    ? "bg-green-project hover:bg-green-light-project text-white dark:border-none"
                     : "bg-white dark:bg-white"
                 }`}
                 onClick={() => setSortOrder("asc")}

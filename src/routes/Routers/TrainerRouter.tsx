@@ -18,7 +18,6 @@ export default function TrainerRouter() {
       ),
       children: [
         { index: true, element: <UserLandingPage /> },
-        { path: "clients", element: <UserLandingPage /> },
         { path: "trainings", element: <UserLandingPage /> },
         { path: "profile", element: <UserProfile /> },
         { path: "requests", element: <RequestsToTrainer /> },
