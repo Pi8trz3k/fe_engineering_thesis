@@ -236,7 +236,7 @@ export default function TrainerRelationsTable({
   ];
 
   return (
-    <div className="overflow-x-auto pt-5">
+    <div className="overflow-x-auto pt-5 pr-5">
       <Table
         dataSource={mergedData}
         columns={columns}
