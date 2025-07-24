@@ -9,6 +9,7 @@ import Achievements from "@/pages/user/Achievements.tsx";
 import EmailConfirmationPage from "@/pages/EmailConfirmationPage.tsx";
 import TrainerProfilePageWrapper from "@/pages/user/TrainerProfilePageWrapper.tsx";
 import RequestsToTrainer from "@/pages/trainer/RequestsToTrainer.tsx";
+import TrainerOpinions from "@/pages/user/TrainerOpinions.tsx";
 
 export default function UserRouter() {
   const userRoutes = [
@@ -23,16 +24,17 @@ export default function UserRouter() {
       ),
       children: [
         { index: true, element: <UserLandingPage /> },
-        { path: "trainings", element: <Trainings /> },
         { path: "trainers", element: <TrainersPage /> },
         {
           path: "trainers/:trainerId",
           element: <TrainerProfilePageWrapper />,
         },
-        { path: "profile", element: <UserProfile /> },
-        { path: "achievements", element: <Achievements /> },
-        { path: "confirm-email", element: <EmailConfirmationPage /> },
+        { path: "trainings", element: <Trainings /> },
         { path: "requests", element: <RequestsToTrainer /> },
+        { path: "trainer-opinions", element: <TrainerOpinions /> },
+        { path: "achievements", element: <Achievements /> },
+        { path: "profile", element: <UserProfile /> },
+        { path: "confirm-email", element: <EmailConfirmationPage /> },
         { path: "*", element: <Navigate to="/" /> },
       ],
     },
