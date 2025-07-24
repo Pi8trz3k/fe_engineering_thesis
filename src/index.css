@@ -87,3 +87,11 @@
         scale:0.95;
     }
 }
+
+.dark .ant-card-body {
+    background-color: #99a1af;
+}
+
+.dark .ant-input {
+    background-color: #dbe6f4;
+}
