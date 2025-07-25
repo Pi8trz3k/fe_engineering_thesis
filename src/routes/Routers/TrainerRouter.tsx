@@ -4,6 +4,7 @@ import UserLayout from "@/components/Elements/Layout/UserLayout.tsx";
 import ErrorPage from "@/pages/ErrorPage.tsx";
 import UserProfile from "@/pages/UserProfile";
 import RequestsToTrainer from "@/pages/trainer/RequestsToTrainer.tsx";
+import Trainings from "@/pages/user/Trainings.tsx";
 
 export default function TrainerRouter() {
   const trainerRoutes = [
@@ -18,9 +19,9 @@ export default function TrainerRouter() {
       ),
       children: [
         { index: true, element: <UserLandingPage /> },
-        { path: "trainings", element: <UserLandingPage /> },
-        { path: "profile", element: <UserProfile /> },
         { path: "requests", element: <RequestsToTrainer /> },
+        { path: "trainings", element: <Trainings /> },
+        { path: "profile", element: <UserProfile /> },
         { path: "*", element: <Navigate to="/" /> },
       ],
     },
