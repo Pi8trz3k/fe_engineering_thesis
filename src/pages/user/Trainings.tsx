@@ -1,9 +1,9 @@
+import { UseAuth } from "@/hooks/useAuth.tsx";
+import UserTrainings from "@/pages/user/UserTrainings.tsx";
+import TrainerTrainings from "@/pages/trainer/TrainerTrainings.tsx";
+
 export default function Trainings() {
-  return (
-    <>
-      <div>
-        <h1 className="dark:text-white">Trainings</h1>
-      </div>
-    </>
-  );
+  const { role } = UseAuth();
+
+  return role === "user" ? <UserTrainings /> : <TrainerTrainings />;
 }
