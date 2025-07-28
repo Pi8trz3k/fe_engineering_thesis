@@ -56,8 +56,8 @@ export default function UserTrainings({ userId }: UserTrainingsProps) {
     setIsModalOpen(true);
   };
 
-  const handleViewPlan = (planId: string) => {
-    navigate(`/trainings/${planId}`);
+  const handleViewTrainingPlan = (trainingPlanId: string) => {
+    navigate(`/trainings/${trainingPlanId}`);
   };
 
   return (
@@ -97,7 +97,7 @@ export default function UserTrainings({ userId }: UserTrainingsProps) {
         {userTrainingPlans.map((plan: TrainingPlan) => (
           <div
             key={plan.training_plan_id}
-            onClick={() => handleViewPlan(plan.training_plan_id)}
+            onClick={() => handleViewTrainingPlan(plan.training_plan_id)}
             className="cursor-pointer border rounded-xl shadow hover:shadow-md transition-transform hover:scale-105 bg-white
             dark:bg-gray-200 pt-5 pb-5
             flex items-start justify-center sm:items-center"
