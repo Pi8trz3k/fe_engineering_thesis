@@ -11,11 +11,11 @@ type TrainingPlan = {
   workouts: string[];
 };
 
-export default function UserTrainings({
-  userId,
-}: {
+type UserTrainingsProps = {
   userId: number | undefined;
-}) {
+};
+
+export default function UserTrainings({ userId }: UserTrainingsProps) {
   const [userTrainingPlans, setUserTrainingPlans] = useState<TrainingPlan[]>(
     [],
   );
