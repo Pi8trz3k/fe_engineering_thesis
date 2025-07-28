@@ -10,6 +10,7 @@ import EmailConfirmationPage from "@/pages/EmailConfirmationPage.tsx";
 import TrainerProfilePageWrapper from "@/pages/user/TrainerProfilePageWrapper.tsx";
 import RequestsToTrainer from "@/pages/trainer/RequestsToTrainer.tsx";
 import TrainerOpinions from "@/pages/user/TrainerOpinions.tsx";
+import TrainingPlanDetailsPage from "@/pages/user/TrainingPlanPage.tsx";
 
 export default function UserRouter() {
   const userRoutes = [
@@ -30,6 +31,10 @@ export default function UserRouter() {
           element: <TrainerProfilePageWrapper />,
         },
         { path: "trainings", element: <Trainings /> },
+        {
+          path: "trainings/:trainingPlanId",
+          element: <TrainingPlanDetailsPage />,
+        },
         { path: "requests", element: <RequestsToTrainer /> },
         { path: "trainer-opinions", element: <TrainerOpinions /> },
         { path: "achievements", element: <Achievements /> },
