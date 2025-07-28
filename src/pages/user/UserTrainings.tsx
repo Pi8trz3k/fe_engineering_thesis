@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import api from "@/lib/api.tsx";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import CreateTrainingPlanModal from "@/components/Elements/Modals/CreateTrainingPlanModal/CreateTrainingPlanModal";
 
 type TrainingPlan = {
   training_plan_id: string;
@@ -19,7 +20,23 @@ export default function UserTrainings({ userId }: UserTrainingsProps) {
   const [userTrainingPlans, setUserTrainingPlans] = useState<TrainingPlan[]>(
     [],
   );
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+
+  const handleCreateTrainingPlan = async (title: string) => {
+    try {
+      const response = await api.post("/training_plan", {
+        client_id: userId,
+        title: title,
+      });
+
+      const newPlan = await response.data;
+      setUserTrainingPlans((prev) => [newPlan, ...prev]);
+    } catch (error: any) {
+      console.error(error);
+      toast.error("Wystąpił błąd podczas tworzenia planu");
+    }
+  };
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -35,8 +52,8 @@ export default function UserTrainings({ userId }: UserTrainingsProps) {
     fetchPlans();
   }, [userId]);
 
-  const handleCreateNew = () => {
-    navigate("/trainings/create");
+  const handleCreateNewTrainingPlan = () => {
+    setIsModalOpen(true);
   };
 
   const handleViewPlan = (planId: string) => {
@@ -45,9 +62,15 @@ export default function UserTrainings({ userId }: UserTrainingsProps) {
 
   return (
     <>
+      <CreateTrainingPlanModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onCreate={handleCreateTrainingPlan}
+      />
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div
-          onClick={handleCreateNew}
+          onClick={handleCreateNewTrainingPlan}
           className="cursor-pointer border-2 border-dashed border-gray-400 dark:border-gray-200 rounded-xl flex
                      flex-col items-center justify-center p-6 hover:bg-green-100 dark:hover:bg-gray-800
                      transition-transform hover:scale-105"
