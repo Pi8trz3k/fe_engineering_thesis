@@ -1,8 +1,89 @@
-export default function UserTrainings() {
+import { useEffect, useState } from "react";
+import api from "@/lib/api.tsx";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+
+type TrainingPlan = {
+  training_plan_id: string;
+  title: string;
+  client_id: number;
+  trainer_id?: number;
+  workouts: string[];
+};
+
+export default function UserTrainings({
+  userId,
+}: {
+  userId: number | undefined;
+}) {
+  const [userTrainingPlans, setUserTrainingPlans] = useState<TrainingPlan[]>(
+    [],
+  );
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        const response = await api.get(`/training_plan/user/${userId}`);
+        setUserTrainingPlans(response.data);
+      } catch (error) {
+        console.error(error);
+        toast.error("Wystąpił błąd podczas pobierania danych");
+      }
+    };
+
+    fetchPlans();
+  }, [userId]);
+
+  const handleCreateNew = () => {
+    navigate("/trainings/create");
+  };
+
+  const handleViewPlan = (planId: string) => {
+    navigate(`/trainings/${planId}`);
+  };
+
   return (
     <>
-      <div>
-        <h1 className="dark:text-white">User Training</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div
+          onClick={handleCreateNew}
+          className="cursor-pointer border-2 border-dashed border-gray-400 dark:border-gray-200 rounded-xl flex
+                     flex-col items-center justify-center p-6 hover:bg-green-100 dark:hover:bg-gray-800
+                     transition-transform hover:scale-105"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-10 w-10 text-gray-500 dark:text-gray-100"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          <p className="mt-2 text-gray-600 font-medium dark:text-white">
+            Nowy plan treningowy
+          </p>
+        </div>
+
+        {userTrainingPlans.map((plan: TrainingPlan) => (
+          <div
+            key={plan.training_plan_id}
+            onClick={() => handleViewPlan(plan.training_plan_id)}
+            className="cursor-pointer border rounded-xl shadow hover:shadow-md transition-transform hover:scale-105 bg-white
+            dark:bg-gray-200 pt-5 pb-5
+            flex items-start justify-center sm:items-center"
+          >
+            <h3 className="text-lg font-semibold text-center justify-center text-gray-800">
+              {plan.title}
+            </h3>
+          </div>
+        ))}
       </div>
     </>
   );
