@@ -42,7 +42,7 @@ export default function Sidebar() {
           <Link to="/trainers">Wyszukiwarka trenerów</Link>
           <Link to="/trainings">Twoje treningi</Link>
           <Link to="/requests">Prośby do trenerów</Link>
-          <Link to="/trainer-opinions">Opinie o trenerach</Link>
+          <Link to="/trainer-opinions">Oceń trenera</Link>
           <Link to="/achievements">Osiągnięcia</Link>
           <Link to="/profile">Profil</Link>
         </>
