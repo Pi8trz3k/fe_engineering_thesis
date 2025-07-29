@@ -6,12 +6,21 @@ import api from "@/lib/api.tsx";
 
 type workout = {
   client_id: number;
-  exercises: [];
+  exercises: exercise[];
   is_training_done: boolean;
   title: string;
   trainer_id: number;
   training_plan_id: string;
   workout_date: string;
+  workout_id: string;
+};
+
+type exercise = {
+  exercise_id: string;
+  exercise_name: string;
+  sets: string;
+  weight: string;
+  description: string;
   workout_id: string;
 };
 
@@ -53,6 +62,7 @@ export default function TrainingPlanDetailsPage() {
             ),
           );
           setUserWorkouts(responseUserWorkouts.map((res) => res.data));
+          responseUserWorkouts.map((res) => console.log(res.data));
         } catch (error: any) {
           toast.error("Wystąpił błąd podczas pobierania treningów");
           console.log(error);
