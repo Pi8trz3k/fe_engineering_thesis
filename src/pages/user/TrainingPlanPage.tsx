@@ -46,6 +46,9 @@ export default function TrainingPlanDetailsPage() {
     useState(false);
   const [trainingPlanTitle, setTrainingPlanTitle] = useState("");
   const [form] = Form.useForm();
+  const [editForm] = Form.useForm();
+  const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null);
+  const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false);
 
   const [currentMonth, setCurrentMonth] = useState(dayjs());
   const daysInMonth = currentMonth.daysInMonth();
@@ -111,6 +114,74 @@ export default function TrainingPlanDetailsPage() {
     form.resetFields();
   };
 
+  const handleEditWorkout = async (values: WorkoutFormData) => {
+    if (!selectedWorkout) return;
+
+    try {
+      // divide exercises to those that should be updated and those that should be added
+      const existingExercises = values.exercises
+        .filter((ex) => ex.exercise_id) // with id
+        .map((ex) => ({
+          exercise_id: ex.exercise_id,
+          exercise_name: ex.exercise_name,
+          sets: ex.sets,
+          weight: ex.weight,
+          description: ex.description,
+        }));
+
+      const newExercises = values.exercises
+        .filter((ex) => !ex.exercise_id) // new, withoud id
+        .map((ex) => ({
+          exercise_name: ex.exercise_name,
+          sets: ex.sets,
+          weight: ex.weight,
+          description: ex.description,
+        }));
+
+      const patchResponse = await api.patch(
+        `/workouts/${selectedWorkout.workout_id}`,
+        {
+          workout: {
+            title: values.title,
+            workout_date: selectedWorkout.workout_date,
+            is_training_done: selectedWorkout.is_training_done ?? false,
+          },
+          exercises: existingExercises,
+        },
+      );
+
+      if (newExercises.length > 0) {
+        await Promise.all(
+          newExercises.map((exercise) =>
+            api.patch(
+              `/workouts/${selectedWorkout.workout_id}/exercises`,
+              exercise,
+            ),
+          ),
+        );
+      }
+
+      toast.success("Trening został zaktualizowany!");
+      setIsWorkoutModalOpen(false);
+      editForm.resetFields();
+
+      const updatedWorkoutResponse = await api.get(
+        `/workouts/${selectedWorkout.workout_id}`,
+      );
+
+      setUserWorkouts((prev) =>
+        prev.map((w) =>
+          w.workout_id === selectedWorkout.workout_id
+            ? updatedWorkoutResponse.data
+            : w,
+        ),
+      );
+    } catch (err) {
+      toast.error("Błąd podczas aktualizacji treningu");
+      console.error(err);
+    }
+  };
+
   const handleUpdateTrainingPlanWorkout = async (title: string) => {
     try {
       await api.patch(`/training_plan/${trainingPlanId}`, { title: title });
@@ -124,6 +195,25 @@ export default function TrainingPlanDetailsPage() {
       }
     }
     setTrainingPlanTitle(title);
+  };
+
+  const handleOpenWorkoutModal = (workout: Workout) => {
+    setSelectedWorkout(workout);
+    setIsWorkoutModalOpen(true);
+    editForm.setFieldsValue({
+      title: workout.title,
+      exercises: workout.exercises.map((ex) => ({
+        exercise_name: ex.exercise_name,
+        sets: ex.sets,
+        weight: ex.weight,
+        description: ex.description,
+      })),
+    });
+  };
+
+  const handleCloseWorkoutModal = () => {
+    setSelectedWorkout(null);
+    setIsWorkoutModalOpen(false);
   };
 
   const handlePrevMonth = () => {
@@ -143,24 +233,46 @@ export default function TrainingPlanDetailsPage() {
 
     for (let i = 1; i <= daysInMonth; i++) {
       const date = currentMonth.date(i).toDate();
-      const isToday = dayjs().isSame(currentMonth.date(i), "day");
+      const isToday = dayjs().isSame(date, "day");
+      const formattedDate = dayjs(date).format("YYYY-MM-DD");
+
+      const workoutsForDay = userWorkouts.filter(
+        (workout) =>
+          dayjs(workout.workout_date).format("YYYY-MM-DD") === formattedDate,
+      );
 
       days.push(
         <div
           key={i}
-          onClick={() => handleOpenModal(date)}
-          className={`relative border rounded-lg p-3 text-sm cursor-pointer transition group ${
+          className={`relative border rounded-lg p-3 text-sm cursor-pointer transition group dark:text-white ${
             isToday ? "border-green-project border-2" : "border-gray-300"
           }`}
         >
-          <div className="font-semibold">
-            {currentMonth.date(i).format("D (ddd)")}
+          <div className="font-semibold">{dayjs(date).format("D (ddd)")}</div>
+
+          <div className="mt-2 space-y-1">
+            {workoutsForDay.map((workout) => (
+              <div
+                key={workout.workout_id}
+                className="bg-green-100 border border-green-400 text-green-800 text-xs rounded px-2 py-1 hover:bg-green-300"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpenWorkoutModal(workout);
+                }}
+              >
+                {workout.title}
+              </div>
+            ))}
           </div>
-          <Tooltip title="Dodaj trening">
-            <div className="absolute inset-0 hidden group-hover:flex items-center justify-center bg-green-200/75 rounded-lg">
-              <PlusOutlined className="text-green-600 text-2xl" />
-            </div>
-          </Tooltip>
+
+          <div className="mt-2 hidden group-hover:flex items-center justify-center">
+            <Tooltip title="Dodaj trening">
+              <PlusOutlined
+                className="text-green-600 text-2xl cursor-pointer"
+                onClick={() => handleOpenModal(date)}
+              />
+            </Tooltip>
+          </div>
         </div>,
       );
     }
@@ -170,7 +282,7 @@ export default function TrainingPlanDetailsPage() {
 
   return (
     <div>
-      <div className="mb-4">
+      <div className="mb-4 text-center jusitfy-center dark:text-white">
         {editingTrainingPlanTitle ? (
           <Input
             value={trainingPlanTitle}
@@ -191,7 +303,7 @@ export default function TrainingPlanDetailsPage() {
         )}
       </div>
 
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 dark:text-white">
         <Button
           icon={<LeftOutlined />}
           onClick={handlePrevMonth}
@@ -263,6 +375,76 @@ export default function TrainingPlanDetailsPage() {
                       <Input.TextArea rows={2} />
                     </Form.Item>
                     <Button danger type="link" onClick={() => remove(name)}>
+                      Usuń ćwiczenie
+                    </Button>
+                  </div>
+                ))}
+                <Button type="dashed" onClick={() => add()} block>
+                  Dodaj ćwiczenie
+                </Button>
+              </>
+            )}
+          </Form.List>
+        </Form>
+      </Modal>
+
+      <Modal
+        open={isWorkoutModalOpen}
+        title={`Edytuj trening — ${selectedWorkout?.title}`}
+        onCancel={handleCloseWorkoutModal}
+        onOk={() => editForm.submit()}
+        okText="Zapisz zmiany"
+        cancelText="Anuluj"
+        width={600}
+      >
+        <Form
+          form={editForm}
+          layout="vertical"
+          onFinish={(values) => handleEditWorkout(values)}
+        >
+          <Form.Item
+            label="Tytuł treningu"
+            name="title"
+            rules={[{ required: true, message: "Podaj tytuł" }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.List name="exercises">
+            {(fields, { add, remove }) => (
+              <>
+                {fields.map(({ key, name }) => (
+                  <div
+                    key={key}
+                    className="border p-2 rounded mb-2 bg-gray-50 space-y-2"
+                  >
+                    <Form.Item
+                      label="Nazwa ćwiczenia"
+                      name={[name, "exercise_name"]}
+                      rules={[{ required: true }]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      label="Liczba serii"
+                      name={[name, "sets"]}
+                      rules={[{ required: true }]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item label="Waga (kg)" name={[name, "weight"]}>
+                      <Input />
+                    </Form.Item>
+                    <Form.Item label="Opis" name={[name, "description"]}>
+                      <Input.TextArea rows={2} />
+                    </Form.Item>
+                    <Button
+                      danger
+                      type="link"
+                      onClick={() => {
+                        remove(name);
+                      }}
+                    >
                       Usuń ćwiczenie
                     </Button>
                   </div>
