@@ -4,13 +4,13 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import CreateTrainingPlanModal from "@/components/Elements/Modals/CreateTrainingPlanModal/CreateTrainingPlanModal";
 
-type TrainingPlan = {
+export interface TrainingPlan {
   training_plan_id: string;
   title: string;
   client_id: number;
   trainer_id?: number;
   workouts: string[];
-};
+}
 
 type UserTrainingsProps = {
   userId: number | undefined;
@@ -43,9 +43,14 @@ export default function UserTrainings({ userId }: UserTrainingsProps) {
       try {
         const response = await api.get(`/training_plan/user/${userId}`);
         setUserTrainingPlans(response.data);
-      } catch (error) {
-        console.error(error);
-        toast.error("Wystąpił błąd podczas pobierania danych");
+      } catch (error: any) {
+        if (error.response.status == 404) {
+          console.error(error);
+          toast.warn("Brak treningów");
+        } else {
+          console.error(error);
+          toast.error("Wystąpił błąd podczas pobierania danych");
+        }
       }
     };
 
