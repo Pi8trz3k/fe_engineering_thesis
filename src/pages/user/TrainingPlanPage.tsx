@@ -494,10 +494,18 @@ export default function TrainingPlanDetailsPage() {
                     >
                       <Input />
                     </Form.Item>
-                    <Form.Item label="Waga (kg)" name={[name, "weight"]}>
+                    <Form.Item
+                      label="Waga (kg)"
+                      name={[name, "weight"]}
+                      rules={[{ required: true }]}
+                    >
                       <Input />
                     </Form.Item>
-                    <Form.Item label="Opis" name={[name, "description"]}>
+                    <Form.Item
+                      label="Opis"
+                      name={[name, "description"]}
+                      rules={[{ required: true }]}
+                    >
                       <Input.TextArea rows={2} />
                     </Form.Item>
                     <Button
