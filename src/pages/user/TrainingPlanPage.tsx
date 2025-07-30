@@ -49,6 +49,7 @@ export default function TrainingPlanDetailsPage() {
   const [editForm] = Form.useForm();
   const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null);
   const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false);
+  const [userId, setUserId] = useState<number>();
 
   const [currentMonth, setCurrentMonth] = useState(dayjs());
   const daysInMonth = currentMonth.daysInMonth();
@@ -99,6 +100,20 @@ export default function TrainingPlanDetailsPage() {
     fetchUserWorkouts();
   }, [userTrainingPlan]);
 
+  useEffect(() => {
+    const fetchActualUser = async () => {
+      try {
+        const response = await api.get("/token/me");
+        setUserId(response.data.user_id);
+      } catch (error: any) {
+        toast.error("Wystąpił błąd podczas pobierania danych!");
+        console.log(error);
+      }
+    };
+
+    fetchActualUser();
+  }, []);
+
   if (unauthorized) {
     return () => {
       toast.error("Brak dostępu");
@@ -110,10 +125,27 @@ export default function TrainingPlanDetailsPage() {
     setIsModalOpen(true);
   };
 
-  const handleCreateWorkout = (values: WorkoutFormData) => {
-    console.log("Dodano trening dla:", selectedDate, values);
-    setIsModalOpen(false);
-    form.resetFields();
+  const handleCreateWorkout = async (values: WorkoutFormData) => {
+    try {
+      const response = await api.post(`/workouts`, {
+        workout: {
+          title: values.title,
+          workout_date: selectedDate?.toISOString(),
+          is_training_done: false,
+          client_id: userId,
+          training_plan_id: trainingPlanId,
+        },
+        exercises: values.exercises,
+      });
+
+      setUserWorkouts((prev) => [...prev, response.data]);
+
+      setIsModalOpen(false);
+      form.resetFields();
+    } catch (error: any) {
+      console.log(error);
+      toast.error("Wystąpił błąd podczas tworzenia treningu");
+    }
   };
 
   const handleEditWorkout = async (values: WorkoutFormData) => {
@@ -169,7 +201,6 @@ export default function TrainingPlanDetailsPage() {
 
       // delete exercises
       if (deletedExerciseIds.length > 0) {
-        console.log("Delete: ", deletedExerciseIds);
         await Promise.all(
           deletedExerciseIds.map((id) =>
             api.delete(
@@ -391,10 +422,18 @@ export default function TrainingPlanDetailsPage() {
                     >
                       <Input />
                     </Form.Item>
-                    <Form.Item label="Waga (kg)" name={[name, "weight"]}>
+                    <Form.Item
+                      label="Waga (kg)"
+                      name={[name, "weight"]}
+                      rules={[{ required: true }]}
+                    >
                       <Input />
                     </Form.Item>
-                    <Form.Item label="Opis" name={[name, "description"]}>
+                    <Form.Item
+                      label="Opis"
+                      name={[name, "description"]}
+                      rules={[{ required: true }]}
+                    >
                       <Input.TextArea rows={2} />
                     </Form.Item>
                     <Button danger type="link" onClick={() => remove(name)}>
