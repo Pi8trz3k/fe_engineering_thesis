@@ -140,18 +140,20 @@ export default function TrainingPlanDetailsPage() {
           description: ex.description,
         }));
 
-      // update existing exercises
-      const patchResponse = await api.patch(
-        `/workouts/${selectedWorkout.workout_id}`,
-        {
-          workout: {
-            title: values.title,
-            workout_date: selectedWorkout.workout_date,
-            is_training_done: selectedWorkout.is_training_done ?? false,
-          },
-          exercises: existingExercises,
-        },
+      const currentExerciseIds = existingExercises.map((ex) => ex.exercise_id);
+      const deletedExerciseIds = originalExerciseIdsRef.current.filter(
+        (id) => !currentExerciseIds.includes(id),
       );
+
+      // update existing exercises
+      await api.patch(`/workouts/${selectedWorkout.workout_id}`, {
+        workout: {
+          title: values.title,
+          workout_date: selectedWorkout.workout_date,
+          is_training_done: selectedWorkout.is_training_done ?? false,
+        },
+        exercises: existingExercises,
+      });
 
       // add new exercises
       if (newExercises.length > 0) {
@@ -160,6 +162,18 @@ export default function TrainingPlanDetailsPage() {
             api.patch(
               `/workouts/${selectedWorkout.workout_id}/exercises`,
               exercise,
+            ),
+          ),
+        );
+      }
+
+      // delete exercises
+      if (deletedExerciseIds.length > 0) {
+        console.log("Delete: ", deletedExerciseIds);
+        await Promise.all(
+          deletedExerciseIds.map((id) =>
+            api.delete(
+              `/workouts/${selectedWorkout.workout_id}/exercises/${id}`,
             ),
           ),
         );
@@ -204,8 +218,9 @@ export default function TrainingPlanDetailsPage() {
   const handleOpenWorkoutModal = (workout: Workout) => {
     setSelectedWorkout(workout);
     setIsWorkoutModalOpen(true);
-    originalExerciseIdsRef.current =
-      selectedWorkout?.exercises.map((ex) => ex.exercise_id) ?? [];
+    originalExerciseIdsRef.current = workout.exercises.map(
+      (ex) => ex.exercise_id,
+    );
     editForm.setFieldsValue({
       title: workout.title,
       exercises: workout.exercises.map((ex) => ({
