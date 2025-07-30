@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { TrainingPlan } from "@/pages/user/UserTrainings.tsx";
 import { toast } from "react-toastify";
@@ -22,12 +22,12 @@ type Workout = {
 };
 
 type Exercise = {
-  exercise_id: string;
+  exercise_id?: string;
   exercise_name: string;
   sets: string;
   weight: string;
   description: string;
-  workout_id: string;
+  workout_id?: string;
 };
 
 type WorkoutFormData = {
@@ -53,6 +53,8 @@ export default function TrainingPlanDetailsPage() {
   const [currentMonth, setCurrentMonth] = useState(dayjs());
   const daysInMonth = currentMonth.daysInMonth();
   const firstDay = currentMonth.startOf("month").day(); // 0 = niedziela
+
+  const originalExerciseIdsRef = useRef<string[]>([]);
 
   useEffect(() => {
     const fetchTrainingPlan = async () => {
@@ -118,10 +120,10 @@ export default function TrainingPlanDetailsPage() {
     if (!selectedWorkout) return;
 
     try {
-      // divide exercises to those that should be updated and those that should be added
+      // divide exercises to those that should be updated, added and deleted
       const existingExercises = values.exercises
-        .filter((ex) => ex.exercise_id) // with id
-        .map((ex) => ({
+        .filter((ex: Exercise) => ex.exercise_id) // with id
+        .map((ex: Exercise) => ({
           exercise_id: ex.exercise_id,
           exercise_name: ex.exercise_name,
           sets: ex.sets,
@@ -130,14 +132,15 @@ export default function TrainingPlanDetailsPage() {
         }));
 
       const newExercises = values.exercises
-        .filter((ex) => !ex.exercise_id) // new, withoud id
-        .map((ex) => ({
+        .filter((ex: Exercise) => !ex.exercise_id) // new, withoud id
+        .map((ex: Exercise) => ({
           exercise_name: ex.exercise_name,
           sets: ex.sets,
           weight: ex.weight,
           description: ex.description,
         }));
 
+      // update existing exercises
       const patchResponse = await api.patch(
         `/workouts/${selectedWorkout.workout_id}`,
         {
@@ -150,6 +153,7 @@ export default function TrainingPlanDetailsPage() {
         },
       );
 
+      // add new exercises
       if (newExercises.length > 0) {
         await Promise.all(
           newExercises.map((exercise) =>
@@ -182,7 +186,7 @@ export default function TrainingPlanDetailsPage() {
     }
   };
 
-  const handleUpdateTrainingPlanWorkout = async (title: string) => {
+  const handleUpdateTrainingPlanTitle = async (title: string) => {
     try {
       await api.patch(`/training_plan/${trainingPlanId}`, { title: title });
     } catch (error: any) {
@@ -200,9 +204,13 @@ export default function TrainingPlanDetailsPage() {
   const handleOpenWorkoutModal = (workout: Workout) => {
     setSelectedWorkout(workout);
     setIsWorkoutModalOpen(true);
+    originalExerciseIdsRef.current =
+      selectedWorkout?.exercises.map((ex) => ex.exercise_id) ?? [];
     editForm.setFieldsValue({
       title: workout.title,
       exercises: workout.exercises.map((ex) => ({
+        exercise_id: ex.exercise_id,
+        workout_id: ex.workout_id,
         exercise_name: ex.exercise_name,
         sets: ex.sets,
         weight: ex.weight,
@@ -286,7 +294,7 @@ export default function TrainingPlanDetailsPage() {
         {editingTrainingPlanTitle ? (
           <Input
             value={trainingPlanTitle}
-            onChange={(e) => handleUpdateTrainingPlanWorkout(e.target.value)}
+            onChange={(e) => handleUpdateTrainingPlanTitle(e.target.value)}
             onBlur={() => setEditingTrainingPlanTitle(false)}
             className="text-xl font-bold max-w-sm"
             autoFocus
@@ -356,7 +364,7 @@ export default function TrainingPlanDetailsPage() {
                   >
                     <Form.Item
                       label="Nazwa ćwiczenia"
-                      name={[name, "name"]}
+                      name={[name, "exercise_name"]}
                       rules={[{ required: true }]}
                     >
                       <Input />
@@ -371,7 +379,7 @@ export default function TrainingPlanDetailsPage() {
                     <Form.Item label="Waga (kg)" name={[name, "weight"]}>
                       <Input />
                     </Form.Item>
-                    <Form.Item label="Opis" name={[name, "notes"]}>
+                    <Form.Item label="Opis" name={[name, "description"]}>
                       <Input.TextArea rows={2} />
                     </Form.Item>
                     <Button danger type="link" onClick={() => remove(name)}>
