@@ -1,11 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { TrainingPlan } from "@/pages/user/UserTrainings.tsx";
 import { toast } from "react-toastify";
 import api from "@/lib/api.tsx";
 import { Button, Form, Input, Modal, Tooltip } from "antd";
 import dayjs from "dayjs";
-import { LeftOutlined, PlusOutlined, RightOutlined } from "@ant-design/icons";
+import {
+  DeleteTwoTone,
+  LeftOutlined,
+  PlusOutlined,
+  RightOutlined,
+} from "@ant-design/icons";
 import "dayjs/locale/pl";
 
 dayjs.locale("pl");
@@ -50,6 +55,7 @@ export default function TrainingPlanDetailsPage() {
   const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null);
   const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false);
   const [userId, setUserId] = useState<number>();
+  const navigate = useNavigate();
 
   const [currentMonth, setCurrentMonth] = useState(dayjs());
   const daysInMonth = currentMonth.daysInMonth();
@@ -265,6 +271,17 @@ export default function TrainingPlanDetailsPage() {
     setTrainingPlanTitle(title);
   };
 
+  const handleDeleteTrainingPlan = async (trainingPlanId: string) => {
+    try {
+      await api.delete(`/training_plan/${trainingPlanId}`);
+      toast.success("Plan treningowy został usunięty");
+      navigate("/trainings");
+    } catch (err) {
+      toast.error("Błąd podczas usuwania planu treningowego");
+      console.error(err);
+    }
+  };
+
   const handleOpenWorkoutModal = (workout: Workout) => {
     setSelectedWorkout(workout);
     setIsWorkoutModalOpen(true);
@@ -374,6 +391,14 @@ export default function TrainingPlanDetailsPage() {
             </h1>
           </Tooltip>
         )}
+        <Tooltip title="Usuń trening">
+          <Button
+            icon={<DeleteTwoTone twoToneColor="#ff0000" />}
+            size="small"
+            onClick={() => handleDeleteTrainingPlan(trainingPlanId)}
+            className="ml-3"
+          />
+        </Tooltip>
       </div>
 
       <div className="flex items-center justify-between mb-4 dark:text-white">
