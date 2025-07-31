@@ -335,7 +335,16 @@ export default function TrainingPlanDetailsPage() {
             ))}
           </div>
 
-          <div className="mt-2 hidden group-hover:flex items-center justify-center">
+          <div className="mt-2 flex items-center justify-center md:hidden">
+            <Tooltip title="Dodaj trening">
+              <PlusOutlined
+                className="text-green-600 text-2xl cursor-pointer"
+                onClick={() => handleOpenModal(date)}
+              />
+            </Tooltip>
+          </div>
+
+          <div className="mt-2 hidden md:group-hover:flex items-center justify-center">
             <Tooltip title="Dodaj trening">
               <PlusOutlined
                 className="text-green-600 text-2xl cursor-pointer"
