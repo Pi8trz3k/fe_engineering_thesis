@@ -39,22 +39,21 @@ export default function UserTrainings({ userId }: UserTrainingsProps) {
     }
   };
 
-  useEffect(() => {
-    const fetchPlans = async () => {
-      try {
-        const response = await api.get(`/training_plan/user/${userId}`);
-        setUserTrainingPlans(response.data);
-      } catch (error: any) {
-        if (error.response.status == 404) {
-          console.error(error);
-          toast.warn("Brak treningów");
-        } else {
-          console.error(error);
-          toast.error("Wystąpił błąd podczas pobierania danych");
-        }
+  const fetchPlans = async () => {
+    try {
+      const response = await api.get(`/training_plan/user/${userId}`);
+      setUserTrainingPlans(response.data);
+    } catch (error: any) {
+      if (error.response.status == 404) {
+        toast.warn("Brak treningów");
+      } else {
+        console.error(error);
+        toast.error("Wystąpił błąd podczas pobierania danych");
       }
-    };
+    }
+  };
 
+  useEffect(() => {
     fetchPlans();
   }, [userId]);
 
