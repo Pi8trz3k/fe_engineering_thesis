@@ -57,46 +57,46 @@ export default function TrainingPlanDetailsPage() {
 
   const originalExerciseIdsRef = useRef<string[]>([]);
 
-  useEffect(() => {
-    const fetchTrainingPlan = async () => {
+  const fetchUserWorkouts = async () => {
+    if (userTrainingPlan?.workouts !== undefined) {
       try {
-        const responseUserTrainingPlan = await api.get(
-          `/training_plan/${trainingPlanId}`,
+        const responseUserWorkouts = await Promise.all(
+          userTrainingPlan.workouts.map((workoutId: string) =>
+            api.get(`/workouts/${workoutId}`),
+          ),
         );
-        setUserTrainingPlan(responseUserTrainingPlan.data);
-        setTrainingPlanTitle(responseUserTrainingPlan.data.title);
+        setUserWorkouts(responseUserWorkouts.map((res) => res.data));
       } catch (error: any) {
-        setUnauthorized(true);
-        if (error.response.status == 403) {
-          toast.error("Brak dostępu");
-          console.error(error);
-        } else {
-          toast.error("Wystąpił błąd podczas pobierania planu");
-          console.log(error);
-        }
+        toast.error("Wystąpił błąd podczas pobierania treningów");
+        console.log(error);
       }
-    };
+    }
+  };
 
+  const fetchTrainingPlan = async () => {
+    try {
+      const responseUserTrainingPlan = await api.get(
+        `/training_plan/${trainingPlanId}`,
+      );
+      setUserTrainingPlan(responseUserTrainingPlan.data);
+      setTrainingPlanTitle(responseUserTrainingPlan.data.title);
+    } catch (error: any) {
+      setUnauthorized(true);
+      if (error.response.status == 403) {
+        toast.error("Brak dostępu");
+        console.error(error);
+      } else {
+        toast.error("Wystąpił błąd podczas pobierania planu");
+        console.log(error);
+      }
+    }
+  };
+
+  useEffect(() => {
     fetchTrainingPlan();
   }, [trainingPlanId]);
 
   useEffect(() => {
-    const fetchUserWorkouts = async () => {
-      if (userTrainingPlan?.workouts !== undefined) {
-        try {
-          const responseUserWorkouts = await Promise.all(
-            userTrainingPlan.workouts.map((workoutId: string) =>
-              api.get(`/workouts/${workoutId}`),
-            ),
-          );
-          setUserWorkouts(responseUserWorkouts.map((res) => res.data));
-        } catch (error: any) {
-          toast.error("Wystąpił błąd podczas pobierania treningów");
-          console.log(error);
-        }
-      }
-    };
-
     fetchUserWorkouts();
   }, [userTrainingPlan]);
 
@@ -127,6 +127,10 @@ export default function TrainingPlanDetailsPage() {
 
   const handleCreateWorkout = async (values: WorkoutFormData) => {
     try {
+      if (values.exercises === undefined) {
+        values.exercises = [];
+      }
+
       const response = await api.post(`/workouts`, {
         workout: {
           title: values.title,
@@ -244,6 +248,21 @@ export default function TrainingPlanDetailsPage() {
       }
     }
     setTrainingPlanTitle(title);
+  };
+
+  const handleDeleteWorkout = async (workoutId: string | undefined) => {
+    try {
+      await api.delete(`/workouts/${workoutId}`);
+      toast.success("Trening został usunięty");
+
+      await fetchTrainingPlan();
+      await fetchUserWorkouts();
+
+      setIsWorkoutModalOpen(false);
+    } catch (err) {
+      toast.error("Błąd podczas usuwania treningu");
+      console.error(err);
+    }
   };
 
   const handleOpenWorkoutModal = (workout: Workout) => {
@@ -411,28 +430,32 @@ export default function TrainingPlanDetailsPage() {
                     <Form.Item
                       label="Nazwa ćwiczenia"
                       name={[name, "exercise_name"]}
-                      rules={[{ required: true }]}
+                      rules={[
+                        { required: true, message: "Podaj nazwę ćwiczenia" },
+                      ]}
                     >
                       <Input />
                     </Form.Item>
                     <Form.Item
                       label="Liczba serii"
                       name={[name, "sets"]}
-                      rules={[{ required: true }]}
+                      rules={[
+                        { required: true, message: "Podaj liczbe serii" },
+                      ]}
                     >
                       <Input />
                     </Form.Item>
                     <Form.Item
                       label="Waga (kg)"
                       name={[name, "weight"]}
-                      rules={[{ required: true }]}
+                      rules={[{ required: true, message: "Podaj wagę" }]}
                     >
                       <Input />
                     </Form.Item>
                     <Form.Item
                       label="Opis"
                       name={[name, "description"]}
-                      rules={[{ required: true }]}
+                      rules={[{ required: true, message: "Podaj liczbe opis" }]}
                     >
                       <Input.TextArea rows={2} />
                     </Form.Item>
@@ -452,7 +475,18 @@ export default function TrainingPlanDetailsPage() {
 
       <Modal
         open={isWorkoutModalOpen}
-        title={`Edytuj trening — ${selectedWorkout?.title}`}
+        title={
+          <div className="flex justify-between items-center mr-10">
+            <span>Edytuj trening — {selectedWorkout?.title}</span>
+            <Button
+              danger
+              size="small"
+              onClick={() => handleDeleteWorkout(selectedWorkout?.workout_id)}
+            >
+              Usuń trening
+            </Button>
+          </div>
+        }
         onCancel={handleCloseWorkoutModal}
         onOk={() => editForm.submit()}
         okText="Zapisz zmiany"
@@ -483,28 +517,32 @@ export default function TrainingPlanDetailsPage() {
                     <Form.Item
                       label="Nazwa ćwiczenia"
                       name={[name, "exercise_name"]}
-                      rules={[{ required: true }]}
+                      rules={[
+                        { required: true, message: "Podaj nazwę ćwiczenia" },
+                      ]}
                     >
                       <Input />
                     </Form.Item>
                     <Form.Item
                       label="Liczba serii"
                       name={[name, "sets"]}
-                      rules={[{ required: true }]}
+                      rules={[
+                        { required: true, message: "Podaj liczbe serii" },
+                      ]}
                     >
                       <Input />
                     </Form.Item>
                     <Form.Item
                       label="Waga (kg)"
                       name={[name, "weight"]}
-                      rules={[{ required: true }]}
+                      rules={[{ required: true, message: "Podaj wagę" }]}
                     >
                       <Input />
                     </Form.Item>
                     <Form.Item
                       label="Opis"
                       name={[name, "description"]}
-                      rules={[{ required: true }]}
+                      rules={[{ required: true, message: "Podaj liczbe opis" }]}
                     >
                       <Input.TextArea rows={2} />
                     </Form.Item>
