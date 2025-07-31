@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { TrainingPlan } from "@/pages/user/UserTrainings.tsx";
 import { toast } from "react-toastify";
 import api from "@/lib/api.tsx";
 import { Button, Form, Input, Modal, Tooltip } from "antd";
@@ -12,33 +11,14 @@ import {
   RightOutlined,
 } from "@ant-design/icons";
 import "dayjs/locale/pl";
+import {
+  Workout,
+  WorkoutFormData,
+  TrainingPlan,
+  Exercise,
+} from "./DataTypes/TrainingsTypes";
 
 dayjs.locale("pl");
-
-type Workout = {
-  client_id: number;
-  exercises: Exercise[];
-  is_training_done: boolean;
-  title: string;
-  trainer_id: number;
-  training_plan_id: string;
-  workout_date: string;
-  workout_id: string;
-};
-
-type Exercise = {
-  exercise_id?: string;
-  exercise_name: string;
-  sets: string;
-  weight: string;
-  description: string;
-  workout_id?: string;
-};
-
-type WorkoutFormData = {
-  title: string;
-  exercises: Exercise[];
-};
 
 export default function TrainingPlanDetailsPage() {
   const { trainingPlanId } = useParams<{ trainingPlanId: string }>();
@@ -271,7 +251,7 @@ export default function TrainingPlanDetailsPage() {
     setTrainingPlanTitle(title);
   };
 
-  const handleDeleteTrainingPlan = async (trainingPlanId: string) => {
+  const handleDeleteTrainingPlan = async (trainingPlanId?: string) => {
     try {
       await api.delete(`/training_plan/${trainingPlanId}`);
       toast.success("Plan treningowy został usunięty");

@@ -3,14 +3,7 @@ import api from "@/lib/api.tsx";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import CreateTrainingPlanModal from "@/components/Elements/Modals/CreateTrainingPlanModal/CreateTrainingPlanModal";
-
-export interface TrainingPlan {
-  training_plan_id: string;
-  title: string;
-  client_id: number;
-  trainer_id?: number;
-  workouts: string[];
-}
+import { TrainingPlan } from "@/pages/user/DataTypes/TrainingsTypes.ts";
 
 type UserTrainingsProps = {
   userId: number | undefined;
