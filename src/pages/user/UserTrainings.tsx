@@ -28,6 +28,7 @@ export default function UserTrainings({ userId }: UserTrainingsProps) {
       const response = await api.post("/training_plan", {
         client_id: userId,
         title: title,
+        workouts: [],
       });
 
       const newPlan = await response.data;
