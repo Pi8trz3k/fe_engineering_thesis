@@ -221,6 +221,38 @@ export default function TrainingPlanDetailsPage() {
     }
   };
 
+  const handleToggleWorkoutStatus = async () => {
+    if (!selectedWorkout) return;
+
+    try {
+      await api.patch(`/workouts/${selectedWorkout.workout_id}`, {
+        workout: {
+          is_training_done: !selectedWorkout.is_training_done,
+        },
+      });
+
+      toast.success("Zmieniono status treningu");
+
+      // odśwież dane treningu
+      const updatedWorkoutResponse = await api.get(
+        `/workouts/${selectedWorkout.workout_id}`,
+      );
+
+      setUserWorkouts((prev) =>
+        prev.map((w) =>
+          w.workout_id === selectedWorkout.workout_id
+            ? updatedWorkoutResponse.data
+            : w,
+        ),
+      );
+
+      setSelectedWorkout(updatedWorkoutResponse.data);
+    } catch (error) {
+      toast.error("Nie udało się zmienić statusu");
+      console.error(error);
+    }
+  };
+
   const handleDeleteWorkout = async (workoutId: string | undefined) => {
     try {
       await api.delete(`/workouts/${workoutId}`);
@@ -324,7 +356,9 @@ export default function TrainingPlanDetailsPage() {
             {workoutsForDay.map((workout) => (
               <div
                 key={workout.workout_id}
-                className="bg-green-100 border border-green-400 text-green-800 text-xs rounded px-2 py-1 hover:bg-green-300"
+                className={`border text-green-800 text-xs rounded px-2 py-1 hover:bg-green-300
+      ${workout.is_training_done ? "bg-gray-200" : "bg-green-100"}
+    `}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleOpenWorkoutModal(workout);
@@ -490,12 +524,24 @@ export default function TrainingPlanDetailsPage() {
       <Modal
         open={isWorkoutModalOpen}
         title={
-          <div className="flex justify-between items-center mr-10">
-            <span>Edytuj trening — {selectedWorkout?.title}</span>
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+            <span className="text-lg font-semibold">
+              Edytuj trening — {selectedWorkout?.title}
+            </span>
+            <Button
+              type={selectedWorkout?.is_training_done ? "default" : "primary"}
+              onClick={handleToggleWorkoutStatus}
+              className="w-full sm:w-auto"
+            >
+              {selectedWorkout?.is_training_done
+                ? "Oznacz jako niezrobiony"
+                : "Oznacz jako zrobiony"}
+            </Button>
             <Button
               danger
               size="small"
               onClick={() => handleDeleteWorkout(selectedWorkout?.workout_id)}
+              className="md:mr-6"
             >
               Usuń trening
             </Button>
