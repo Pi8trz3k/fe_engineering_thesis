@@ -235,21 +235,6 @@ export default function TrainingPlanDetailsPage() {
     }
   };
 
-  const handleUpdateTrainingPlanTitle = async (title: string) => {
-    try {
-      await api.patch(`/training_plan/${trainingPlanId}`, { title: title });
-    } catch (error: any) {
-      if (error.response.status == 403) {
-        toast.error("Nie masz uprawnień do edycji nazwy planu treningowego");
-        console.log(error);
-      } else {
-        console.log(error);
-        toast.error("Wystąpił błąd podczas aktualizacji nazwy treningu");
-      }
-    }
-    setTrainingPlanTitle(title);
-  };
-
   const handleDeleteWorkout = async (workoutId: string | undefined) => {
     try {
       await api.delete(`/workouts/${workoutId}`);
@@ -263,6 +248,21 @@ export default function TrainingPlanDetailsPage() {
       toast.error("Błąd podczas usuwania treningu");
       console.error(err);
     }
+  };
+
+  const handleUpdateTrainingPlanTitle = async (title: string) => {
+    try {
+      await api.patch(`/training_plan/${trainingPlanId}`, { title: title });
+    } catch (error: any) {
+      if (error.response.status == 403) {
+        toast.error("Nie masz uprawnień do edycji nazwy planu treningowego");
+        console.log(error);
+      } else {
+        console.log(error);
+        toast.error("Wystąpił błąd podczas aktualizacji nazwy treningu");
+      }
+    }
+    setTrainingPlanTitle(title);
   };
 
   const handleOpenWorkoutModal = (workout: Workout) => {
