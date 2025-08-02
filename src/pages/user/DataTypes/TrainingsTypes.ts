@@ -30,3 +30,9 @@ export type WorkoutFormData = {
   title: string;
   exercises: Exercise[];
 };
+
+export type Achievement = {
+  achievement_id: string;
+  exercise_id: string;
+  user_id: number;
+};
