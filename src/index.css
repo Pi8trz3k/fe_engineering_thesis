@@ -95,3 +95,7 @@
 .dark .ant-input {
     background-color: #dbe6f4;
 }
+
+.dark .ant-modal-content {
+    background-color: #99a1af;
+}
