@@ -16,6 +16,7 @@ import {
   WorkoutFormData,
   TrainingPlan,
   Exercise,
+  Achievement,
 } from "./DataTypes/TrainingsTypes";
 
 dayjs.locale("pl");
@@ -36,6 +37,7 @@ export default function TrainingPlanDetailsPage() {
   const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false);
   const [userId, setUserId] = useState<number>();
   const navigate = useNavigate();
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
 
   const [currentMonth, setCurrentMonth] = useState(dayjs());
   const daysInMonth = currentMonth.daysInMonth();
@@ -78,13 +80,18 @@ export default function TrainingPlanDetailsPage() {
     }
   };
 
-  useEffect(() => {
-    fetchTrainingPlan();
-  }, [trainingPlanId]);
+  const fetchAchievements = async () => {
+    if (!userId) return;
 
-  useEffect(() => {
-    fetchUserWorkouts();
-  }, [userTrainingPlan]);
+    try {
+      const response = await api.get(`/achievements/?user_id=${userId}`);
+      setAchievements(response.data);
+      console.log("fetch: ", response.data);
+    } catch (error: any) {
+      toast.error("Błąd podczas pobierania danych");
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     const fetchActualUser = async () => {
@@ -99,6 +106,18 @@ export default function TrainingPlanDetailsPage() {
 
     fetchActualUser();
   }, []);
+
+  useEffect(() => {
+    fetchTrainingPlan();
+  }, [trainingPlanId]);
+
+  useEffect(() => {
+    fetchUserWorkouts();
+  }, [userTrainingPlan]);
+
+  useEffect(() => {
+    fetchAchievements();
+  }, [userId]);
 
   if (unauthorized) {
     return () => {
@@ -291,6 +310,31 @@ export default function TrainingPlanDetailsPage() {
     } catch (err) {
       toast.error("Błąd podczas usuwania planu treningowego");
       console.error(err);
+    }
+  };
+
+  const handleAddAchievement = async (exercise: Exercise) => {
+    if (!exercise?.exercise_id || !userId) {
+      toast.error("Brak ćwiczenia lub użytkownika");
+      return;
+    }
+
+    try {
+      await api.post("/achievements", {
+        exercise_id: exercise.exercise_id,
+        user_id: userId,
+      });
+
+      toast.success("Dodano osiągnięcie!");
+
+      await fetchAchievements();
+    } catch (error: any) {
+      if (error.response.data.detail === "Achievement already exists") {
+        toast.error("Osiągnięcie już istnieje");
+      } else {
+        toast.error("Błąd podczas dodawania osiągnięcia");
+      }
+      console.error(error);
     }
   };
 
@@ -507,7 +551,12 @@ export default function TrainingPlanDetailsPage() {
                     >
                       <Input.TextArea rows={2} />
                     </Form.Item>
-                    <Button danger type="link" onClick={() => remove(name)}>
+                    <Button
+                      danger
+                      type="link"
+                      onClick={() => remove(name)}
+                      className="dark:color-red-100"
+                    >
                       Usuń ćwiczenie
                     </Button>
                   </div>
@@ -524,7 +573,7 @@ export default function TrainingPlanDetailsPage() {
       <Modal
         open={isWorkoutModalOpen}
         title={
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 dark:bg-[#99a1af]">
             <span className="text-lg font-semibold">
               Edytuj trening — {selectedWorkout?.title}
             </span>
@@ -541,7 +590,7 @@ export default function TrainingPlanDetailsPage() {
               danger
               size="small"
               onClick={() => handleDeleteWorkout(selectedWorkout?.workout_id)}
-              className="md:mr-6"
+              className="sm:mr-6"
             >
               Usuń trening
             </Button>
@@ -572,7 +621,7 @@ export default function TrainingPlanDetailsPage() {
                 {fields.map(({ key, name }) => (
                   <div
                     key={key}
-                    className="border p-2 rounded mb-2 bg-gray-50 space-y-2"
+                    className="border p-2 rounded mb-2 bg-gray-50 space-y-2 dark:bg-[#b3c3d8]"
                   >
                     <Form.Item
                       label="Nazwa ćwiczenia"
@@ -606,13 +655,44 @@ export default function TrainingPlanDetailsPage() {
                     >
                       <Input.TextArea rows={2} />
                     </Form.Item>
-                    <Button
-                      danger
-                      type="link"
-                      onClick={() => {
-                        remove(name);
-                      }}
+                    <Tooltip
+                      title={
+                        !editForm.getFieldValue(["exercises", name])
+                          ?.exercise_id
+                          ? "Najpierw zapisz ćwiczenie"
+                          : achievements?.some(
+                                (a) =>
+                                  a.exercise_id ===
+                                  editForm.getFieldValue(["exercises", name])
+                                    ?.exercise_id,
+                              )
+                            ? "To ćwiczenie już jest osiągnięciem"
+                            : ""
+                      }
                     >
+                      <Button
+                        type="primary"
+                        onClick={() => {
+                          handleAddAchievement(
+                            editForm.getFieldValue(["exercises", name]),
+                          );
+                        }}
+                        disabled={
+                          !editForm.getFieldValue(["exercises", name])
+                            ?.exercise_id ||
+                          achievements?.some(
+                            (a) =>
+                              a.exercise_id ===
+                              editForm.getFieldValue(["exercises", name])
+                                ?.exercise_id,
+                          )
+                        }
+                        className="sm:mr-6"
+                      >
+                        Dodaj do osiągnięć
+                      </Button>
+                    </Tooltip>
+                    <Button danger size="small" onClick={() => remove(name)}>
                       Usuń ćwiczenie
                     </Button>
                   </div>
