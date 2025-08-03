@@ -76,7 +76,7 @@ export default function TrainerTrainings({ userId }: TrainingsProps) {
         response.data.map((relation: UserTrainerRelation) => relation.user_id),
       );
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
       toast.error("Wystąpił błąd podczas pobierania danych");
     }
   };
