@@ -3,13 +3,12 @@ import api from "@/lib/api.tsx";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import CreateTrainingPlanModal from "@/components/Elements/Modals/CreateTrainingPlanModal/CreateTrainingPlanModal";
-import { TrainingPlan } from "@/pages/user/DataTypes/TrainingsTypes.ts";
+import {
+  TrainingPlan,
+  TrainingsProps,
+} from "@/pages/user/DataTypes/TrainingsTypes.ts";
 
-type UserTrainingsProps = {
-  userId: number | undefined;
-};
-
-export default function UserTrainings({ userId }: UserTrainingsProps) {
+export default function UserTrainings({ userId }: TrainingsProps) {
   const [userTrainingPlans, setUserTrainingPlans] = useState<TrainingPlan[]>(
     [],
   );

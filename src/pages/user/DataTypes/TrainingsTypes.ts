@@ -36,3 +36,7 @@ export type Achievement = {
   exercise_id: string;
   user_id: number;
 };
+
+export type TrainingsProps = {
+  userId: number | undefined;
+};
