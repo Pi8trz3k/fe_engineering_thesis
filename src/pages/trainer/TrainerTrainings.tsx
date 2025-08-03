@@ -53,10 +53,16 @@ export default function TrainerTrainings({ userId }: TrainingsProps) {
   const fetchClientPlans = async () => {
     try {
       const allPlansResponse = await Promise.all(
-        userTrainerRelations.map(async (user_id: number) => {
-          const response = await api.get(`/training_plan/user/${user_id}`);
-          return response.data;
-        }),
+        userTrainerRelations
+          .filter((relation: UserTrainerRelation) => {
+            return relation.trainer_agree === "agree";
+          })
+          .map(async (relation: UserTrainerRelation) => {
+            const response = await api.get(
+              `/training_plan/user/${relation.user_id}`,
+            );
+            return response.data;
+          }),
       );
       setClientTrainingPlans(allPlansResponse.flat());
     } catch (error: any) {
@@ -72,9 +78,7 @@ export default function TrainerTrainings({ userId }: TrainingsProps) {
   const fetchRelationWithUsers = async () => {
     try {
       const response = await api.get(`user-trainer/${userId}`);
-      setUserTrainerRelations(
-        response.data.map((relation: UserTrainerRelation) => relation.user_id),
-      );
+      setUserTrainerRelations(response.data);
     } catch (error: any) {
       console.error(error);
       toast.error("Wystąpił błąd podczas pobierania danych");
