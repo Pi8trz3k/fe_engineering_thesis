@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import api from "@/lib/api.tsx";
 import { toast } from "react-toastify";
 import CreateTrainingPlanModal from "@/components/Elements/Modals/CreateTrainingPlanModal/CreateTrainingPlanModal.tsx";
+import { Tooltip } from "antd";
+import ClientName from "@/components/Elements/Other/ClientNames.tsx";
 
 export default function TrainerTrainings({ userId }: TrainingsProps) {
   const [trainerTrainingPlans, setTrainerTrainingPlans] = useState<
@@ -141,31 +143,46 @@ export default function TrainerTrainings({ userId }: TrainingsProps) {
         </div>
 
         {trainerTrainingPlans.map((plan: TrainingPlan) => (
-          <div
+          <Tooltip
             key={plan.training_plan_id}
-            onClick={() => handleViewTrainerTrainingPlan(plan.training_plan_id)}
-            className="cursor-pointer border rounded-xl shadow hover:shadow-md transition-transform hover:scale-105 bg-white
+            title="Twój prywatny plan treningowy"
+          >
+            <div
+              key={plan.training_plan_id}
+              onClick={() =>
+                handleViewTrainerTrainingPlan(plan.training_plan_id)
+              }
+              className="cursor-pointer border rounded-xl shadow hover:shadow-md transition-transform hover:scale-105 bg-white
             dark:bg-gray-200 pt-5 pb-5
             flex items-start justify-center sm:items-center"
-          >
-            <h3 className="text-lg font-semibold text-center justify-center text-gray-800">
-              {plan.title}
-            </h3>
-          </div>
+            >
+              <h3 className="text-lg font-semibold text-center justify-center text-gray-800">
+                {plan.title}
+              </h3>
+            </div>
+          </Tooltip>
         ))}
 
         {clientTrainingPlans.map((plan: TrainingPlan) => (
-          <div
+          <Tooltip
             key={plan.training_plan_id}
-            onClick={() => handleViewClientTrainingPlan(plan.training_plan_id)}
-            className="cursor-pointer border rounded-xl shadow hover:shadow-md transition-transform hover:scale-105 bg-white
-            dark:bg-gray-200 pt-5 pb-5
-            flex items-start justify-center sm:items-center"
+            title="Plan treningowy twojego klienta"
           >
-            <h3 className="text-lg font-semibold text-center justify-center text-gray-800">
-              {plan.title}
-            </h3>
-          </div>
+            <div
+              key={plan.training_plan_id}
+              onClick={() =>
+                handleViewClientTrainingPlan(plan.training_plan_id)
+              }
+              className="cursor-pointer border rounded-xl shadow hover:shadow-md transition-transform hover:scale-105
+              bg-green-100 pt-5 pb-5 flex flex-col items-center justify-center"
+            >
+              <h3 className="text-lg font-semibold text-gray-800 text-center">
+                {plan.title}
+              </h3>
+
+              <ClientName userId={plan.client_id} />
+            </div>
+          </Tooltip>
         ))}
       </div>
     </>
