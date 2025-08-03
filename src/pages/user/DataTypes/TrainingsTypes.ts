@@ -40,3 +40,11 @@ export type Achievement = {
 export type TrainingsProps = {
   userId: number | undefined;
 };
+
+export type UserTrainerRelation = {
+  client_trainer_id: number;
+  trainer_id: number | undefined;
+  user_id: number;
+  trainer_agree: boolean;
+  message_to_trainer: string;
+};
