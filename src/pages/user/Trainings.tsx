@@ -20,6 +20,6 @@ export default function Trainings() {
   return role === "user" ? (
     <UserTrainings userId={userId} />
   ) : (
-    <TrainerTrainings />
+    <TrainerTrainings userId={userId} />
   );
 }
