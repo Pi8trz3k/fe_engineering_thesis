@@ -45,6 +45,6 @@ export type UserTrainerRelation = {
   client_trainer_id: number;
   trainer_id: number | undefined;
   user_id: number;
-  trainer_agree: boolean;
+  trainer_agree: string;
   message_to_trainer: string;
 };
