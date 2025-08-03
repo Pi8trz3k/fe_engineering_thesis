@@ -1,9 +1,8 @@
 import { UseAuth } from "@/hooks/useAuth.tsx";
 import { NavLink } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { MenuOutlined } from "@ant-design/icons";
 import { Drawer, Button } from "antd";
-import * as React from "react";
 
 export default function Sidebar() {
   const { role } = UseAuth();
@@ -19,13 +18,7 @@ export default function Sidebar() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const Link = ({
-    to,
-    children,
-  }: {
-    to: string;
-    children: React.ReactNode;
-  }) => (
+  const Link = ({ to, children }: { to: string; children: ReactNode }) => (
     <NavLink
       to={to}
       className="text-black dark:text-white hover:text-green-600 transition-colors active:border-b-2 border-black}"
@@ -55,6 +48,7 @@ export default function Sidebar() {
           <Link to="/">Panel główny</Link>
           <Link to="/requests">Zarządzaj podopiecznymi</Link>
           <Link to="/trainings">Treningi</Link>
+          <Link to="/achievements">Osiągnięcia</Link>
           <Link to="/profile">Profil</Link>
         </>
       );
