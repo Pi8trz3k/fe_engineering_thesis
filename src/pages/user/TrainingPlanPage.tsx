@@ -119,9 +119,8 @@ export default function TrainingPlanDetailsPage() {
   }, [userId]);
 
   if (unauthorized) {
-    return () => {
-      toast.error("Brak dostępu");
-    };
+    toast.error("Brak dostępu");
+    return <div>Brak dostępu</div>;
   }
 
   const handleOpenModal = (date: Date) => {
