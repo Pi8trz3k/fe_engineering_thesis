@@ -22,10 +22,11 @@ export default function TrainerTrainings({ userId }: TrainingsProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handleCreateTrainingPlan = async (title: string) => {
+  const handleCreateTrainingPlan = async (title: string, clientId?: number) => {
     try {
       const response = await api.post("/training_plan", {
-        client_id: userId,
+        trainer_id: userId,
+        client_id: clientId,
         title: title,
         workouts: [],
       });
@@ -114,6 +115,8 @@ export default function TrainerTrainings({ userId }: TrainingsProps) {
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onCreate={handleCreateTrainingPlan}
+        role="trainer"
+        relations={userTrainerRelations}
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
