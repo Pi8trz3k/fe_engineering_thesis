@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   TrainingPlan,
   TrainingsProps,
+  UserTrainerRelation,
 } from "@/pages/user/DataTypes/TrainingsTypes.ts";
 import { useNavigate } from "react-router-dom";
 import api from "@/lib/api.tsx";
@@ -10,6 +11,9 @@ import CreateTrainingPlanModal from "@/components/Elements/Modals/CreateTraining
 
 export default function TrainerTrainings({ userId }: TrainingsProps) {
   const [trainerTrainingPlans, setTrainerTrainingPlans] = useState<
+    TrainingPlan[]
+  >([]);
+  const [clientTrainingPlans, setClientTrainingPlans] = useState<
     TrainingPlan[]
   >([]);
   const [userTrainerRelations, setUserTrainerRelations] = useState([]);
@@ -32,7 +36,7 @@ export default function TrainerTrainings({ userId }: TrainingsProps) {
     }
   };
 
-  const fetchPlans = async () => {
+  const fetchTrainerPlans = async () => {
     try {
       const response = await api.get(`/training_plan/user/${userId}`);
       setTrainerTrainingPlans(response.data);
@@ -46,9 +50,45 @@ export default function TrainerTrainings({ userId }: TrainingsProps) {
     }
   };
 
+  const fetchClientPlans = async () => {
+    try {
+      const allPlansResponse = await Promise.all(
+        userTrainerRelations.map(async (user_id: number) => {
+          const response = await api.get(`/training_plan/user/${user_id}`);
+          return response.data;
+        }),
+      );
+      setClientTrainingPlans(allPlansResponse.flat());
+    } catch (error: any) {
+      if (error.response.status == 404) {
+        toast.warn("Brak treningów");
+      } else {
+        console.error(error);
+        toast.error("Wystąpił błąd podczas pobierania danych");
+      }
+    }
+  };
+
+  const fetchRelationWithUsers = async () => {
+    try {
+      const response = await api.get(`user-trainer/${userId}`);
+      setUserTrainerRelations(
+        response.data.map((relation: UserTrainerRelation) => relation.user_id),
+      );
+    } catch (error: any) {
+      console.log(error);
+      toast.error("Wystąpił błąd podczas pobierania danych");
+    }
+  };
+
   useEffect(() => {
-    fetchPlans();
+    fetchTrainerPlans();
+    fetchRelationWithUsers();
   }, [userId]);
+
+  useEffect(() => {
+    fetchClientPlans();
+  }, [userTrainerRelations]);
 
   const handleCreateNewTrainingPlan = () => {
     setIsModalOpen(true);
@@ -100,6 +140,20 @@ export default function TrainerTrainings({ userId }: TrainingsProps) {
           <div
             key={plan.training_plan_id}
             onClick={() => handleViewTrainerTrainingPlan(plan.training_plan_id)}
+            className="cursor-pointer border rounded-xl shadow hover:shadow-md transition-transform hover:scale-105 bg-white
+            dark:bg-gray-200 pt-5 pb-5
+            flex items-start justify-center sm:items-center"
+          >
+            <h3 className="text-lg font-semibold text-center justify-center text-gray-800">
+              {plan.title}
+            </h3>
+          </div>
+        ))}
+
+        {clientTrainingPlans.map((plan: TrainingPlan) => (
+          <div
+            key={plan.training_plan_id}
+            onClick={() => handleViewClientTrainingPlan(plan.training_plan_id)}
             className="cursor-pointer border rounded-xl shadow hover:shadow-md transition-transform hover:scale-105 bg-white
             dark:bg-gray-200 pt-5 pb-5
             flex items-start justify-center sm:items-center"
