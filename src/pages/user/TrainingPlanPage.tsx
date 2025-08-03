@@ -86,7 +86,6 @@ export default function TrainingPlanDetailsPage() {
     try {
       const response = await api.get(`/achievements/?user_id=${userId}`);
       setAchievements(response.data);
-      console.log("fetch: ", response.data);
     } catch (error: any) {
       toast.error("Błąd podczas pobierania danych");
       console.error(error);
