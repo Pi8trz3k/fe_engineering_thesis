@@ -11,7 +11,7 @@ type CreateTrainingPlanModalProps = {
   open: boolean;
   onClose: () => void;
   onCreate: (title: string, clientId?: number) => void;
-  role: string;
+  role?: string;
   relations?: UserTrainerRelation[];
 };
 
