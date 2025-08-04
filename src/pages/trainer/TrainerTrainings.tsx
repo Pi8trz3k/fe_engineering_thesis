@@ -24,15 +24,24 @@ export default function TrainerTrainings({ userId }: TrainingsProps) {
 
   const handleCreateTrainingPlan = async (title: string, clientId?: number) => {
     try {
-      const response = await api.post("/training_plan", {
-        trainer_id: userId,
-        client_id: clientId,
-        title: title,
-        workouts: [],
-      });
-
-      const newPlan = await response.data;
-      setTrainerTrainingPlans((prev) => [newPlan, ...prev]);
+      if (clientId === undefined) {
+        const response = await api.post("/training_plan", {
+          client_id: userId,
+          title: title,
+          workouts: [],
+        });
+        const newPlan = await response.data;
+        setTrainerTrainingPlans((prev) => [newPlan, ...prev]);
+      } else {
+        const response = await api.post("/training_plan", {
+          trainer_id: userId,
+          client_id: clientId,
+          title: title,
+          workouts: [],
+        });
+        const newPlan = await response.data;
+        setTrainerTrainingPlans((prev) => [newPlan, ...prev]);
+      }
     } catch (error: any) {
       console.error(error);
       toast.error("Wystąpił błąd podczas tworzenia planu");
@@ -45,7 +54,7 @@ export default function TrainerTrainings({ userId }: TrainingsProps) {
       setTrainerTrainingPlans(response.data);
     } catch (error: any) {
       if (error.response.status == 404) {
-        toast.warn("Brak treningów");
+        toast.warn("Brak prywatnych treningów");
       } else {
         console.error(error);
         toast.error("Wystąpił błąd podczas pobierania danych");
@@ -54,28 +63,29 @@ export default function TrainerTrainings({ userId }: TrainingsProps) {
   };
 
   const fetchClientPlans = async () => {
-    try {
-      const allPlansResponse = await Promise.all(
-        userTrainerRelations
-          .filter((relation: UserTrainerRelation) => {
-            return relation.trainer_agree === "agree";
-          })
-          .map(async (relation: UserTrainerRelation) => {
+    const allPlansResponse = await Promise.all(
+      userTrainerRelations
+        .filter(
+          (relation: UserTrainerRelation) => relation.trainer_agree === "agree",
+        )
+        .map(async (relation: UserTrainerRelation) => {
+          try {
             const response = await api.get(
               `/training_plan/user/${relation.user_id}`,
             );
             return response.data;
-          }),
-      );
-      setClientTrainingPlans(allPlansResponse.flat());
-    } catch (error: any) {
-      if (error.response.status == 404) {
-        toast.warn("Brak treningów");
-      } else {
-        console.error(error);
-        toast.error("Wystąpił błąd podczas pobierania danych");
-      }
-    }
+          } catch (error: any) {
+            if (error.response?.status === 404) {
+              // if no trainings - return empty array
+              return [];
+            } else {
+              console.error(error);
+              toast.error("Wystąpił błąd podczas pobierania treningów");
+            }
+          }
+        }),
+    );
+    setClientTrainingPlans(allPlansResponse.flat());
   };
 
   const fetchRelationWithUsers = async () => {
@@ -105,8 +115,11 @@ export default function TrainerTrainings({ userId }: TrainingsProps) {
     navigate(`/trainings/${trainingPlanId}`);
   };
 
-  const handleViewClientTrainingPlan = (trainingPlanId: string) => {
-    navigate(`/trainings/client/${trainingPlanId}`);
+  const handleViewClientTrainingPlan = (
+    trainingPlanId: string,
+    userId: number,
+  ) => {
+    navigate(`/trainings/${userId}/${trainingPlanId}`);
   };
 
   return (
@@ -174,7 +187,10 @@ export default function TrainerTrainings({ userId }: TrainingsProps) {
             <div
               key={plan.training_plan_id}
               onClick={() =>
-                handleViewClientTrainingPlan(plan.training_plan_id)
+                handleViewClientTrainingPlan(
+                  plan.training_plan_id,
+                  plan.client_id,
+                )
               }
               className="cursor-pointer border rounded-xl shadow hover:shadow-md transition-transform hover:scale-105
               bg-green-100 pt-5 pb-5 flex flex-col items-center justify-center"
