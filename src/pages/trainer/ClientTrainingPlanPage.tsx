@@ -16,12 +16,14 @@ import {
   WorkoutFormData,
   TrainingPlan,
   Exercise,
-  Achievement,
 } from "../user/DataTypes/TrainingsTypes.ts";
+import { ClientTrainingPlanPageProps } from "@/pages/user/DataTypes/TrainersPageTypes.ts";
 
 dayjs.locale("pl");
 
-export default function ClientTrainingPlanPage() {
+export default function ClientTrainingPlanPage({
+  clientId,
+}: ClientTrainingPlanPageProps) {
   const { trainingPlanId } = useParams<{ trainingPlanId: string }>();
   const [userWorkouts, setUserWorkouts] = useState<Workout[]>([]);
   const [unauthorized, setUnauthorized] = useState(false);
@@ -37,7 +39,6 @@ export default function ClientTrainingPlanPage() {
   const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false);
   const [userId, setUserId] = useState<number>();
   const navigate = useNavigate();
-  const [achievements, setAchievements] = useState<Achievement[]>([]);
 
   const [currentMonth, setCurrentMonth] = useState(dayjs());
   const daysInMonth = currentMonth.daysInMonth();
@@ -55,8 +56,13 @@ export default function ClientTrainingPlanPage() {
         );
         setUserWorkouts(responseUserWorkouts.map((res) => res.data));
       } catch (error: any) {
-        toast.error("Wystąpił błąd podczas pobierania treningów");
-        console.log(error);
+        if (error.response.data.detail === "Workout not found") {
+          toast.warn("Wystąpił błąd z treningami");
+          console.warn(error);
+        } else {
+          toast.error("Wystąpił błąd podczas pobierania treningów");
+          console.error(error);
+        }
       }
     }
   };
@@ -77,18 +83,6 @@ export default function ClientTrainingPlanPage() {
         toast.error("Wystąpił błąd podczas pobierania planu");
         console.log(error);
       }
-    }
-  };
-
-  const fetchAchievements = async () => {
-    if (!userId) return;
-
-    try {
-      const response = await api.get(`/achievements/?user_id=${userId}`);
-      setAchievements(response.data);
-    } catch (error: any) {
-      toast.error("Błąd podczas pobierania danych");
-      console.error(error);
     }
   };
 
@@ -114,10 +108,6 @@ export default function ClientTrainingPlanPage() {
     fetchUserWorkouts();
   }, [userTrainingPlan]);
 
-  useEffect(() => {
-    fetchAchievements();
-  }, [userId]);
-
   if (unauthorized) {
     toast.error("Brak dostępu");
     return <div>Brak dostępu</div>;
@@ -139,7 +129,8 @@ export default function ClientTrainingPlanPage() {
           title: values.title,
           workout_date: selectedDate?.toISOString(),
           is_training_done: false,
-          client_id: userId,
+          client_id: clientId,
+          trainer_id: userId,
           training_plan_id: trainingPlanId,
         },
         exercises: values.exercises,
@@ -250,7 +241,7 @@ export default function ClientTrainingPlanPage() {
 
       toast.success("Zmieniono status treningu");
 
-      // odśwież dane treningu
+      // refresh after patch
       const updatedWorkoutResponse = await api.get(
         `/workouts/${selectedWorkout.workout_id}`,
       );
@@ -308,31 +299,6 @@ export default function ClientTrainingPlanPage() {
     } catch (err) {
       toast.error("Błąd podczas usuwania planu treningowego");
       console.error(err);
-    }
-  };
-
-  const handleAddAchievement = async (exercise: Exercise) => {
-    if (!exercise?.exercise_id || !userId) {
-      toast.error("Brak ćwiczenia lub użytkownika");
-      return;
-    }
-
-    try {
-      await api.post("/achievements", {
-        exercise_id: exercise.exercise_id,
-        user_id: userId,
-      });
-
-      toast.success("Dodano osiągnięcie!");
-
-      await fetchAchievements();
-    } catch (error: any) {
-      if (error.response.data.detail === "Achievement already exists") {
-        toast.error("Osiągnięcie już istnieje");
-      } else {
-        toast.error("Błąd podczas dodawania osiągnięcia");
-      }
-      console.error(error);
     }
   };
 
@@ -437,273 +403,226 @@ export default function ClientTrainingPlanPage() {
 
   return (
     <div>
-      <a>Hello ClientTrainingPlanPage</a>
-      {/*<div className="mb-4 text-center jusitfy-center dark:text-white">*/}
-      {/*  {editingTrainingPlanTitle ? (*/}
-      {/*    <Input*/}
-      {/*      value={trainingPlanTitle}*/}
-      {/*      onChange={(e) => handleUpdateTrainingPlanTitle(e.target.value)}*/}
-      {/*      onBlur={() => setEditingTrainingPlanTitle(false)}*/}
-      {/*      className="text-xl font-bold max-w-sm"*/}
-      {/*      autoFocus*/}
-      {/*    />*/}
-      {/*  ) : (*/}
-      {/*    <Tooltip title="Kliknij aby edytować tytuł">*/}
-      {/*      <h1*/}
-      {/*        onClick={() => setEditingTrainingPlanTitle(true)}*/}
-      {/*        className="text-2xl font-bold cursor-pointer hover:underline inline-block"*/}
-      {/*      >*/}
-      {/*        {trainingPlanTitle}*/}
-      {/*      </h1>*/}
-      {/*    </Tooltip>*/}
-      {/*  )}*/}
-      {/*  <Tooltip title="Usuń trening">*/}
-      {/*    <Button*/}
-      {/*      icon={<DeleteTwoTone twoToneColor="#ff0000" />}*/}
-      {/*      size="small"*/}
-      {/*      onClick={() => handleDeleteTrainingPlan(trainingPlanId)}*/}
-      {/*      className="ml-3"*/}
-      {/*    />*/}
-      {/*  </Tooltip>*/}
-      {/*</div>*/}
+      <div className="mb-4 text-center jusitfy-center dark:text-white">
+        {editingTrainingPlanTitle ? (
+          <Input
+            value={trainingPlanTitle}
+            onChange={(e) => handleUpdateTrainingPlanTitle(e.target.value)}
+            onBlur={() => setEditingTrainingPlanTitle(false)}
+            className="text-xl font-bold max-w-sm"
+            autoFocus
+          />
+        ) : (
+          <Tooltip title="Kliknij aby edytować tytuł">
+            <h1
+              onClick={() => setEditingTrainingPlanTitle(true)}
+              className="text-2xl font-bold cursor-pointer hover:underline inline-block"
+            >
+              {trainingPlanTitle}
+            </h1>
+          </Tooltip>
+        )}
+        <Tooltip title="Usuń trening">
+          <Button
+            icon={<DeleteTwoTone twoToneColor="#ff0000" />}
+            size="small"
+            onClick={() => handleDeleteTrainingPlan(trainingPlanId)}
+            className="ml-3"
+          />
+        </Tooltip>
+      </div>
 
-      {/*<div className="flex items-center justify-between mb-4 dark:text-white">*/}
-      {/*  <Button*/}
-      {/*    icon={<LeftOutlined />}*/}
-      {/*    onClick={handlePrevMonth}*/}
-      {/*    aria-label="Poprzedni miesiąc"*/}
-      {/*  />*/}
-      {/*  <h2 className="text-lg font-semibold">*/}
-      {/*    {currentMonth.format("MMMM YYYY")}*/}
-      {/*  </h2>*/}
-      {/*  <Button*/}
-      {/*    icon={<RightOutlined />}*/}
-      {/*    onClick={handleNextMonth}*/}
-      {/*    aria-label="Następny miesiąc"*/}
-      {/*  />*/}
-      {/*</div>*/}
+      <div className="flex items-center justify-between mb-4 dark:text-white">
+        <Button
+          icon={<LeftOutlined />}
+          onClick={handlePrevMonth}
+          aria-label="Poprzedni miesiąc"
+        />
+        <h2 className="text-lg font-semibold">
+          {currentMonth.format("MMMM YYYY")}
+        </h2>
+        <Button
+          icon={<RightOutlined />}
+          onClick={handleNextMonth}
+          aria-label="Następny miesiąc"
+        />
+      </div>
 
-      {/*<div*/}
-      {/*  className="grid gap-2"*/}
-      {/*  style={{*/}
-      {/*    gridTemplateColumns: "repeat(auto-fit, minmax(80px, 1fr))",*/}
-      {/*  }}*/}
-      {/*>*/}
-      {/*  {renderDays()}*/}
-      {/*</div>*/}
+      <div
+        className="grid gap-2"
+        style={{
+          gridTemplateColumns: "repeat(auto-fit, minmax(80px, 1fr))",
+        }}
+      >
+        {renderDays()}
+      </div>
 
-      {/*<Modal*/}
-      {/*  open={isModalOpen}*/}
-      {/*  title={`Nowy trening — ${selectedDate?.toLocaleDateString("pl-PL")}`}*/}
-      {/*  onCancel={() => setIsModalOpen(false)}*/}
-      {/*  onOk={() => form.submit()}*/}
-      {/*  okText="Zapisz"*/}
-      {/*  cancelText="Anuluj"*/}
-      {/*  width={600}*/}
-      {/*>*/}
-      {/*  <Form form={form} layout="vertical" onFinish={handleCreateWorkout}>*/}
-      {/*    <Form.Item*/}
-      {/*      label="Tytuł treningu"*/}
-      {/*      name="title"*/}
-      {/*      rules={[{ required: true, message: "Podaj tytuł" }]}*/}
-      {/*    >*/}
-      {/*      <Input />*/}
-      {/*    </Form.Item>*/}
+      <Modal
+        open={isModalOpen}
+        title={`Nowy trening — ${selectedDate?.toLocaleDateString("pl-PL")}`}
+        onCancel={() => setIsModalOpen(false)}
+        onOk={() => form.submit()}
+        okText="Zapisz"
+        cancelText="Anuluj"
+        width={600}
+      >
+        <Form form={form} layout="vertical" onFinish={handleCreateWorkout}>
+          <Form.Item
+            label="Tytuł treningu"
+            name="title"
+            rules={[{ required: true, message: "Podaj tytuł" }]}
+          >
+            <Input />
+          </Form.Item>
 
-      {/*    <Form.List name="exercises">*/}
-      {/*      {(fields, { add, remove }) => (*/}
-      {/*        <>*/}
-      {/*          {fields.map(({ key, name }) => (*/}
-      {/*            <div*/}
-      {/*              key={key}*/}
-      {/*              className="border p-2 rounded mb-2 bg-gray-50 space-y-2"*/}
-      {/*            >*/}
-      {/*              <Form.Item*/}
-      {/*                label="Nazwa ćwiczenia"*/}
-      {/*                name={[name, "exercise_name"]}*/}
-      {/*                rules={[*/}
-      {/*                  { required: true, message: "Podaj nazwę ćwiczenia" },*/}
-      {/*                ]}*/}
-      {/*              >*/}
-      {/*                <Input />*/}
-      {/*              </Form.Item>*/}
-      {/*              <Form.Item*/}
-      {/*                label="Liczba serii"*/}
-      {/*                name={[name, "sets"]}*/}
-      {/*                rules={[*/}
-      {/*                  { required: true, message: "Podaj liczbe serii" },*/}
-      {/*                ]}*/}
-      {/*              >*/}
-      {/*                <Input />*/}
-      {/*              </Form.Item>*/}
-      {/*              <Form.Item*/}
-      {/*                label="Waga (kg)"*/}
-      {/*                name={[name, "weight"]}*/}
-      {/*                rules={[{ required: true, message: "Podaj wagę" }]}*/}
-      {/*              >*/}
-      {/*                <Input />*/}
-      {/*              </Form.Item>*/}
-      {/*              <Form.Item*/}
-      {/*                label="Opis"*/}
-      {/*                name={[name, "description"]}*/}
-      {/*                rules={[{ required: true, message: "Podaj liczbe opis" }]}*/}
-      {/*              >*/}
-      {/*                <Input.TextArea rows={2} />*/}
-      {/*              </Form.Item>*/}
-      {/*              <Button*/}
-      {/*                danger*/}
-      {/*                type="link"*/}
-      {/*                onClick={() => remove(name)}*/}
-      {/*                className="dark:color-red-100"*/}
-      {/*              >*/}
-      {/*                Usuń ćwiczenie*/}
-      {/*              </Button>*/}
-      {/*            </div>*/}
-      {/*          ))}*/}
-      {/*          <Button type="dashed" onClick={() => add()} block>*/}
-      {/*            Dodaj ćwiczenie*/}
-      {/*          </Button>*/}
-      {/*        </>*/}
-      {/*      )}*/}
-      {/*    </Form.List>*/}
-      {/*  </Form>*/}
-      {/*</Modal>*/}
+          <Form.List name="exercises">
+            {(fields, { add, remove }) => (
+              <>
+                {fields.map(({ key, name }) => (
+                  <div
+                    key={key}
+                    className="border p-2 rounded mb-2 bg-gray-50 space-y-2"
+                  >
+                    <Form.Item
+                      label="Nazwa ćwiczenia"
+                      name={[name, "exercise_name"]}
+                      rules={[
+                        { required: true, message: "Podaj nazwę ćwiczenia" },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      label="Liczba serii"
+                      name={[name, "sets"]}
+                      rules={[
+                        { required: true, message: "Podaj liczbe serii" },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      label="Waga (kg)"
+                      name={[name, "weight"]}
+                      rules={[{ required: true, message: "Podaj wagę" }]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      label="Opis"
+                      name={[name, "description"]}
+                      rules={[{ required: true, message: "Podaj liczbe opis" }]}
+                    >
+                      <Input.TextArea rows={2} />
+                    </Form.Item>
+                    <Button
+                      danger
+                      type="link"
+                      onClick={() => remove(name)}
+                      className="dark:color-red-100"
+                    >
+                      Usuń ćwiczenie
+                    </Button>
+                  </div>
+                ))}
+                <Button type="dashed" onClick={() => add()} block>
+                  Dodaj ćwiczenie
+                </Button>
+              </>
+            )}
+          </Form.List>
+        </Form>
+      </Modal>
 
-      {/*<Modal*/}
-      {/*  open={isWorkoutModalOpen}*/}
-      {/*  title={*/}
-      {/*    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 dark:bg-[#99a1af]">*/}
-      {/*      <span className="text-lg font-semibold">*/}
-      {/*        Edytuj trening — {selectedWorkout?.title}*/}
-      {/*      </span>*/}
-      {/*      <Button*/}
-      {/*        type={selectedWorkout?.is_training_done ? "default" : "primary"}*/}
-      {/*        onClick={handleToggleWorkoutStatus}*/}
-      {/*        className="w-full sm:w-auto"*/}
-      {/*      >*/}
-      {/*        {selectedWorkout?.is_training_done*/}
-      {/*          ? "Oznacz jako niezrobiony"*/}
-      {/*          : "Oznacz jako zrobiony"}*/}
-      {/*      </Button>*/}
-      {/*      <Button*/}
-      {/*        danger*/}
-      {/*        size="small"*/}
-      {/*        onClick={() => handleDeleteWorkout(selectedWorkout?.workout_id)}*/}
-      {/*        className="sm:mr-6"*/}
-      {/*      >*/}
-      {/*        Usuń trening*/}
-      {/*      </Button>*/}
-      {/*    </div>*/}
-      {/*  }*/}
-      {/*  onCancel={handleCloseWorkoutModal}*/}
-      {/*  onOk={() => editForm.submit()}*/}
-      {/*  okText="Zapisz zmiany"*/}
-      {/*  cancelText="Anuluj"*/}
-      {/*  width={600}*/}
-      {/*>*/}
-      {/*  <Form*/}
-      {/*    form={editForm}*/}
-      {/*    layout="vertical"*/}
-      {/*    onFinish={(values) => handleEditWorkout(values)}*/}
-      {/*  >*/}
-      {/*    <Form.Item*/}
-      {/*      label="Tytuł treningu"*/}
-      {/*      name="title"*/}
-      {/*      rules={[{ required: true, message: "Podaj tytuł" }]}*/}
-      {/*    >*/}
-      {/*      <Input />*/}
-      {/*    </Form.Item>*/}
+      <Modal
+        open={isWorkoutModalOpen}
+        title={
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 dark:bg-[#99a1af]">
+            <span className="text-lg font-semibold">
+              Edytuj trening — {selectedWorkout?.title}
+            </span>
+            <Button
+              danger
+              size="small"
+              onClick={() => handleDeleteWorkout(selectedWorkout?.workout_id)}
+              className="sm:mr-6"
+            >
+              Usuń trening
+            </Button>
+          </div>
+        }
+        onCancel={handleCloseWorkoutModal}
+        onOk={() => editForm.submit()}
+        okText="Zapisz zmiany"
+        cancelText="Anuluj"
+        width={600}
+      >
+        <Form
+          form={editForm}
+          layout="vertical"
+          onFinish={(values) => handleEditWorkout(values)}
+        >
+          <Form.Item
+            label="Tytuł treningu"
+            name="title"
+            rules={[{ required: true, message: "Podaj tytuł" }]}
+          >
+            <Input />
+          </Form.Item>
 
-      {/*    <Form.List name="exercises">*/}
-      {/*      {(fields, { add, remove }) => (*/}
-      {/*        <>*/}
-      {/*          {fields.map(({ key, name }) => (*/}
-      {/*            <div*/}
-      {/*              key={key}*/}
-      {/*              className="border p-2 rounded mb-2 bg-gray-50 space-y-2 dark:bg-[#b3c3d8]"*/}
-      {/*            >*/}
-      {/*              <Form.Item*/}
-      {/*                label="Nazwa ćwiczenia"*/}
-      {/*                name={[name, "exercise_name"]}*/}
-      {/*                rules={[*/}
-      {/*                  { required: true, message: "Podaj nazwę ćwiczenia" },*/}
-      {/*                ]}*/}
-      {/*              >*/}
-      {/*                <Input />*/}
-      {/*              </Form.Item>*/}
-      {/*              <Form.Item*/}
-      {/*                label="Liczba serii"*/}
-      {/*                name={[name, "sets"]}*/}
-      {/*                rules={[*/}
-      {/*                  { required: true, message: "Podaj liczbe serii" },*/}
-      {/*                ]}*/}
-      {/*              >*/}
-      {/*                <Input />*/}
-      {/*              </Form.Item>*/}
-      {/*              <Form.Item*/}
-      {/*                label="Waga (kg)"*/}
-      {/*                name={[name, "weight"]}*/}
-      {/*                rules={[{ required: true, message: "Podaj wagę" }]}*/}
-      {/*              >*/}
-      {/*                <Input />*/}
-      {/*              </Form.Item>*/}
-      {/*              <Form.Item*/}
-      {/*                label="Opis"*/}
-      {/*                name={[name, "description"]}*/}
-      {/*                rules={[{ required: true, message: "Podaj liczbe opis" }]}*/}
-      {/*              >*/}
-      {/*                <Input.TextArea rows={2} />*/}
-      {/*              </Form.Item>*/}
-      {/*              <Tooltip*/}
-      {/*                title={*/}
-      {/*                  !editForm.getFieldValue(["exercises", name])*/}
-      {/*                    ?.exercise_id*/}
-      {/*                    ? "Najpierw zapisz ćwiczenie"*/}
-      {/*                    : achievements?.some(*/}
-      {/*                      (a) =>*/}
-      {/*                        a.exercise_id ===*/}
-      {/*                        editForm.getFieldValue(["exercises", name])*/}
-      {/*                          ?.exercise_id,*/}
-      {/*                    )*/}
-      {/*                      ? "To ćwiczenie już jest osiągnięciem"*/}
-      {/*                      : ""*/}
-      {/*                }*/}
-      {/*              >*/}
-      {/*                <Button*/}
-      {/*                  type="primary"*/}
-      {/*                  onClick={() => {*/}
-      {/*                    handleAddAchievement(*/}
-      {/*                      editForm.getFieldValue(["exercises", name]),*/}
-      {/*                    );*/}
-      {/*                  }}*/}
-      {/*                  disabled={*/}
-      {/*                    !editForm.getFieldValue(["exercises", name])*/}
-      {/*                      ?.exercise_id ||*/}
-      {/*                    achievements?.some(*/}
-      {/*                      (a) =>*/}
-      {/*                        a.exercise_id ===*/}
-      {/*                        editForm.getFieldValue(["exercises", name])*/}
-      {/*                          ?.exercise_id,*/}
-      {/*                    )*/}
-      {/*                  }*/}
-      {/*                  className="sm:mr-6"*/}
-      {/*                >*/}
-      {/*                  Dodaj do osiągnięć*/}
-      {/*                </Button>*/}
-      {/*              </Tooltip>*/}
-      {/*              <Button danger size="small" onClick={() => remove(name)}>*/}
-      {/*                Usuń ćwiczenie*/}
-      {/*              </Button>*/}
-      {/*            </div>*/}
-      {/*          ))}*/}
-      {/*          <Button type="dashed" onClick={() => add()} block>*/}
-      {/*            Dodaj ćwiczenie*/}
-      {/*          </Button>*/}
-      {/*        </>*/}
-      {/*      )}*/}
-      {/*    </Form.List>*/}
-      {/*  </Form>*/}
-      {/*</Modal>*/}
+          <Form.List name="exercises">
+            {(fields, { add, remove }) => (
+              <>
+                {fields.map(({ key, name }) => (
+                  <div
+                    key={key}
+                    className="border p-2 rounded mb-2 bg-gray-50 space-y-2 dark:bg-[#b3c3d8]"
+                  >
+                    <Form.Item
+                      label="Nazwa ćwiczenia"
+                      name={[name, "exercise_name"]}
+                      rules={[
+                        { required: true, message: "Podaj nazwę ćwiczenia" },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      label="Liczba serii"
+                      name={[name, "sets"]}
+                      rules={[
+                        { required: true, message: "Podaj liczbe serii" },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      label="Waga (kg)"
+                      name={[name, "weight"]}
+                      rules={[{ required: true, message: "Podaj wagę" }]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      label="Opis"
+                      name={[name, "description"]}
+                      rules={[{ required: true, message: "Podaj liczbe opis" }]}
+                    >
+                      <Input.TextArea rows={2} />
+                    </Form.Item>
+                    <Button danger size="small" onClick={() => remove(name)}>
+                      Usuń ćwiczenie
+                    </Button>
+                  </div>
+                ))}
+                <Button type="dashed" onClick={() => add()} block>
+                  Dodaj ćwiczenie
+                </Button>
+              </>
+            )}
+          </Form.List>
+        </Form>
+      </Modal>
     </div>
   );
 }
