@@ -41,3 +41,7 @@ export type OpinionCardProps = {
   description: string;
   numberOfStars: number;
 };
+
+export type ClientTrainingPlanPageProps = {
+  clientId: number;
+};
