@@ -229,38 +229,6 @@ export default function ClientTrainingPlanPage({
     }
   };
 
-  const handleToggleWorkoutStatus = async () => {
-    if (!selectedWorkout) return;
-
-    try {
-      await api.patch(`/workouts/${selectedWorkout.workout_id}`, {
-        workout: {
-          is_training_done: !selectedWorkout.is_training_done,
-        },
-      });
-
-      toast.success("Zmieniono status treningu");
-
-      // refresh after patch
-      const updatedWorkoutResponse = await api.get(
-        `/workouts/${selectedWorkout.workout_id}`,
-      );
-
-      setUserWorkouts((prev) =>
-        prev.map((w) =>
-          w.workout_id === selectedWorkout.workout_id
-            ? updatedWorkoutResponse.data
-            : w,
-        ),
-      );
-
-      setSelectedWorkout(updatedWorkoutResponse.data);
-    } catch (error) {
-      toast.error("Nie udało się zmienić statusu");
-      console.error(error);
-    }
-  };
-
   const handleDeleteWorkout = async (workoutId: string | undefined) => {
     try {
       await api.delete(`/workouts/${workoutId}`);

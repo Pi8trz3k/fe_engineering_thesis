@@ -40,7 +40,7 @@ export default function TrainerTrainings({ userId }: TrainingsProps) {
           workouts: [],
         });
         const newPlan = await response.data;
-        setTrainerTrainingPlans((prev) => [newPlan, ...prev]);
+        setClientTrainingPlans((prev) => [newPlan, ...prev]);
       }
     } catch (error: any) {
       console.error(error);
