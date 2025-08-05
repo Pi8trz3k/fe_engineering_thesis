@@ -282,11 +282,11 @@ export default function TrainingPlanDetailsPage() {
 
       await fetchTrainingPlan();
       await fetchUserWorkouts();
-
-      setIsWorkoutModalOpen(false);
     } catch (err) {
       toast.error("Błąd podczas usuwania treningu");
       console.error(err);
+    } finally {
+      setIsWorkoutModalOpen(false);
     }
   };
 
