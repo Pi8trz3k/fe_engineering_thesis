@@ -16,7 +16,6 @@ export default function AchievementsTable({ data, onRefresh }: Props) {
   const [userExercises, setUserExercises] = useState<Exercise[]>([]);
 
   const fetchExercises = async () => {
-    console.log("userexercise: ", userExercises);
     try {
       const responseUserExercises = await Promise.all(
         data.map((achievement: Achievement) =>
