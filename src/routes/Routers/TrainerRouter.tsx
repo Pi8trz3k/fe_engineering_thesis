@@ -6,8 +6,8 @@ import UserProfile from "@/pages/UserProfile";
 import RequestsToTrainer from "@/pages/trainer/RequestsToTrainer.tsx";
 import Trainings from "@/pages/user/Trainings.tsx";
 import TrainingPlanDetailsPage from "@/pages/user/TrainingPlanPage.tsx";
-import Achievements from "@/pages/user/Achievements.tsx";
 import ClientTrainingPlanWrapper from "@/pages/trainer/ClientTrainingPlanWrapper.tsx";
+import AchievementsPage from "@/pages/user/AchievementsPage.tsx";
 
 export default function TrainerRouter() {
   const trainerRoutes = [
@@ -32,7 +32,7 @@ export default function TrainerRouter() {
           path: "trainings/:clientId/:trainingPlanId",
           element: <ClientTrainingPlanWrapper />,
         },
-        { path: "achievements", element: <Achievements /> },
+        { path: "achievements", element: <AchievementsPage /> },
         { path: "profile", element: <UserProfile /> },
         { path: "*", element: <Navigate to="/" /> },
       ],

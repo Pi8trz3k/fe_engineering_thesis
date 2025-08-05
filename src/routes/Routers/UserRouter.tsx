@@ -5,12 +5,12 @@ import ErrorPage from "@/pages/ErrorPage.tsx";
 import Trainings from "@/pages/user/Trainings.tsx";
 import TrainersPage from "@/pages/user/TrainersPage.tsx";
 import UserProfile from "@/pages/UserProfile.tsx";
-import Achievements from "@/pages/user/Achievements.tsx";
 import EmailConfirmationPage from "@/pages/EmailConfirmationPage.tsx";
 import TrainerProfilePageWrapper from "@/pages/user/TrainerProfilePageWrapper.tsx";
 import RequestsToTrainer from "@/pages/trainer/RequestsToTrainer.tsx";
 import TrainerOpinions from "@/pages/user/TrainerOpinions.tsx";
 import TrainingPlanDetailsPage from "@/pages/user/TrainingPlanPage.tsx";
+import AchievementsPage from "@/pages/user/AchievementsPage.tsx";
 
 export default function UserRouter() {
   const userRoutes = [
@@ -37,7 +37,7 @@ export default function UserRouter() {
         },
         { path: "requests", element: <RequestsToTrainer /> },
         { path: "trainer-opinions", element: <TrainerOpinions /> },
-        { path: "achievements", element: <Achievements /> },
+        { path: "achievements", element: <AchievementsPage /> },
         { path: "profile", element: <UserProfile /> },
         { path: "confirm-email", element: <EmailConfirmationPage /> },
         { path: "*", element: <Navigate to="/" /> },

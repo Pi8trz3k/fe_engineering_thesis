@@ -145,7 +145,12 @@ export default function TrainingPlanDetailsPage() {
         exercises: values.exercises,
       });
 
-      setUserWorkouts((prev) => [...prev, response.data]);
+      // get new full workout
+      const fullWorkout = await api.get(
+        `/workouts/${response.data.workout_id}`,
+      );
+
+      setUserWorkouts((prev) => [...prev, fullWorkout.data]);
 
       setIsModalOpen(false);
       form.resetFields();
@@ -277,11 +282,11 @@ export default function TrainingPlanDetailsPage() {
 
       await fetchTrainingPlan();
       await fetchUserWorkouts();
-
-      setIsWorkoutModalOpen(false);
     } catch (err) {
       toast.error("Błąd podczas usuwania treningu");
       console.error(err);
+    } finally {
+      setIsWorkoutModalOpen(false);
     }
   };
 
