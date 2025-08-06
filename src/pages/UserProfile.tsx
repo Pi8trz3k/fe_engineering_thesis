@@ -5,7 +5,7 @@ import { usePicture } from "@/utils/PictureProvider.tsx";
 import { Button, Spin } from "antd";
 import CommonProfileContent from "@/components/Elements/ProfileContent/UserProfileContent.tsx";
 import TrainerProfileContent from "@/components/Elements/ProfileContent/TrainerProfileContent.tsx";
-import ChangePasswordSection from "@/components/Elements/ProfileContent/ChangePasswordContent.tsx";
+import ChangePasswordAndDeleteAccountContent from "@/components/Elements/ProfileContent/ChangePasswordAndDeleteAccountContent.tsx";
 import { UserBackend } from "@/components/Elements/ProfileContent/DataTypes.ts";
 import { toast } from "react-toastify";
 import { UploadOutlined } from "@ant-design/icons";
@@ -97,10 +97,10 @@ export default function UserProfile() {
         </div>
       </div>
 
-      {/* password and trainer data */}
+      {/* password, delete account and trainer data */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pr-5">
         <div>
-          <ChangePasswordSection />
+          <ChangePasswordAndDeleteAccountContent user={user} />
         </div>
 
         {role === "trainer" && user?.user_id && (

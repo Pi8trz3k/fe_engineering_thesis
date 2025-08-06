@@ -2,13 +2,20 @@ import { ChangeEvent, useState } from "react";
 import { Input, Button } from "antd";
 import api from "@/lib/api";
 import { toast } from "react-toastify";
+import { UserBackend } from "@/components/Elements/ProfileContent/DataTypes.ts";
+import { UseAuth } from "@/hooks/useAuth.tsx";
 
-export default function ChangePasswordSection() {
+type Props = {
+  user: UserBackend | undefined;
+};
+
+export default function ChangePasswordAndDeleteAccountContent({ user }: Props) {
   const [formData, setFormData] = useState({
     current_password: "",
     new_password: "",
     confirm_password: "",
   });
+  const { logOut } = UseAuth();
 
   const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/;
 
@@ -52,6 +59,23 @@ export default function ChangePasswordSection() {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    if (!user?.user_id) return toast.error("Brak numeru użytkownika!");
+
+    const confirmed = window.confirm("Czy na pewno chcesz usunąć swoje konto?");
+
+    if (!confirmed) return;
+
+    try {
+      await api.delete(`/user/${user.user_id}`);
+      toast.success("Konto zostało usunięte.");
+      logOut();
+    } catch (err) {
+      console.error(err);
+      toast.error("Nie udało się usunąć konta");
+    }
+  };
+
   return (
     <div className="w-full flex justify-center">
       <div className="w-[100%] sm:w-[75%] flex flex-col gap-4 mt-8 max-w-md text-center pb-10">
@@ -78,6 +102,10 @@ export default function ChangePasswordSection() {
 
         <Button type="primary" onClick={handleSubmit}>
           Zmień hasło
+        </Button>
+
+        <Button danger onClick={handleDeleteAccount}>
+          Usuń konto
         </Button>
       </div>
     </div>
