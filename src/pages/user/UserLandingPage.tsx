@@ -22,6 +22,10 @@ export default function UserLandingPage() {
     not_done: number;
     total: number;
   } | null>(null);
+  const [trainerRelationsSummary, setTrainerRelationsSummary] = useState<{
+    wait: number;
+    agree: number;
+  }>({ wait: 0, agree: 0 });
   const navigate = useNavigate();
 
   const fetchUser = async () => {
@@ -86,18 +90,48 @@ export default function UserLandingPage() {
       }
     };
 
+    const fetchTrainerRelationsSummary = async () => {
+      if (role === "trainer") {
+        try {
+          const response = await api.get(`/user-trainer/${user?.user_id}`);
+          const relations = response.data;
+
+          const summary = relations.reduce(
+            (acc: { wait: number; agree: number }, relation: any) => {
+              if (relation.trainer_agree === "wait") acc.wait += 1;
+              if (relation.trainer_agree === "agree") acc.agree += 1;
+              return acc;
+            },
+            { wait: 0, agree: 0 },
+          );
+
+          setTrainerRelationsSummary(summary);
+        } catch (error: any) {
+          console.error(error);
+          toast.error("Błąd podczas pobierania relacji z trenerami");
+        }
+      } else {
+        return;
+      }
+    };
+
     if (user?.user_id) {
       fetchNextTraining();
       fetchTrainerRelations();
       fetchAchievements();
       fetchWorkoutsCount();
+      fetchTrainerRelationsSummary();
     }
   }, [user]);
 
   return (
     <div className="flex flex-col gap-6 mt-6 items-center">
       <h1 className="text-2xl font-bold text-center mb-4 dark:text-white">
-        Witamy w panelu użytkownika!
+        {role === "user" ? (
+          <a>Witamy w panelu użytkownika!</a>
+        ) : (
+          <a>Witamy w panelu trenera</a>
+        )}
       </h1>
       <div className="w-[90%] md:w-[60%] space-y-6">
         {!user?.is_mail_verified && (
@@ -137,7 +171,7 @@ export default function UserLandingPage() {
         {monthlySummary && (
           <div className="border rounded-xl p-4 shadow-md text-center dark:bg-gray-200 bg-white">
             <h3 className="text-lg font-semibold mb-2">
-              Treningi w tym miesiącu
+              Twoje treningi w tym miesiącu
             </h3>
             <div className="text-base flex flex-col gap-1">
               <p>
@@ -163,26 +197,29 @@ export default function UserLandingPage() {
             <p className="text-sm text-gray-500">Ładowanie danych...</p>
           )}
         </div>
-        <div className="border rounded-xl p-4 shadow-md text-center dark:bg-gray-200 bg-white">
-          <h3 className="text-lg font-semibold mb-2">Twoi trenerzy</h3>
-          {trainerCount !== null ? (
-            <div className="flex items-center justify-center text-center">
+        {role === "user" ? (
+          <div className="border rounded-xl p-4 shadow-md text-center dark:bg-gray-200 bg-white">
+            <h3 className="text-lg font-semibold mb-2">Twoi trenerzy</h3>
+            {trainerCount !== null ? (
               <p className="text-base text-center">
                 👤 Trenerzy, z którymi współpracujesz:{" "}
                 <strong>{trainerCount}</strong>
               </p>
-              <Button
-                type="link"
-                onClick={() => navigate("/trainers")}
-                className="text-green-500"
-              >
-                Zobacz trenerów
-              </Button>
-            </div>
-          ) : (
-            <p className="text-sm text-gray-500">Ładowanie danych...</p>
-          )}
-        </div>
+            ) : (
+              <p className="text-sm text-gray-500">Ładowanie danych...</p>
+            )}
+          </div>
+        ) : (
+          <div className="border rounded-xl p-4 shadow-md text-center dark:bg-gray-200 bg-white">
+            <h3 className="text-lg font-semibold mb-2">Twoi podopieczni</h3>
+            <p>
+              🟩 Aktywni: <strong>{trainerRelationsSummary.agree}</strong>
+            </p>
+            <p>
+              🟨 Oczekujący: <strong>{trainerRelationsSummary.wait}</strong>
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
