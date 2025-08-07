@@ -13,7 +13,15 @@ export default function UserLandingPage() {
 
   const [nextTraining, setNextTraining] = useState<Workout | null>(null);
   const [trainerCount, setTrainerCount] = useState<number | null>(null);
+  const [achievementsCount, setAchievementsCount] = useState<number | null>(
+    null,
+  );
   const [user, setUser] = useState<BackendUser>();
+  const [monthlySummary, setMonthlySummary] = useState<{
+    done: number;
+    not_done: number;
+    total: number;
+  } | null>(null);
   const navigate = useNavigate();
 
   const fetchUser = async () => {
@@ -56,9 +64,33 @@ export default function UserLandingPage() {
       }
     };
 
+    const fetchAchievements = async () => {
+      try {
+        const response = await api.get(
+          `/achievements/?user_id=${user?.user_id}`,
+        );
+        setAchievementsCount(response.data.length);
+      } catch (error: any) {
+        console.error(error);
+        toast.error("Błąd podczas pobierania osiągnięc");
+      }
+    };
+
+    const fetchWorkoutsCount = async () => {
+      try {
+        const response = await api.get(`/workouts/this_month/${user?.user_id}`);
+        setMonthlySummary(response.data);
+      } catch (error: any) {
+        console.error(error);
+        toast.error("Błąd podczas pobierania treningów");
+      }
+    };
+
     if (user?.user_id) {
       fetchNextTraining();
       fetchTrainerRelations();
+      fetchAchievements();
+      fetchWorkoutsCount();
     }
   }, [user]);
 
@@ -102,11 +134,40 @@ export default function UserLandingPage() {
             </p>
           )}
         </div>
-        <div className="border rounded-xl p-4 shadow-md dark:bg-gray-200 bg-white">
+        {monthlySummary && (
+          <div className="border rounded-xl p-4 shadow-md text-center dark:bg-gray-200 bg-white">
+            <h3 className="text-lg font-semibold mb-2">
+              Treningi w tym miesiącu
+            </h3>
+            <div className="text-base flex flex-col gap-1">
+              <p>
+                ✅ Wykonane: <strong>{monthlySummary.done}</strong>
+              </p>
+              <p>
+                ❌ Niewykonane: <strong>{monthlySummary.not_done}</strong>
+              </p>
+              <p>
+                📊 Łącznie: <strong>{monthlySummary.total}</strong>
+              </p>
+            </div>
+          </div>
+        )}
+        <div className="border rounded-xl p-4 shadow-md text-center dark:bg-gray-200 bg-white">
+          <h3 className="text-lg font-semibold mb-2">Twoje osiągnięcia</h3>
+          {achievementsCount !== null ? (
+            <p className="text-base">
+              🏆Liczba twoich wszystkich osiągnięć:
+              <strong> {achievementsCount}</strong>
+            </p>
+          ) : (
+            <p className="text-sm text-gray-500">Ładowanie danych...</p>
+          )}
+        </div>
+        <div className="border rounded-xl p-4 shadow-md text-center dark:bg-gray-200 bg-white">
           <h3 className="text-lg font-semibold mb-2">Twoi trenerzy</h3>
           {trainerCount !== null ? (
-            <div className="flex items-center justify-between">
-              <p className="text-base">
+            <div className="flex items-center justify-center text-center">
+              <p className="text-base text-center">
                 👤 Trenerzy, z którymi współpracujesz:{" "}
                 <strong>{trainerCount}</strong>
               </p>
