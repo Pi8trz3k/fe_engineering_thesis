@@ -273,9 +273,9 @@ export default function ClientTrainingPlanPage({
   const handleOpenWorkoutModal = (workout: Workout) => {
     setSelectedWorkout(workout);
     setIsWorkoutModalOpen(true);
-    originalExerciseIdsRef.current = workout.exercises.map(
-      (ex) => ex.exercise_id,
-    );
+    originalExerciseIdsRef.current = workout.exercises
+      .map((ex) => ex.exercise_id)
+      .filter((id): id is string => id !== undefined);
     editForm.setFieldsValue({
       title: workout.title,
       exercises: workout.exercises.map((ex) => ({
