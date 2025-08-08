@@ -1,6 +1,4 @@
-import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { RegisterInputs } from "@/providers/DataTypes/AuthProviderTypes.ts";
+import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { AuthNavigationButton } from "@/components/Elements/Buttons/AuthNavigationButton/AuthNavigationButton.tsx";
 import { useSearchParams } from "react-router-dom";
