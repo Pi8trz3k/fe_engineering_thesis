@@ -258,8 +258,8 @@ export default function TrainerRelationsTable({
 
   return (
     <div className="overflow-x-auto pt-5 pr-5">
-      <Table
-        dataSource={mergedData}
+      <Table<TableColumnsTypeProps>
+        dataSource={mergedData as TableColumnsTypeProps[]}
         columns={columns}
         rowKey="client_trainer_id"
         scroll={{ x: true }}
