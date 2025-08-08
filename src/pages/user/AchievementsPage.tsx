@@ -4,12 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
 import api from "@/lib/api";
 import UserAchievementsTable from "@/components/Elements/Table/UserAchievementsTable.tsx";
-
-type Achievement = {
-  achievement_id: string;
-  exercise_id: string;
-  user_id: string;
-};
+import { Achievement } from "@/pages/user/DataTypes/TrainingsTypes.ts";
 
 export default function AchievementsPage() {
   const { accessToken } = UseAuth();

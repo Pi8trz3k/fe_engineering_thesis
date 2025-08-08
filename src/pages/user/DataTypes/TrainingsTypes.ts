@@ -31,11 +31,11 @@ export type WorkoutFormData = {
   exercises: Exercise[];
 };
 
-export type Achievement = {
+export interface Achievement {
   achievement_id: string;
   exercise_id: string;
   user_id: number;
-};
+}
 
 export type TrainingsProps = {
   userId: number | undefined;
