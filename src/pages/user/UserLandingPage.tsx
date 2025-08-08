@@ -125,7 +125,7 @@ export default function UserLandingPage() {
   }, [user]);
 
   return (
-    <div className="flex flex-col gap-6 mt-6 items-center">
+    <div className="flex flex-col gap-6 mt-4 items-center">
       <h1 className="text-2xl font-bold text-center mb-4 dark:text-white">
         {role === "user" ? (
           <a>Witamy w panelu użytkownika!</a>
