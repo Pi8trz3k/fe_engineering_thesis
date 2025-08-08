@@ -10,7 +10,9 @@ interface Props {
   onRefresh: () => Promise<void>;
 }
 
-interface TableRow extends Achievement, Partial<Exercise> {}
+interface TableRow extends Achievement, Partial<Exercise> {
+  exercise_id: string;
+}
 
 export default function AchievementsTable({ data, onRefresh }: Props) {
   const [userExercises, setUserExercises] = useState<Exercise[]>([]);
