@@ -99,3 +99,8 @@
 .dark .ant-modal-content {
     background-color: #99a1af;
 }
+
+.ant-btn-link {
+    color: var(--color-green-project) !important;
+    font-weight: bold;
+}

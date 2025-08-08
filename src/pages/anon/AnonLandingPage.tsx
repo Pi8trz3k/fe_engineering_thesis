@@ -35,20 +35,21 @@ export default function AnonLandingPage() {
         <div className={userAndTrainerStyle}>
           <h2 className={h2Style}>Użytkownik prywatny</h2>
           <ul className={ulStyle}>
+            <li>Wyszukiwarka trenerów</li>
+            <li>Współprace z treneremi</li>
             <li>Tworzenie własnych planów treningowych</li>
-            <li>Śledzenie postępów i osiągnięć</li>
             <li>Rejestracja wykonanych ćwiczeń</li>
-            <li>Współpraca z trenerem</li>
+            <li>Śledzenie osiągnięć</li>
           </ul>
         </div>
 
         <div className={userAndTrainerStyle}>
           <h2 className={h2Style}>Trener</h2>
           <ul className={ulStyle}>
+            <li>Tworzenie własnych planów treningowych</li>
+            <li>Śledzenie osiągnięć</li>
             <li>Tworzenie planów dla podopiecznych</li>
-            <li>Monitoring postępów użytkowników</li>
-            <li>Personalizacja ćwiczeń</li>
-            <li>Komunikacja z klientem</li>
+            <li>Monitoring postępów podopiecznych</li>
           </ul>
         </div>
       </div>
