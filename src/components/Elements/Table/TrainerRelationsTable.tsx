@@ -121,8 +121,9 @@ export default function TrainerRelationsTable({
             title: "Klient",
             dataIndex: "userId",
             key: "userId",
-            render: (_, record) => `${record.name} ${record.last_name}`,
-            sorter: (a, b) => {
+            render: (_: any, record: any) =>
+              `${record.name} ${record.last_name}`,
+            sorter: (a: any, b: any) => {
               const fullNameA = `${a.name} ${a.last_name}`.toLowerCase();
               const fullNameB = `${b.name} ${b.last_name}`.toLowerCase();
               return fullNameA.localeCompare(fullNameB);
@@ -144,8 +145,9 @@ export default function TrainerRelationsTable({
             title: "Trener",
             dataIndex: "trainer_id",
             key: "trainer_id",
-            render: (_, record) => `${record.name} ${record.last_name}`,
-            sorter: (a, b) => {
+            render: (_: any, record: any) =>
+              `${record.name} ${record.last_name}`,
+            sorter: (a: any, b: any) => {
               const fullNameA = `${a.name} ${a.last_name}`.toLowerCase();
               const fullNameB = `${b.name} ${b.last_name}`.toLowerCase();
               return fullNameA.localeCompare(fullNameB);
@@ -181,7 +183,7 @@ export default function TrainerRelationsTable({
           {
             title: "Akcja",
             key: "action",
-            render: (_, record) =>
+            render: (_: any, record: any) =>
               record.trainer_agree === "wait" ? (
                 <>
                   <Button
@@ -227,7 +229,7 @@ export default function TrainerRelationsTable({
           {
             title: "Akcja",
             key: "action",
-            render: (_, record) =>
+            render: (_: any, record: any) =>
               record.trainer_agree === "wait" ? (
                 <Button
                   type="primary"
