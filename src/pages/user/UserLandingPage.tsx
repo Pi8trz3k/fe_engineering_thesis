@@ -48,7 +48,7 @@ export default function UserLandingPage() {
         const response = await api.get(`/workouts/next/${user?.user_id}`);
         setNextTraining(response.data);
       } catch (error: any) {
-        console.log("Brak najbliższego treningu");
+        console.error(error);
       }
     };
 
