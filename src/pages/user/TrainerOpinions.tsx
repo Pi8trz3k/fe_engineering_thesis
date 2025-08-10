@@ -190,8 +190,12 @@ export default function TrainerOpinions() {
         },
       }));
     } catch (error: any) {
-      console.log(error);
-      toast.error("Błąd podczas zapisywania opinii.");
+      if (error.response.status === 404) {
+        toast.warning("Błąd! Twoja relacja musi zostać najpierw potwierdzona");
+      } else {
+        console.log(error);
+        toast.error("Błąd podczas zapisywania opinii.");
+      }
     }
   };
 
