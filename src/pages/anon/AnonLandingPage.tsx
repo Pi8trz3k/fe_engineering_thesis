@@ -48,6 +48,7 @@ export default function AnonLandingPage() {
           <ul className={ulStyle}>
             <li>Tworzenie własnych planów treningowych</li>
             <li>Śledzenie osiągnięć</li>
+            <li>Wspólprace z podopiecznymi</li>
             <li>Tworzenie planów dla podopiecznych</li>
             <li>Monitoring postępów podopiecznych</li>
           </ul>

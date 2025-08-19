@@ -147,7 +147,7 @@ export default function UserLandingPage() {
           {nextTraining ? (
             <div className="flex flex-col gap-1">
               <p className="text-base">
-                📅 {dayjs(nextTraining.workout_date).format("DD.MM.YYYY HH:mm")}
+                📅 {dayjs(nextTraining.workout_date).format("DD.MM.YYYY")}
               </p>
               <p className="text-base">🏋️‍♂️ {nextTraining.title}</p>
               <div className="mt-4 flex justify-center">
