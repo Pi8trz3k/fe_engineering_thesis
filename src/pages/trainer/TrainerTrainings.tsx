@@ -43,8 +43,16 @@ export default function TrainerTrainings({ userId }: TrainingsProps) {
         setClientTrainingPlans((prev) => [newPlan, ...prev]);
       }
     } catch (error: any) {
+      if (
+        error.response.data.detail.includes(
+          "You are not allowed to have more than",
+        )
+      ) {
+        toast.error("Przejdź na konto premium aby założyć więcej planów");
+      } else {
+        toast.error("Wystąpił błąd podczas tworzenia planu");
+      }
       console.error(error);
-      toast.error("Wystąpił błąd podczas tworzenia planu");
     }
   };
 
