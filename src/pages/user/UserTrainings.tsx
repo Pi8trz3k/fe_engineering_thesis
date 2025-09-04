@@ -26,8 +26,15 @@ export default function UserTrainings({ userId }: TrainingsProps) {
       const newPlan = await response.data;
       setUserTrainingPlans((prev) => [newPlan, ...prev]);
     } catch (error: any) {
+      if (
+        error.response.data.detail ===
+        "You are not allowed to have more than 1 training plan"
+      ) {
+        toast.error("Przejdź na konto premium aby założyć więcej planów");
+      } else {
+        toast.error("Wystąpił błąd podczas tworzenia planu");
+      }
       console.error(error);
-      toast.error("Wystąpił błąd podczas tworzenia planu");
     }
   };
 
