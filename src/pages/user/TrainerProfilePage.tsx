@@ -138,7 +138,7 @@ export default function TrainerProfilePage({
         </div>
       </div>
       <div className="mt-8 w-[95%] md:w-[50%] m-auto dark:text-white ">
-        <a>Zapytaj o współpracę wysyłając wiadomość do trenera: </a>
+        <p>Zapytaj o współpracę wysyłając wiadomość do trenera: </p>
         <Input.TextArea
           value={messageToTrainer}
           onChange={(e) => setMessageToTrainer(e.target.value)}
