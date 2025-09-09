@@ -77,13 +77,13 @@ export default function CommonProfileContent({
           <label className="font-semibold">
             Adres email:{" "}
             {user.is_mail_verified ? (
-              <a className="font-normal text-green-project dark:text-green-500">
+              <p className="font-normal text-green-project dark:text-green-500">
                 {"Potwierdzony"}
-              </a>
+              </p>
             ) : (
-              <a className="font-normal text-red-700 dark:text-red-500">
+              <p className="font-normal text-red-700 dark:text-red-500">
                 {"Niepotwierdzony"}{" "}
-              </a>
+              </p>
             )}
           </label>
         </div>
@@ -92,15 +92,15 @@ export default function CommonProfileContent({
           <label className="font-semibold">
             Status:{" "}
             {user.status === "active" ? (
-              <a className="font-normal text-green-project dark:text-green-500">
+              <p className="font-normal text-green-project dark:text-green-500">
                 {"Aktywny"}{" "}
-              </a>
+              </p>
             ) : user.status === "not_active" ? (
-              <a className="font-normal text-yellow-400"> {"Nieaktywny"} </a>
+              <p className="font-normal text-yellow-400"> {"Nieaktywny"} </p>
             ) : (
-              <a className="font-normal text-red-700 dark:text-red-500">
+              <p className="font-normal text-red-700 dark:text-red-500">
                 {"Zablokowany"}{" "}
-              </a>
+              </p>
             )}
           </label>
         </div>
