@@ -128,9 +128,9 @@ export default function UserLandingPage() {
     <div className="flex flex-col gap-6 mt-4 items-center">
       <h1 className="text-2xl font-bold text-center mb-4 dark:text-white">
         {role === "user" ? (
-          <a>Witamy w panelu użytkownika!</a>
+          <p>Witamy w panelu użytkownika!</p>
         ) : (
-          <a>Witamy w panelu trenera</a>
+          <p>Witamy w panelu trenera</p>
         )}
       </h1>
       <div className="w-[90%] md:w-[60%] space-y-6">
