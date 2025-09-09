@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Disallow: /confirm-email
+Disallow: /login/request-password-reset
