@@ -55,7 +55,7 @@ export default function TrainerOpinionCard({
       }}
     >
       <div className="flex flex-col items-center gap-2 w-50">
-        <Avatar src={img} size={64} />
+        <Avatar src={img} size={64} alt="Trainer profile image" />
         <div className="text-center text-lg font-medium">{fullName}</div>
       </div>
 
